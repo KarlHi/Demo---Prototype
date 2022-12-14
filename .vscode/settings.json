@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "gd32v_mpu6500_if.h": "c",
+        "pwd.h": "c",
+        "math.h": "c",
+        "cmath": "c",
+        "*.tcc": "c",
+        "gd32v_tf_card_if.h": "c"
+    }
+}

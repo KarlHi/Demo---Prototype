@@ -1,0 +1,1806 @@
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 1
+
+
+   1              		.file	"main.c"
+   2              		.option nopic
+   3              		.attribute arch, "rv32i2p0_m2p0_a2p0_c2p0"
+   4              		.attribute unaligned_access, 0
+   5              		.attribute stack_align, 16
+   6              		.text
+   7              	.Ltext0:
+   8              		.cfi_sections	.debug_frame
+   9              		.section	.text.Initialize_Project,"ax",@progbits
+  10              		.align	1
+  11              		.globl	Initialize_Project
+  13              	Initialize_Project:
+  14              	.LFB7:
+  15              		.file 1 "main.c"
+   1:main.c        **** #include "gd32vf103.h"
+   2:main.c        **** #include "lcd.h"
+   3:main.c        **** #include "delay.h"
+   4:main.c        **** #include "gd32v_mpu6500_if.h"
+   5:main.c        **** #include "gd32vf103v_eval.h"
+   6:main.c        **** #include "stdio.h"
+   7:main.c        **** #include "string.h"
+   8:main.c        **** #include "gd32v_tf_card_if.h"
+   9:main.c        **** #include "pwm.h"
+  10:main.c        **** 
+  11:main.c        **** ////////////////////////// Define functions /////////////////////////////////////////
+  12:main.c        **** void Initialize_Project();
+  13:main.c        **** 
+  14:main.c        **** void SendToSD(int data);
+  15:main.c        **** 
+  16:main.c        **** ///////////////////////////// Main function /////////////////////////////////////////
+  17:main.c        **** int main(void) {   
+  18:main.c        ****     Initialize_Project();
+  19:main.c        **** 	///////////////////////// Acc & Gyro variables ///////////////////////////////////
+  20:main.c        **** 
+  21:main.c        **** 	/* The related data structure for the IMU, contains a vector of x, y, z floats*/
+  22:main.c        ****     mpu_vector_t Acc;
+  23:main.c        ****     float y;
+  24:main.c        ****     int on = 0;
+  25:main.c        ****     int G=0, R=0, S=0;         // States
+  26:main.c        ****     uint16_t _color;
+  27:main.c        **** 
+  28:main.c        ****     /////////////////////////////////// SD-Card variables /////////////////////////////////////////
+  29:main.c        ****     
+  30:main.c        ****     /* Create an int for transmiting data to SD-Card & Clock to see when we should send it */
+  31:main.c        ****     int redReps = 0;
+  32:main.c        ****     int period = 7200000;
+  33:main.c        ****     int hepticPeriod = 2000;
+  34:main.c        ****     int testFreq = 200;
+  35:main.c        ****     uint64_t start_mtime, delta_mtime;
+  36:main.c        ****     uint64_t startH_mtime, deltaH_mtime;
+  37:main.c        ****     uint64_t test_time_start, test_time_delta;
+  38:main.c        ****     
+  39:main.c        ****     test_time_start = get_timer_value();
+  40:main.c        **** 	while(1) {
+  41:main.c        ****         // Try multiplying y with 10 or 100 to get a better number to compare with, maybe use conve
+  42:main.c        **** 
+  43:main.c        ****         ///////////////////////////////////////////////// Accel & Gyro ////////////////////////////
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 2
+
+
+  44:main.c        **** 		
+  45:main.c        ****         // Read button pressed (GPIO-pin)
+  46:main.c        ****         if(gpio_input_bit_get(GPIOA, GPIO_PIN_6) == SET) {          // if Button is pressed        
+  47:main.c        ****             if(on == 0) {
+  48:main.c        ****                 on = 1; 
+  49:main.c        ****             } else {
+  50:main.c        ****                 on = 0;
+  51:main.c        ****             }
+  52:main.c        ****             while(gpio_input_bit_get(GPIOA, GPIO_PIN_6) == SET);    // while Button is pressed
+  53:main.c        ****         }
+  54:main.c        **** 
+  55:main.c        ****         if(on == 0) {
+  56:main.c        ****             // On a break 
+  57:main.c        ****             start_mtime = get_timer_value();
+  58:main.c        ****             if(S == 0){
+  59:main.c        ****                 //LCD_Clear(1);
+  60:main.c        ****                 SendToSD(redReps);                                  // Send redReps to SD-Card
+  61:main.c        ****                 S=1;
+  62:main.c        ****                 G=0;
+  63:main.c        ****                 R=0;
+  64:main.c        ****             }
+  65:main.c        ****             /* Blink diod */
+  66:main.c        ****             T1setPWMmotorB(1);
+  67:main.c        ****             delay_1ms(200);
+  68:main.c        ****             T1setPWMmotorB(0);
+  69:main.c        ****             delay_1ms(200);
+  70:main.c        ****         } else {
+  71:main.c        ****             mpu6500_getAccel(&Acc);                     // Get accelleration data (Note: Blocking r
+  72:main.c        ****             y = Acc.y / 16384;                          // Scale to G values   
+  73:main.c        **** 
+  74:main.c        ****             test_time_delta = get_timer_value() - test_time_start;
+  75:main.c        **** 
+  76:main.c        ****             if (test_time_delta >(SystemCoreClock/4000.0 *testFreq)){
+  77:main.c        ****                 if(y>0.80) {
+  78:main.c        ****                     _color = GREEN;
+  79:main.c        ****                     if(G==0) {
+  80:main.c        ****                         T1setPWMmotorB(0);
+  81:main.c        ****                         // LCD_ShowNum1(10,10,y,8,_color);
+  82:main.c        ****                         // LCD_ShowNum1(50,50,redReps,8,WHITE);
+  83:main.c        ****                     }
+  84:main.c        ****                     G=1;
+  85:main.c        ****                     R=0;
+  86:main.c        ****                 } else if(y<0.55) {
+  87:main.c        ****                     _color = RED;
+  88:main.c        ****                     if(R==0) {
+  89:main.c        ****                         redReps++;
+  90:main.c        ****                         T1setPWMmotorB(1);
+  91:main.c        ****                         // LCD_ShowNum1(10,10,y,8,_color);
+  92:main.c        ****                         // if((redReps%10)==0 && (redReps>0)) {
+  93:main.c        ****                         //     startH_mtime = get_timer_value();
+  94:main.c        ****                         // }
+  95:main.c        ****                     }
+  96:main.c        ****                     G=0;
+  97:main.c        ****                     R=1;
+  98:main.c        ****                 } else {
+  99:main.c        ****                     T1setPWMmotorB(0);
+ 100:main.c        ****                 }
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 3
+
+
+ 101:main.c        ****                 test_time_start = get_timer_value();
+ 102:main.c        ****             }
+ 103:main.c        ****             // deltaH_mtime = get_timer_value() - startH_mtime;
+ 104:main.c        ****             // if (deltaH_mtime < (SystemCoreClock/4000.0 *hepticPeriod)){
+ 105:main.c        ****             //     T1setPWMmotorB(1);
+ 106:main.c        ****             // } else T1setPWMmotorB(0);
+ 107:main.c        ****             
+ 108:main.c        ****             S = 0;    
+ 109:main.c        ****         }
+ 110:main.c        ****             
+ 111:main.c        ****         /////////////////////////////////////////////////// SD-Card ///////////////////////////////
+ 112:main.c        ****         // Count up the time passed in ms
+ 113:main.c        ****         delta_mtime = get_timer_value() - start_mtime;
+ 114:main.c        **** 
+ 115:main.c        ****         // Send to SD-Card after 2 hours of work
+ 116:main.c        ****         if (delta_mtime >(SystemCoreClock/4000.0 *period)){
+ 117:main.c        ****             SendToSD(redReps);      // Send redReps to SD-Card
+ 118:main.c        ****         }
+ 119:main.c        ****     };
+ 120:main.c        ****     
+ 121:main.c        **** }
+ 122:main.c        **** 
+ 123:main.c        **** ////////////////////////// Write functions /////////////////////////////////////////
+ 124:main.c        **** 
+ 125:main.c        **** void Initialize_Project(){
+  16              		.loc 1 125 26
+  17              		.cfi_startproc
+ 126:main.c        ****     ////////////////////////////////// Initialize  heptic feedback ////////////////////////////////
+ 127:main.c        ****     T1powerUpInitPWM(0x3);                  //Starts A0 and A1.
+  18              		.loc 1 127 5
+ 125:main.c        ****     ////////////////////////////////// Initialize  heptic feedback ////////////////////////////////
+  19              		.loc 1 125 26 is_stmt 0
+  20 0000 4111     		addi	sp,sp,-16
+  21              	.LCFI0:
+  22              		.cfi_def_cfa_offset 16
+  23              		.loc 1 127 5
+  24 0002 0D45     		li	a0,3
+ 125:main.c        ****     ////////////////////////////////// Initialize  heptic feedback ////////////////////////////////
+  25              		.loc 1 125 26
+  26 0004 06C6     		sw	ra,12(sp)
+  27 0006 22C4     		sw	s0,8(sp)
+  28              		.cfi_offset 1, -4
+  29              		.cfi_offset 8, -8
+  30              		.loc 1 127 5
+  31 0008 97000000 		call	T1powerUpInitPWM
+  31      E7800000 
+  32              	.LVL0:
+ 128:main.c        ****     ////////////////////////////////////// Initialize LCD /////////////////////////////////////////
+ 129:main.c        ****     // Lcd_SetType(LCD_INVERTED);
+ 130:main.c        ****     // Lcd_Init();
+ 131:main.c        ****     // LCD_Clear(1);
+ 132:main.c        ****     // LCD_DrawPoint(1,1,1);
+ 133:main.c        ****     // delay_1ms(100);
+ 134:main.c        **** 	//////////////////////////////////// Initialize Acc  ///////////////////////////////////////////
+ 135:main.c        **** 	/* Initialize pins for I2C */
+ 136:main.c        ****     rcu_periph_clock_enable(RCU_GPIOB);
+  33              		.loc 1 136 5 is_stmt 1
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 4
+
+
+  34 0010 13053060 		li	a0,1539
+  35 0014 97000000 		call	rcu_periph_clock_enable
+  35      E7800000 
+  36              	.LVL1:
+ 137:main.c        ****     rcu_periph_clock_enable(RCU_I2C0);
+  37              		.loc 1 137 5
+  38 001c 13055071 		li	a0,1813
+  39 0020 97000000 		call	rcu_periph_clock_enable
+  39      E7800000 
+  40              	.LVL2:
+ 138:main.c        ****     gpio_init(GPIOB, GPIO_MODE_AF_OD, GPIO_OSPEED_50MHZ, GPIO_PIN_6 | GPIO_PIN_7);
+  41              		.loc 1 138 5
+  42 0028 37140140 		li	s0,1073811456
+  43 002c 9306000C 		li	a3,192
+  44 0030 0D46     		li	a2,3
+  45 0032 F145     		li	a1,28
+  46 0034 130504C0 		addi	a0,s0,-1024
+  47 0038 97000000 		call	gpio_init
+  47      E7800000 
+  48              	.LVL3:
+ 139:main.c        ****     /* Initialize the IMU (Notice that MPU6500 is referenced, this is due to the fact that ICM-2060
+ 140:main.c        ****        ICM-20600 is mostly register compatible with MPU6500, if MPU6500 is used only thing that nee
+ 141:main.c        ****        to change is MPU6500_WHO_AM_I_ID from 0x11 to 0x70. */
+ 142:main.c        **** 
+ 143:main.c        ****     mpu6500_install(I2C0);
+  49              		.loc 1 143 5
+  50 0040 37550040 		li	a0,1073762304
+  51 0044 13050540 		addi	a0,a0,1024
+  52 0048 97000000 		call	mpu6500_install
+  52      E7800000 
+  53              	.LVL4:
+ 144:main.c        ****     //////////////////////////////////// Initialize Button  ///////////////////////////////////////
+ 145:main.c        ****     rcu_periph_clock_enable(RCU_GPIOA);
+  54              		.loc 1 145 5
+  55 0050 13052060 		li	a0,1538
+  56 0054 97000000 		call	rcu_periph_clock_enable
+  56      E7800000 
+  57              	.LVL5:
+ 146:main.c        ****     /* This configures the A3 and A4 pins as inputs with internal pull ups enabled */
+ 147:main.c        ****     gpio_init(GPIOA, GPIO_MODE_IN_FLOATING, GPIO_OSPEED_50MHZ, GPIO_PIN_6);
+  58              		.loc 1 147 5
+  59 005c 93060004 		li	a3,64
+  60 0060 0D46     		li	a2,3
+  61 0062 9145     		li	a1,4
+  62 0064 13050480 		addi	a0,s0,-2048
+  63 0068 97000000 		call	gpio_init
+  63      E7800000 
+  64              	.LVL6:
+ 148:main.c        ****     
+ 149:main.c        ****     /* Blink diod */
+ 150:main.c        ****     T1setPWMmotorB(1);
+  65              		.loc 1 150 5
+  66 0070 0545     		li	a0,1
+  67 0072 97000000 		call	T1setPWMmotorB
+  67      E7800000 
+  68              	.LVL7:
+ 151:main.c        ****     delay_1ms(1000);
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 5
+
+
+  69              		.loc 1 151 5
+  70 007a 1305803E 		li	a0,1000
+  71 007e 97000000 		call	delay_1ms
+  71      E7800000 
+  72              	.LVL8:
+ 152:main.c        ****     T1setPWMmotorB(0);
+  73              		.loc 1 152 5
+  74 0086 0145     		li	a0,0
+  75 0088 97000000 		call	T1setPWMmotorB
+  75      E7800000 
+  76              	.LVL9:
+ 153:main.c        ****     delay_1ms(1000);
+  77              		.loc 1 153 5
+ 154:main.c        **** }
+  78              		.loc 1 154 1 is_stmt 0
+  79 0090 2244     		lw	s0,8(sp)
+  80              		.cfi_restore 8
+  81 0092 B240     		lw	ra,12(sp)
+  82              		.cfi_restore 1
+ 153:main.c        ****     delay_1ms(1000);
+  83              		.loc 1 153 5
+  84 0094 1305803E 		li	a0,1000
+  85              		.loc 1 154 1
+  86 0098 4101     		addi	sp,sp,16
+  87              	.LCFI1:
+  88              		.cfi_def_cfa_offset 0
+ 153:main.c        ****     delay_1ms(1000);
+  89              		.loc 1 153 5
+  90 009a 17030000 		tail	delay_1ms
+  90      67000300 
+  91              	.LVL10:
+  92              		.cfi_endproc
+  93              	.LFE7:
+  95              		.section	.text.SendToSD,"ax",@progbits
+  96              		.align	1
+  97              		.globl	SendToSD
+  99              	SendToSD:
+ 100              	.LFB8:
+ 155:main.c        **** 
+ 156:main.c        **** void SendToSD(int data){
+ 101              		.loc 1 156 24 is_stmt 1
+ 102              		.cfi_startproc
+ 103              	.LVL11:
+ 157:main.c        ****     FATFS fs;
+ 104              		.loc 1 157 5
+ 158:main.c        ****     volatile FRESULT fr;
+ 105              		.loc 1 158 5
+ 159:main.c        ****     FIL file;
+ 106              		.loc 1 159 5
+ 160:main.c        **** 
+ 161:main.c        ****     UINT bw = 0;
+ 107              		.loc 1 161 5
+ 156:main.c        ****     FATFS fs;
+ 108              		.loc 1 156 24 is_stmt 0
+ 109 0000 130101B1 		addi	sp,sp,-1264
+ 110              	.LCFI2:
+ 111              		.cfi_def_cfa_offset 1264
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 6
+
+
+ 162:main.c        **** 
+ 163:main.c        ****     char information[128];
+ 164:main.c        ****     
+ 165:main.c        ****     set_fattime(2022,12,6,12,0,0);
+ 112              		.loc 1 165 5
+ 113 0004 0147     		li	a4,0
+ 114 0006 B146     		li	a3,12
+ 115 0008 8147     		li	a5,0
+ 156:main.c        ****     FATFS fs;
+ 116              		.loc 1 156 24
+ 117 000a 2324814E 		sw	s0,1256(sp)
+ 118              		.loc 1 165 5
+ 119 000e 1946     		li	a2,6
+ 120 0010 B145     		li	a1,12
+ 121              		.cfi_offset 8, -8
+ 156:main.c        ****     FATFS fs;
+ 122              		.loc 1 156 24
+ 123 0012 2A84     		mv	s0,a0
+ 124              		.loc 1 165 5
+ 125 0014 1305607E 		li	a0,2022
+ 126              	.LVL12:
+ 156:main.c        ****     FATFS fs;
+ 127              		.loc 1 156 24
+ 128 0018 2326114E 		sw	ra,1260(sp)
+ 129              		.cfi_offset 1, -4
+ 161:main.c        **** 
+ 130              		.loc 1 161 10
+ 131 001c 02C2     		sw	zero,4(sp)
+ 163:main.c        ****     
+ 132              		.loc 1 163 5 is_stmt 1
+ 133              		.loc 1 165 5
+ 134 001e 97000000 		call	set_fattime
+ 134      E7800000 
+ 135              	.LVL13:
+ 166:main.c        ****     delay_1ms(100);
+ 136              		.loc 1 166 5
+ 137 0026 13054006 		li	a0,100
+ 138 002a 97000000 		call	delay_1ms
+ 138      E7800000 
+ 139              	.LVL14:
+ 167:main.c        ****     
+ 168:main.c        ****     strcpy(information,"");
+ 140              		.loc 1 168 5
+ 169:main.c        ****     sprintf(&information[strlen(information)], "%d", data);
+ 141              		.loc 1 169 5 is_stmt 0
+ 142 0032 B7050000 		lui	a1,%hi(.LC0)
+ 143 0036 2286     		mv	a2,s0
+ 144 0038 93850500 		addi	a1,a1,%lo(.LC0)
+ 145 003c 2800     		addi	a0,sp,8
+ 168:main.c        ****     sprintf(&information[strlen(information)], "%d", data);
+ 146              		.loc 1 168 5
+ 147 003e 23040100 		sb	zero,8(sp)
+ 148              		.loc 1 169 5 is_stmt 1
+ 149 0042 97000000 		call	sprintf
+ 149      E7800000 
+ 150              	.LVL15:
+ 170:main.c        ****     strcat(information,"");
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 7
+
+
+ 151              		.loc 1 170 5
+ 171:main.c        ****     
+ 172:main.c        ****     f_mount(&fs,"",1);
+ 152              		.loc 1 172 5
+ 153 004a B7050000 		lui	a1,%hi(.LC1)
+ 154 004e 0546     		li	a2,1
+ 155 0050 93850500 		addi	a1,a1,%lo(.LC1)
+ 156 0054 081D     		addi	a0,sp,688
+ 157 0056 97000000 		call	f_mount
+ 157      E7800000 
+ 158              	.LVL16:
+ 173:main.c        ****     f_sync(&file);
+ 159              		.loc 1 173 5
+ 160 005e 2801     		addi	a0,sp,136
+ 161 0060 97000000 		call	f_sync
+ 161      E7800000 
+ 162              	.LVL17:
+ 174:main.c        **** 
+ 175:main.c        ****     fr = f_open(&file, "DATA.TXT", FA_WRITE | FA_CREATE_ALWAYS);
+ 163              		.loc 1 175 5
+ 164              		.loc 1 175 10 is_stmt 0
+ 165 0068 B7050000 		lui	a1,%hi(.LC2)
+ 166 006c 2946     		li	a2,10
+ 167 006e 93850500 		addi	a1,a1,%lo(.LC2)
+ 168 0072 2801     		addi	a0,sp,136
+ 169 0074 97000000 		call	f_open
+ 169      E7800000 
+ 170              	.LVL18:
+ 171 007c AA87     		mv	a5,a0
+ 176:main.c        ****     fr = f_write(&file, information, strlen(information), &bw);
+ 172              		.loc 1 176 10
+ 173 007e 2800     		addi	a0,sp,8
+ 175:main.c        ****     fr = f_write(&file, information, strlen(information), &bw);
+ 174              		.loc 1 175 8
+ 175 0080 3EC0     		sw	a5,0(sp)
+ 176              		.loc 1 176 5 is_stmt 1
+ 177              		.loc 1 176 10 is_stmt 0
+ 178 0082 97000000 		call	strlen
+ 178      E7800000 
+ 179              	.LVL19:
+ 180 008a 2A86     		mv	a2,a0
+ 181 008c 5400     		addi	a3,sp,4
+ 182 008e 2C00     		addi	a1,sp,8
+ 183 0090 2801     		addi	a0,sp,136
+ 184 0092 97000000 		call	f_write
+ 184      E7800000 
+ 185              	.LVL20:
+ 186 009a AA87     		mv	a5,a0
+ 177:main.c        ****     delay_1ms(400);
+ 187              		.loc 1 177 5
+ 188 009c 13050019 		li	a0,400
+ 176:main.c        ****     fr = f_write(&file, information, strlen(information), &bw);
+ 189              		.loc 1 176 8
+ 190 00a0 3EC0     		sw	a5,0(sp)
+ 191              		.loc 1 177 5 is_stmt 1
+ 192 00a2 97000000 		call	delay_1ms
+ 192      E7800000 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 8
+
+
+ 193              	.LVL21:
+ 178:main.c        **** 
+ 179:main.c        ****     f_sync(&file);
+ 194              		.loc 1 179 5
+ 195 00aa 2801     		addi	a0,sp,136
+ 196 00ac 97000000 		call	f_sync
+ 196      E7800000 
+ 197              	.LVL22:
+ 180:main.c        **** 
+ 181:main.c        ****     f_close(&file);
+ 198              		.loc 1 181 5
+ 199 00b4 2801     		addi	a0,sp,136
+ 200 00b6 97000000 		call	f_close
+ 200      E7800000 
+ 201              	.LVL23:
+ 182:main.c        ****     delay_1ms(100);
+ 202              		.loc 1 182 5
+ 203 00be 13054006 		li	a0,100
+ 204 00c2 97000000 		call	delay_1ms
+ 204      E7800000 
+ 205              	.LVL24:
+ 183:main.c        **** 
+ 184:main.c        **** }
+ 206              		.loc 1 184 1 is_stmt 0
+ 207 00ca 8320C14E 		lw	ra,1260(sp)
+ 208              		.cfi_restore 1
+ 209 00ce 0324814E 		lw	s0,1256(sp)
+ 210              		.cfi_restore 8
+ 211              	.LVL25:
+ 212 00d2 1301014F 		addi	sp,sp,1264
+ 213              	.LCFI3:
+ 214              		.cfi_def_cfa_offset 0
+ 215 00d6 8280     		jr	ra
+ 216              		.cfi_endproc
+ 217              	.LFE8:
+ 219              		.globl	__floatundidf
+ 220              		.globl	__floatunsidf
+ 221              		.globl	__divdf3
+ 222              		.globl	__muldf3
+ 223              		.globl	__gtdf2
+ 224              		.globl	__mulsf3
+ 225              		.globl	__extendsfdf2
+ 226              		.globl	__ltdf2
+ 227              		.section	.text.startup.main,"ax",@progbits
+ 228              		.align	1
+ 229              		.globl	main
+ 231              	main:
+ 232              	.LFB6:
+  17:main.c        ****     Initialize_Project();
+ 233              		.loc 1 17 16 is_stmt 1
+ 234              		.cfi_startproc
+  18:main.c        **** 	///////////////////////// Acc & Gyro variables ///////////////////////////////////
+ 235              		.loc 1 18 5
+  17:main.c        ****     Initialize_Project();
+ 236              		.loc 1 17 16 is_stmt 0
+ 237 0000 7571     		addi	sp,sp,-144
+ 238              	.LCFI4:
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 9
+
+
+ 239              		.cfi_def_cfa_offset 144
+ 240 0002 06C7     		sw	ra,140(sp)
+ 241 0004 22C5     		sw	s0,136(sp)
+ 242 0006 4AC1     		sw	s2,128(sp)
+ 243 0008 D6DA     		sw	s5,116(sp)
+ 244 000a DAD8     		sw	s6,112(sp)
+ 245 000c DED6     		sw	s7,108(sp)
+ 246 000e EAD0     		sw	s10,96(sp)
+ 247 0010 EECE     		sw	s11,92(sp)
+ 248 0012 26C3     		sw	s1,132(sp)
+ 249 0014 CEDE     		sw	s3,124(sp)
+ 250 0016 D2DC     		sw	s4,120(sp)
+ 251 0018 E2D4     		sw	s8,104(sp)
+ 252 001a E6D2     		sw	s9,100(sp)
+ 253              		.cfi_offset 1, -4
+ 254              		.cfi_offset 8, -8
+ 255              		.cfi_offset 18, -16
+ 256              		.cfi_offset 21, -28
+ 257              		.cfi_offset 22, -32
+ 258              		.cfi_offset 23, -36
+ 259              		.cfi_offset 26, -48
+ 260              		.cfi_offset 27, -52
+ 261              		.cfi_offset 9, -12
+ 262              		.cfi_offset 19, -20
+ 263              		.cfi_offset 20, -24
+ 264              		.cfi_offset 24, -40
+ 265              		.cfi_offset 25, -44
+  18:main.c        **** 	///////////////////////// Acc & Gyro variables ///////////////////////////////////
+ 266              		.loc 1 18 5
+ 267 001c 97000000 		call	Initialize_Project
+ 267      E7800000 
+ 268              	.LVL26:
+  22:main.c        ****     float y;
+ 269              		.loc 1 22 5 is_stmt 1
+  23:main.c        ****     int on = 0;
+ 270              		.loc 1 23 5
+  24:main.c        ****     int G=0, R=0, S=0;         // States
+ 271              		.loc 1 24 5
+  25:main.c        ****     uint16_t _color;
+ 272              		.loc 1 25 5
+  26:main.c        **** 
+ 273              		.loc 1 26 5
+  31:main.c        ****     int period = 7200000;
+ 274              		.loc 1 31 5
+  32:main.c        ****     int hepticPeriod = 2000;
+ 275              		.loc 1 32 5
+  33:main.c        ****     int testFreq = 200;
+ 276              		.loc 1 33 5
+  34:main.c        ****     uint64_t start_mtime, delta_mtime;
+ 277              		.loc 1 34 5
+  35:main.c        ****     uint64_t startH_mtime, deltaH_mtime;
+ 278              		.loc 1 35 5
+  36:main.c        ****     uint64_t test_time_start, test_time_delta;
+ 279              		.loc 1 36 5
+  37:main.c        ****     
+ 280              		.loc 1 37 5
+  39:main.c        **** 	while(1) {
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 10
+
+
+ 281              		.loc 1 39 5
+  39:main.c        **** 	while(1) {
+ 282              		.loc 1 39 23 is_stmt 0
+ 283 0024 97000000 		call	get_timer_value
+ 283      E7800000 
+ 284              	.LVL27:
+ 285 002c B7070000 		lui	a5,%hi(.LC3)
+  76:main.c        ****                 if(y>0.80) {
+ 286              		.loc 1 76 50
+ 287 0030 03AD0700 		lw	s10,%lo(.LC3)(a5)
+ 288 0034 83AB4700 		lw	s7,%lo(.LC3+4)(a5)
+  76:main.c        ****                 if(y>0.80) {
+ 289              		.loc 1 76 58
+ 290 0038 B7070000 		lui	a5,%hi(.LC4)
+ 291 003c 03A84700 		lw	a6,%lo(.LC4+4)(a5)
+ 292 0040 83A70700 		lw	a5,%lo(.LC4)(a5)
+  46:main.c        ****             if(on == 0) {
+ 293              		.loc 1 46 12
+ 294 0044 37140140 		li	s0,1073811456
+  76:main.c        ****                 if(y>0.80) {
+ 295              		.loc 1 76 58
+ 296 0048 42CA     		sw	a6,20(sp)
+ 297 004a 3EC8     		sw	a5,16(sp)
+  72:main.c        **** 
+ 298              		.loc 1 72 15
+ 299 004c B7070000 		lui	a5,%hi(.LC5)
+ 300 0050 83A70700 		lw	a5,%lo(.LC5)(a5)
+  39:main.c        **** 	while(1) {
+ 301              		.loc 1 39 23
+ 302 0054 2AC6     		sw	a0,12(sp)
+ 303 0056 2ECC     		sw	a1,24(sp)
+ 304              	.LVL28:
+  72:main.c        **** 
+ 305              		.loc 1 72 15
+ 306 0058 3ED6     		sw	a5,44(sp)
+  77:main.c        ****                     _color = GREEN;
+ 307              		.loc 1 77 19
+ 308 005a B7070000 		lui	a5,%hi(.LC6)
+ 309 005e 03A84700 		lw	a6,%lo(.LC6+4)(a5)
+ 310 0062 83A70700 		lw	a5,%lo(.LC6)(a5)
+  76:main.c        ****                 if(y>0.80) {
+ 311              		.loc 1 76 50
+ 312 0066 6ACE     		sw	s10,28(sp)
+  77:main.c        ****                     _color = GREEN;
+ 313              		.loc 1 77 19
+ 314 0068 42DA     		sw	a6,52(sp)
+ 315 006a 3ED8     		sw	a5,48(sp)
+  86:main.c        ****                     _color = RED;
+ 316              		.loc 1 86 26
+ 317 006c B7070000 		lui	a5,%hi(.LC7)
+ 318 0070 03A84700 		lw	a6,%lo(.LC7+4)(a5)
+ 319 0074 83A70700 		lw	a5,%lo(.LC7)(a5)
+  76:main.c        ****                 if(y>0.80) {
+ 320              		.loc 1 76 50
+ 321 0078 5ED0     		sw	s7,32(sp)
+  86:main.c        ****                     _color = RED;
+ 322              		.loc 1 86 26
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 11
+
+
+ 323 007a 42DE     		sw	a6,60(sp)
+ 324 007c 3EDC     		sw	a5,56(sp)
+ 116:main.c        ****             SendToSD(redReps);      // Send redReps to SD-Card
+ 325              		.loc 1 116 50
+ 326 007e B7070000 		lui	a5,%hi(.LC8)
+ 327 0082 03A84700 		lw	a6,%lo(.LC8+4)(a5)
+ 328 0086 83A70700 		lw	a5,%lo(.LC8)(a5)
+  31:main.c        ****     int period = 7200000;
+ 329              		.loc 1 31 9
+ 330 008a 814D     		li	s11,0
+ 116:main.c        ****             SendToSD(redReps);      // Send redReps to SD-Card
+ 331              		.loc 1 116 50
+ 332 008c 42C2     		sw	a6,4(sp)
+ 333 008e 3EC0     		sw	a5,0(sp)
+  25:main.c        ****     uint16_t _color;
+ 334              		.loc 1 25 19
+ 335 0090 814A     		li	s5,0
+  25:main.c        ****     uint16_t _color;
+ 336              		.loc 1 25 14
+ 337 0092 02D4     		sw	zero,40(sp)
+  25:main.c        ****     uint16_t _color;
+ 338              		.loc 1 25 9
+ 339 0094 02D2     		sw	zero,36(sp)
+  24:main.c        ****     int G=0, R=0, S=0;         // States
+ 340              		.loc 1 24 9
+ 341 0096 014B     		li	s6,0
+ 342 0098 37090000 		lui	s2,%hi(SystemCoreClock)
+  46:main.c        ****             if(on == 0) {
+ 343              		.loc 1 46 12
+ 344 009c 13040480 		addi	s0,s0,-2048
+ 345              	.LVL29:
+ 346              	.L7:
+  40:main.c        ****         // Try multiplying y with 10 or 100 to get a better number to compare with, maybe use conve
+ 347              		.loc 1 40 2 is_stmt 1
+  46:main.c        ****             if(on == 0) {
+ 348              		.loc 1 46 9
+  46:main.c        ****             if(on == 0) {
+ 349              		.loc 1 46 12 is_stmt 0
+ 350 00a0 93050004 		li	a1,64
+ 351 00a4 2285     		mv	a0,s0
+ 352 00a6 97000000 		call	gpio_input_bit_get
+ 352      E7800000 
+ 353              	.LVL30:
+  46:main.c        ****             if(on == 0) {
+ 354              		.loc 1 46 11
+ 355 00ae 8547     		li	a5,1
+ 356 00b0 6300F50C 		beq	a0,a5,.L33
+ 357              	.LVL31:
+ 358              	.L8:
+  55:main.c        ****             // On a break 
+ 359              		.loc 1 55 9 is_stmt 1
+  55:main.c        ****             // On a break 
+ 360              		.loc 1 55 11 is_stmt 0
+ 361 00b4 631C0B0C 		bne	s6,zero,.L10
+ 362              	.L35:
+ 363              	.LVL32:
+  57:main.c        ****             if(S == 0){
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 12
+
+
+ 364              		.loc 1 57 13 is_stmt 1
+  57:main.c        ****             if(S == 0){
+ 365              		.loc 1 57 27 is_stmt 0
+ 366 00b8 97000000 		call	get_timer_value
+ 366      E7800000 
+ 367              	.LVL33:
+ 368 00c0 AA89     		mv	s3,a0
+ 369 00c2 2E8A     		mv	s4,a1
+ 370              	.LVL34:
+  58:main.c        ****                 //LCD_Clear(1);
+ 371              		.loc 1 58 13 is_stmt 1
+  58:main.c        ****                 //LCD_Clear(1);
+ 372              		.loc 1 58 15 is_stmt 0
+ 373 00c4 63880A16 		beq	s5,zero,.L34
+ 374              	.LVL35:
+ 375              	.L11:
+  66:main.c        ****             delay_1ms(200);
+ 376              		.loc 1 66 13 is_stmt 1
+ 377 00c8 0545     		li	a0,1
+ 378 00ca 97000000 		call	T1setPWMmotorB
+ 378      E7800000 
+ 379              	.LVL36:
+  67:main.c        ****             T1setPWMmotorB(0);
+ 380              		.loc 1 67 13
+ 381 00d2 1305800C 		li	a0,200
+ 382 00d6 97000000 		call	delay_1ms
+ 382      E7800000 
+ 383              	.LVL37:
+  68:main.c        ****             delay_1ms(200);
+ 384              		.loc 1 68 13
+ 385 00de 0145     		li	a0,0
+ 386 00e0 97000000 		call	T1setPWMmotorB
+ 386      E7800000 
+ 387              	.LVL38:
+  69:main.c        ****         } else {
+ 388              		.loc 1 69 13
+ 389 00e8 1305800C 		li	a0,200
+ 390 00ec 97000000 		call	delay_1ms
+ 390      E7800000 
+ 391              	.LVL39:
+ 392 00f4 854A     		li	s5,1
+ 393              	.LVL40:
+ 394              	.L12:
+ 113:main.c        **** 
+ 395              		.loc 1 113 9
+ 113:main.c        **** 
+ 396              		.loc 1 113 23 is_stmt 0
+ 397 00f6 97000000 		call	get_timer_value
+ 397      E7800000 
+ 398              	.LVL41:
+ 399 00fe AA87     		mv	a5,a0
+ 400              	.LVL42:
+ 116:main.c        ****             SendToSD(redReps);      // Send redReps to SD-Card
+ 401              		.loc 1 116 9 is_stmt 1
+ 113:main.c        **** 
+ 402              		.loc 1 113 21 is_stmt 0
+ 403 0100 33053541 		sub	a0,a0,s3
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 13
+
+
+ 404              	.LVL43:
+ 405 0104 B3B7A700 		sgtu	a5,a0,a5
+ 406              	.LVL44:
+ 407 0108 B3854541 		sub	a1,a1,s4
+ 116:main.c        ****             SendToSD(redReps);      // Send redReps to SD-Card
+ 408              		.loc 1 116 25
+ 409 010c 9D8D     		sub	a1,a1,a5
+ 410 010e 97000000 		call	__floatundidf
+ 410      E7800000 
+ 411              	.LVL45:
+ 412 0116 2A8C     		mv	s8,a0
+ 116:main.c        ****             SendToSD(redReps);      // Send redReps to SD-Card
+ 413              		.loc 1 116 42
+ 414 0118 03250900 		lw	a0,%lo(SystemCoreClock)(s2)
+ 116:main.c        ****             SendToSD(redReps);      // Send redReps to SD-Card
+ 415              		.loc 1 116 25
+ 416 011c AE8C     		mv	s9,a1
+ 116:main.c        ****             SendToSD(redReps);      // Send redReps to SD-Card
+ 417              		.loc 1 116 42
+ 418 011e 97000000 		call	__floatunsidf
+ 418      E7800000 
+ 419              	.LVL46:
+ 420 0126 6A86     		mv	a2,s10
+ 421 0128 DE86     		mv	a3,s7
+ 422 012a 97000000 		call	__divdf3
+ 422      E7800000 
+ 423              	.LVL47:
+ 116:main.c        ****             SendToSD(redReps);      // Send redReps to SD-Card
+ 424              		.loc 1 116 50
+ 425 0132 0246     		lw	a2,0(sp)
+ 426 0134 9246     		lw	a3,4(sp)
+ 427 0136 97000000 		call	__muldf3
+ 427      E7800000 
+ 428              	.LVL48:
+ 116:main.c        ****             SendToSD(redReps);      // Send redReps to SD-Card
+ 429              		.loc 1 116 12
+ 430 013e 2A86     		mv	a2,a0
+ 431 0140 AE86     		mv	a3,a1
+ 432 0142 6285     		mv	a0,s8
+ 433 0144 E685     		mv	a1,s9
+ 434 0146 97000000 		call	__gtdf2
+ 434      E7800000 
+ 435              	.LVL49:
+ 436 014e E359A0F4 		ble	a0,zero,.L7
+ 117:main.c        ****         }
+ 437              		.loc 1 117 13 is_stmt 1
+ 438 0152 6E85     		mv	a0,s11
+ 439 0154 97000000 		call	SendToSD
+ 439      E7800000 
+ 440              	.LVL50:
+  40:main.c        ****         // Try multiplying y with 10 or 100 to get a better number to compare with, maybe use conve
+ 441              		.loc 1 40 2
+  46:main.c        ****             if(on == 0) {
+ 442              		.loc 1 46 9
+  46:main.c        ****             if(on == 0) {
+ 443              		.loc 1 46 12 is_stmt 0
+ 444 015c 93050004 		li	a1,64
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 14
+
+
+ 445 0160 2285     		mv	a0,s0
+ 446 0162 97000000 		call	gpio_input_bit_get
+ 446      E7800000 
+ 447              	.LVL51:
+  46:main.c        ****             if(on == 0) {
+ 448              		.loc 1 46 11
+ 449 016a 8547     		li	a5,1
+ 450 016c E314F5F4 		bne	a0,a5,.L8
+ 451              	.LVL52:
+ 452              	.L33:
+  47:main.c        ****                 on = 1; 
+ 453              		.loc 1 47 13 is_stmt 1
+ 454 0170 134B1B00 		xori	s6,s6,1
+ 455              	.LVL53:
+  52:main.c        ****         }
+ 456              		.loc 1 52 18 is_stmt 0
+ 457 0174 8544     		li	s1,1
+ 458              	.LVL54:
+ 459              	.L9:
+  52:main.c        ****         }
+ 460              		.loc 1 52 64 is_stmt 1 discriminator 1
+  52:main.c        ****         }
+ 461              		.loc 1 52 19 is_stmt 0 discriminator 1
+ 462 0176 93050004 		li	a1,64
+ 463 017a 2285     		mv	a0,s0
+ 464 017c 97000000 		call	gpio_input_bit_get
+ 464      E7800000 
+ 465              	.LVL55:
+  52:main.c        ****         }
+ 466              		.loc 1 52 18 discriminator 1
+ 467 0184 E30995FE 		beq	a0,s1,.L9
+  55:main.c        ****             // On a break 
+ 468              		.loc 1 55 9 is_stmt 1
+  55:main.c        ****             // On a break 
+ 469              		.loc 1 55 11 is_stmt 0
+ 470 0188 E3080BF2 		beq	s6,zero,.L35
+ 471              	.L10:
+  71:main.c        ****             y = Acc.y / 16384;                          // Scale to G values   
+ 472              		.loc 1 71 13 is_stmt 1
+ 473 018c C800     		addi	a0,sp,68
+ 474 018e 97000000 		call	mpu6500_getAccel
+ 474      E7800000 
+ 475              	.LVL56:
+  72:main.c        **** 
+ 476              		.loc 1 72 13
+  72:main.c        **** 
+ 477              		.loc 1 72 20 is_stmt 0
+ 478 0196 A644     		lw	s1,72(sp)
+ 479              	.LVL57:
+  74:main.c        **** 
+ 480              		.loc 1 74 13 is_stmt 1
+  74:main.c        **** 
+ 481              		.loc 1 74 31 is_stmt 0
+ 482 0198 97000000 		call	get_timer_value
+ 482      E7800000 
+ 483              	.LVL58:
+  74:main.c        **** 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 15
+
+
+ 484              		.loc 1 74 29
+ 485 01a0 3247     		lw	a4,12(sp)
+  74:main.c        **** 
+ 486              		.loc 1 74 31
+ 487 01a2 AA87     		mv	a5,a0
+ 488              	.LVL59:
+  76:main.c        ****                 if(y>0.80) {
+ 489              		.loc 1 76 13 is_stmt 1
+ 108:main.c        ****         }
+ 490              		.loc 1 108 15 is_stmt 0
+ 491 01a4 814A     		li	s5,0
+ 492              	.LVL60:
+  74:main.c        **** 
+ 493              		.loc 1 74 29
+ 494 01a6 198D     		sub	a0,a0,a4
+ 495              	.LVL61:
+ 496 01a8 6247     		lw	a4,24(sp)
+ 497              	.LVL62:
+ 498 01aa B3B7A700 		sgtu	a5,a0,a5
+ 499              	.LVL63:
+ 500 01ae 998D     		sub	a1,a1,a4
+  76:main.c        ****                 if(y>0.80) {
+ 501              		.loc 1 76 33
+ 502 01b0 9D8D     		sub	a1,a1,a5
+ 503 01b2 97000000 		call	__floatundidf
+ 503      E7800000 
+ 504              	.LVL64:
+ 505 01ba 2A8C     		mv	s8,a0
+  76:main.c        ****                 if(y>0.80) {
+ 506              		.loc 1 76 50
+ 507 01bc 03250900 		lw	a0,%lo(SystemCoreClock)(s2)
+  76:main.c        ****                 if(y>0.80) {
+ 508              		.loc 1 76 33
+ 509 01c0 AE8C     		mv	s9,a1
+  76:main.c        ****                 if(y>0.80) {
+ 510              		.loc 1 76 50
+ 511 01c2 97000000 		call	__floatunsidf
+ 511      E7800000 
+ 512              	.LVL65:
+ 513 01ca 7246     		lw	a2,28(sp)
+ 514 01cc 8256     		lw	a3,32(sp)
+ 515 01ce 97000000 		call	__divdf3
+ 515      E7800000 
+ 516              	.LVL66:
+  76:main.c        ****                 if(y>0.80) {
+ 517              		.loc 1 76 58
+ 518 01d6 4246     		lw	a2,16(sp)
+ 519 01d8 D246     		lw	a3,20(sp)
+ 520 01da 97000000 		call	__muldf3
+ 520      E7800000 
+ 521              	.LVL67:
+  76:main.c        ****                 if(y>0.80) {
+ 522              		.loc 1 76 16
+ 523 01e2 2A86     		mv	a2,a0
+ 524 01e4 AE86     		mv	a3,a1
+ 525 01e6 6285     		mv	a0,s8
+ 526 01e8 E685     		mv	a1,s9
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 16
+
+
+ 527 01ea 97000000 		call	__gtdf2
+ 527      E7800000 
+ 528              	.LVL68:
+ 529 01f2 E352A0F0 		ble	a0,zero,.L12
+  77:main.c        ****                     _color = GREEN;
+ 530              		.loc 1 77 17 is_stmt 1
+  72:main.c        **** 
+ 531              		.loc 1 72 15 is_stmt 0
+ 532 01f6 B255     		lw	a1,44(sp)
+ 533 01f8 2685     		mv	a0,s1
+ 534 01fa 97000000 		call	__mulsf3
+ 534      E7800000 
+ 535              	.LVL69:
+  77:main.c        ****                     _color = GREEN;
+ 536              		.loc 1 77 21
+ 537 0202 97000000 		call	__extendsfdf2
+ 537      E7800000 
+ 538              	.LVL70:
+  77:main.c        ****                     _color = GREEN;
+ 539              		.loc 1 77 19
+ 540 020a 4256     		lw	a2,48(sp)
+ 541 020c D256     		lw	a3,52(sp)
+  77:main.c        ****                     _color = GREEN;
+ 542              		.loc 1 77 21
+ 543 020e 2A8C     		mv	s8,a0
+ 544 0210 AE8C     		mv	s9,a1
+  77:main.c        ****                     _color = GREEN;
+ 545              		.loc 1 77 19
+ 546 0212 97000000 		call	__gtdf2
+ 546      E7800000 
+ 547              	.LVL71:
+ 548 021a 6355A002 		ble	a0,zero,.L30
+  78:main.c        ****                     if(G==0) {
+ 549              		.loc 1 78 21 is_stmt 1
+ 550              	.LVL72:
+  79:main.c        ****                         T1setPWMmotorB(0);
+ 551              		.loc 1 79 21
+  79:main.c        ****                         T1setPWMmotorB(0);
+ 552              		.loc 1 79 23 is_stmt 0
+ 553 021e 9257     		lw	a5,36(sp)
+  85:main.c        ****                 } else if(y<0.55) {
+ 554              		.loc 1 85 22
+ 555 0220 02D4     		sw	zero,40(sp)
+ 556              	.LVL73:
+  79:main.c        ****                         T1setPWMmotorB(0);
+ 557              		.loc 1 79 23
+ 558 0222 A9CF     		beq	a5,zero,.L36
+ 559              	.LVL74:
+ 560              	.L16:
+ 101:main.c        ****             }
+ 561              		.loc 1 101 17 is_stmt 1
+ 101:main.c        ****             }
+ 562              		.loc 1 101 35 is_stmt 0
+ 563 0224 97000000 		call	get_timer_value
+ 563      E7800000 
+ 564              	.LVL75:
+ 565 022c 2AC6     		sw	a0,12(sp)
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 17
+
+
+ 566 022e 2ECC     		sw	a1,24(sp)
+ 567              	.LVL76:
+ 108:main.c        ****         }
+ 568              		.loc 1 108 15
+ 569 0230 814A     		li	s5,0
+ 570 0232 D1B5     		j	.L12
+ 571              	.LVL77:
+ 572              	.L34:
+  60:main.c        ****                 S=1;
+ 573              		.loc 1 60 17 is_stmt 1
+ 574 0234 6E85     		mv	a0,s11
+ 575              	.LVL78:
+ 576 0236 97000000 		call	SendToSD
+ 576      E7800000 
+ 577              	.LVL79:
+  61:main.c        ****                 G=0;
+ 578              		.loc 1 61 17
+  62:main.c        ****                 R=0;
+ 579              		.loc 1 62 17
+  63:main.c        ****             }
+ 580              		.loc 1 63 17
+  63:main.c        ****             }
+ 581              		.loc 1 63 18 is_stmt 0
+ 582 023e 02D4     		sw	zero,40(sp)
+  62:main.c        ****                 R=0;
+ 583              		.loc 1 62 18
+ 584 0240 02D2     		sw	zero,36(sp)
+ 585 0242 59B5     		j	.L11
+ 586              	.LVL80:
+ 587              	.L30:
+  86:main.c        ****                     _color = RED;
+ 588              		.loc 1 86 24 is_stmt 1
+  86:main.c        ****                     _color = RED;
+ 589              		.loc 1 86 26 is_stmt 0
+ 590 0244 6256     		lw	a2,56(sp)
+ 591 0246 F256     		lw	a3,60(sp)
+ 592 0248 6285     		mv	a0,s8
+ 593 024a E685     		mv	a1,s9
+ 594 024c 97000000 		call	__ltdf2
+ 594      E7800000 
+ 595              	.LVL81:
+ 596 0254 635E0500 		bge	a0,zero,.L31
+  87:main.c        ****                     if(R==0) {
+ 597              		.loc 1 87 21 is_stmt 1
+ 598              	.LVL82:
+  88:main.c        ****                         redReps++;
+ 599              		.loc 1 88 21
+  88:main.c        ****                         redReps++;
+ 600              		.loc 1 88 23 is_stmt 0
+ 601 0258 A257     		lw	a5,40(sp)
+  96:main.c        ****                     R=1;
+ 602              		.loc 1 96 22
+ 603 025a 02D2     		sw	zero,36(sp)
+ 604              	.LVL83:
+  88:main.c        ****                         redReps++;
+ 605              		.loc 1 88 23
+ 606 025c E1F7     		bne	a5,zero,.L16
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 18
+
+
+  89:main.c        ****                         T1setPWMmotorB(1);
+ 607              		.loc 1 89 25 is_stmt 1
+  90:main.c        ****                         // LCD_ShowNum1(10,10,y,8,_color);
+ 608              		.loc 1 90 25 is_stmt 0
+ 609 025e 0545     		li	a0,1
+  96:main.c        ****                     R=1;
+ 610              		.loc 1 96 22
+ 611 0260 3ED2     		sw	a5,36(sp)
+  89:main.c        ****                         T1setPWMmotorB(1);
+ 612              		.loc 1 89 32
+ 613 0262 850D     		addi	s11,s11,1
+ 614              	.LVL84:
+  90:main.c        ****                         // LCD_ShowNum1(10,10,y,8,_color);
+ 615              		.loc 1 90 25 is_stmt 1
+ 616 0264 97000000 		call	T1setPWMmotorB
+ 616      E7800000 
+ 617              	.LVL85:
+  97:main.c        ****                 } else {
+ 618              		.loc 1 97 22 is_stmt 0
+ 619 026c 5AD4     		sw	s6,40(sp)
+ 620              	.LVL86:
+ 621 026e 5DBF     		j	.L16
+ 622              	.LVL87:
+ 623              	.L31:
+  99:main.c        ****                 }
+ 624              		.loc 1 99 21 is_stmt 1
+ 625 0270 0145     		li	a0,0
+ 626 0272 97000000 		call	T1setPWMmotorB
+ 626      E7800000 
+ 627              	.LVL88:
+ 628 027a 6DB7     		j	.L16
+ 629              	.LVL89:
+ 630              	.L36:
+  80:main.c        ****                         // LCD_ShowNum1(10,10,y,8,_color);
+ 631              		.loc 1 80 25
+ 632 027c 0145     		li	a0,0
+  85:main.c        ****                 } else if(y<0.55) {
+ 633              		.loc 1 85 22 is_stmt 0
+ 634 027e 3ED4     		sw	a5,40(sp)
+  80:main.c        ****                         // LCD_ShowNum1(10,10,y,8,_color);
+ 635              		.loc 1 80 25
+ 636 0280 97000000 		call	T1setPWMmotorB
+ 636      E7800000 
+ 637              	.LVL90:
+  84:main.c        ****                     R=0;
+ 638              		.loc 1 84 22
+ 639 0288 5AD2     		sw	s6,36(sp)
+ 640              	.LVL91:
+ 641 028a 69BF     		j	.L16
+ 642              		.cfi_endproc
+ 643              	.LFE6:
+ 645              		.section	.rodata.SendToSD.str1.4,"aMS",@progbits,1
+ 646              		.align	2
+ 647              	.LC0:
+ 648 0000 256400   		.string	"%d"
+ 649 0003 00       		.zero	1
+ 650              	.LC1:
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 19
+
+
+ 651 0004 00       		.string	""
+ 652 0005 000000   		.zero	3
+ 653              	.LC2:
+ 654 0008 44415441 		.string	"DATA.TXT"
+ 654      2E545854 
+ 654      00
+ 655              		.section	.rodata.main.cst4,"aM",@progbits,4
+ 656              		.align	2
+ 657              	.LC5:
+ 658 0000 00008038 		.word	947912704
+ 659              		.section	.rodata.main.cst8,"aM",@progbits,8
+ 660              		.align	3
+ 661              	.LC3:
+ 662 0000 00000000 		.word	0
+ 663 0004 0040AF40 		.word	1085227008
+ 664              	.LC4:
+ 665 0008 00000000 		.word	0
+ 666 000c 00006940 		.word	1080623104
+ 667              	.LC6:
+ 668 0010 9A999999 		.word	-1717986918
+ 669 0014 9999E93F 		.word	1072273817
+ 670              	.LC7:
+ 671 0018 9A999999 		.word	-1717986918
+ 672 001c 9999E13F 		.word	1071749529
+ 673              	.LC8:
+ 674 0020 00000000 		.word	0
+ 675 0024 40775B41 		.word	1096513344
+ 676              		.text
+ 677              	.Letext0:
+ 678              		.file 2 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\machine\
+ 679              		.file 3 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\sys\\_st
+ 680              		.file 4 "../../firmware/GD32VF103_standard_peripheral/gd32vf103.h"
+ 681              		.file 5 "../../firmware/GD32VF103_standard_peripheral/Include/gd32vf103_rcu.h"
+ 682              		.file 6 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\lib\\gcc\\riscv64-unknown-elf\\8.3.0\\
+ 683              		.file 7 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\sys\\_ty
+ 684              		.file 8 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\sys\\ree
+ 685              		.file 9 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\sys\\loc
+ 686              		.file 10 "../../firmware/GD32VF103_standard_peripheral/system_gd32vf103.h"
+ 687              		.file 11 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\stdlib.
+ 688              		.file 12 "lib/lcd/include/lcd.h"
+ 689              		.file 13 "lib/mpu6500/include/mpu6500_driver.h"
+ 690              		.file 14 "lib/fatfs/include/ff.h"
+ 691              		.file 15 "lib/fatfs/include/gd32v_tf_card_if.h"
+ 692              		.file 16 "lib/delay/include/delay.h"
+ 693              		.file 17 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\stdio.h
+ 694              		.file 18 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\string.
+ 695              		.file 19 "lib/pwm/include/pwm.h"
+ 696              		.file 20 "../../firmware/GD32VF103_standard_peripheral/Include/gd32vf103_gpio.h"
+ 697              		.file 21 "lib/mpu6500/include/gd32v_mpu6500_if.h"
+ 698              		.file 22 "../../firmware/RISCV/drivers/n200_func.h"
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 20
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.c
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:13     .text.Initialize_Project:0000000000000000 Initialize_Project
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:17     .text.Initialize_Project:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:18     .text.Initialize_Project:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:19     .text.Initialize_Project:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:20     .text.Initialize_Project:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:22     .text.Initialize_Project:0000000000000002 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:24     .text.Initialize_Project:0000000000000002 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:26     .text.Initialize_Project:0000000000000004 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:28     .text.Initialize_Project:0000000000000008 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:29     .text.Initialize_Project:0000000000000008 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:31     .text.Initialize_Project:0000000000000008 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:34     .text.Initialize_Project:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:38     .text.Initialize_Project:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:42     .text.Initialize_Project:0000000000000028 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:50     .text.Initialize_Project:0000000000000040 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:55     .text.Initialize_Project:0000000000000050 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:59     .text.Initialize_Project:000000000000005c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:66     .text.Initialize_Project:0000000000000070 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:70     .text.Initialize_Project:000000000000007a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:74     .text.Initialize_Project:0000000000000086 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:78     .text.Initialize_Project:0000000000000090 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:79     .text.Initialize_Project:0000000000000090 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:80     .text.Initialize_Project:0000000000000092 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:82     .text.Initialize_Project:0000000000000094 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:84     .text.Initialize_Project:0000000000000094 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:86     .text.Initialize_Project:0000000000000098 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:88     .text.Initialize_Project:000000000000009a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:90     .text.Initialize_Project:000000000000009a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:92     .text.Initialize_Project:00000000000000a2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:99     .text.SendToSD:0000000000000000 SendToSD
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:102    .text.SendToSD:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:104    .text.SendToSD:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:105    .text.SendToSD:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:106    .text.SendToSD:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:107    .text.SendToSD:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:108    .text.SendToSD:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:109    .text.SendToSD:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:111    .text.SendToSD:0000000000000004 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:113    .text.SendToSD:0000000000000004 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:117    .text.SendToSD:000000000000000a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:119    .text.SendToSD:000000000000000e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:121    .text.SendToSD:0000000000000012 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:123    .text.SendToSD:0000000000000012 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:125    .text.SendToSD:0000000000000014 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:128    .text.SendToSD:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:129    .text.SendToSD:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:131    .text.SendToSD:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:133    .text.SendToSD:000000000000001e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:134    .text.SendToSD:000000000000001e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:137    .text.SendToSD:0000000000000026 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:141    .text.SendToSD:0000000000000032 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:142    .text.SendToSD:0000000000000032 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:147    .text.SendToSD:000000000000003e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:149    .text.SendToSD:0000000000000042 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:152    .text.SendToSD:000000000000004a .L0 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 21
+
+
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:153    .text.SendToSD:000000000000004a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:160    .text.SendToSD:000000000000005e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:164    .text.SendToSD:0000000000000068 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:165    .text.SendToSD:0000000000000068 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:173    .text.SendToSD:000000000000007e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:175    .text.SendToSD:0000000000000080 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:177    .text.SendToSD:0000000000000082 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:178    .text.SendToSD:0000000000000082 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:188    .text.SendToSD:000000000000009c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:190    .text.SendToSD:00000000000000a0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:192    .text.SendToSD:00000000000000a2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:195    .text.SendToSD:00000000000000aa .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:199    .text.SendToSD:00000000000000b4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:203    .text.SendToSD:00000000000000be .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:207    .text.SendToSD:00000000000000ca .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:208    .text.SendToSD:00000000000000ce .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:210    .text.SendToSD:00000000000000d2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:214    .text.SendToSD:00000000000000d6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:216    .text.SendToSD:00000000000000d8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:231    .text.startup.main:0000000000000000 main
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:234    .text.startup.main:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:235    .text.startup.main:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:236    .text.startup.main:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:237    .text.startup.main:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:239    .text.startup.main:0000000000000002 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:253    .text.startup.main:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:254    .text.startup.main:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:255    .text.startup.main:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:256    .text.startup.main:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:257    .text.startup.main:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:258    .text.startup.main:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:259    .text.startup.main:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:260    .text.startup.main:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:261    .text.startup.main:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:262    .text.startup.main:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:263    .text.startup.main:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:264    .text.startup.main:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:265    .text.startup.main:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:267    .text.startup.main:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:270    .text.startup.main:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:271    .text.startup.main:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:272    .text.startup.main:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:273    .text.startup.main:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:274    .text.startup.main:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:275    .text.startup.main:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:276    .text.startup.main:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:277    .text.startup.main:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:278    .text.startup.main:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:279    .text.startup.main:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:280    .text.startup.main:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:281    .text.startup.main:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:282    .text.startup.main:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:283    .text.startup.main:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:287    .text.startup.main:0000000000000030 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:290    .text.startup.main:0000000000000038 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:294    .text.startup.main:0000000000000044 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:296    .text.startup.main:0000000000000048 .L0 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 22
+
+
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:299    .text.startup.main:000000000000004c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:302    .text.startup.main:0000000000000054 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:306    .text.startup.main:0000000000000058 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:308    .text.startup.main:000000000000005a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:312    .text.startup.main:0000000000000066 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:314    .text.startup.main:0000000000000068 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:317    .text.startup.main:000000000000006c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:321    .text.startup.main:0000000000000078 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:323    .text.startup.main:000000000000007a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:326    .text.startup.main:000000000000007e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:330    .text.startup.main:000000000000008a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:332    .text.startup.main:000000000000008c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:335    .text.startup.main:0000000000000090 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:337    .text.startup.main:0000000000000092 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:339    .text.startup.main:0000000000000094 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:341    .text.startup.main:0000000000000096 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:344    .text.startup.main:000000000000009c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:348    .text.startup.main:00000000000000a0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:349    .text.startup.main:00000000000000a0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:350    .text.startup.main:00000000000000a0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:355    .text.startup.main:00000000000000ae .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:360    .text.startup.main:00000000000000b4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:361    .text.startup.main:00000000000000b4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:365    .text.startup.main:00000000000000b8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:366    .text.startup.main:00000000000000b8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:372    .text.startup.main:00000000000000c4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:373    .text.startup.main:00000000000000c4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:377    .text.startup.main:00000000000000c8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:381    .text.startup.main:00000000000000d2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:385    .text.startup.main:00000000000000de .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:389    .text.startup.main:00000000000000e8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:396    .text.startup.main:00000000000000f6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:397    .text.startup.main:00000000000000f6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:402    .text.startup.main:0000000000000100 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:403    .text.startup.main:0000000000000100 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:409    .text.startup.main:000000000000010c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:414    .text.startup.main:0000000000000118 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:416    .text.startup.main:000000000000011c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:418    .text.startup.main:000000000000011e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:425    .text.startup.main:0000000000000132 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:430    .text.startup.main:000000000000013e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:438    .text.startup.main:0000000000000152 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:442    .text.startup.main:000000000000015c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:443    .text.startup.main:000000000000015c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:444    .text.startup.main:000000000000015c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:449    .text.startup.main:000000000000016a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:454    .text.startup.main:0000000000000170 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:457    .text.startup.main:0000000000000174 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:461    .text.startup.main:0000000000000176 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:462    .text.startup.main:0000000000000176 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:467    .text.startup.main:0000000000000184 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:469    .text.startup.main:0000000000000188 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:470    .text.startup.main:0000000000000188 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:473    .text.startup.main:000000000000018c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:477    .text.startup.main:0000000000000196 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:478    .text.startup.main:0000000000000196 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:481    .text.startup.main:0000000000000198 .L0 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 23
+
+
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:482    .text.startup.main:0000000000000198 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:485    .text.startup.main:00000000000001a0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:487    .text.startup.main:00000000000001a2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:490    .text.startup.main:00000000000001a4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:491    .text.startup.main:00000000000001a4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:494    .text.startup.main:00000000000001a6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:502    .text.startup.main:00000000000001b0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:507    .text.startup.main:00000000000001bc .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:509    .text.startup.main:00000000000001c0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:511    .text.startup.main:00000000000001c2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:518    .text.startup.main:00000000000001d6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:523    .text.startup.main:00000000000001e2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:531    .text.startup.main:00000000000001f6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:532    .text.startup.main:00000000000001f6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:537    .text.startup.main:0000000000000202 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:540    .text.startup.main:000000000000020a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:543    .text.startup.main:000000000000020e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:546    .text.startup.main:0000000000000212 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:551    .text.startup.main:000000000000021e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:552    .text.startup.main:000000000000021e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:553    .text.startup.main:000000000000021e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:555    .text.startup.main:0000000000000220 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:558    .text.startup.main:0000000000000222 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:562    .text.startup.main:0000000000000224 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:563    .text.startup.main:0000000000000224 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:569    .text.startup.main:0000000000000230 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:574    .text.startup.main:0000000000000234 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:579    .text.startup.main:000000000000023e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:580    .text.startup.main:000000000000023e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:581    .text.startup.main:000000000000023e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:582    .text.startup.main:000000000000023e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:584    .text.startup.main:0000000000000240 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:589    .text.startup.main:0000000000000244 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:590    .text.startup.main:0000000000000244 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:599    .text.startup.main:0000000000000258 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:600    .text.startup.main:0000000000000258 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:601    .text.startup.main:0000000000000258 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:603    .text.startup.main:000000000000025a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:606    .text.startup.main:000000000000025c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:608    .text.startup.main:000000000000025e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:609    .text.startup.main:000000000000025e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:611    .text.startup.main:0000000000000260 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:613    .text.startup.main:0000000000000262 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:616    .text.startup.main:0000000000000264 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:619    .text.startup.main:000000000000026c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:625    .text.startup.main:0000000000000270 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:632    .text.startup.main:000000000000027c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:634    .text.startup.main:000000000000027e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:636    .text.startup.main:0000000000000280 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:639    .text.startup.main:0000000000000288 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:642    .text.startup.main:000000000000028c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:95     .text.Initialize_Project:00000000000000a2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:227    .text.SendToSD:00000000000000d8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:645    .text.startup.main:000000000000028c .L0 
+                     .debug_frame:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:647    .rodata.SendToSD.str1.4:0000000000000000 .LC0
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:650    .rodata.SendToSD.str1.4:0000000000000004 .LC1
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 24
+
+
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:653    .rodata.SendToSD.str1.4:0000000000000008 .LC2
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:661    .rodata.main.cst8:0000000000000000 .LC3
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:664    .rodata.main.cst8:0000000000000008 .LC4
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:657    .rodata.main.cst4:0000000000000000 .LC5
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:667    .rodata.main.cst8:0000000000000010 .LC6
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:670    .rodata.main.cst8:0000000000000018 .LC7
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:673    .rodata.main.cst8:0000000000000020 .LC8
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:452    .text.startup.main:0000000000000170 .L33
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:471    .text.startup.main:000000000000018c .L10
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:572    .text.startup.main:0000000000000234 .L34
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:346    .text.startup.main:00000000000000a0 .L7
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:358    .text.startup.main:00000000000000b4 .L8
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:459    .text.startup.main:0000000000000176 .L9
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:362    .text.startup.main:00000000000000b8 .L35
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:394    .text.startup.main:00000000000000f6 .L12
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:587    .text.startup.main:0000000000000244 .L30
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:630    .text.startup.main:000000000000027c .L36
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:375    .text.startup.main:00000000000000c8 .L11
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:623    .text.startup.main:0000000000000270 .L31
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:560    .text.startup.main:0000000000000224 .L16
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:3680   .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4973   .debug_str:0000000000000137 .LASF255
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5191   .debug_str:00000000000005fc .LASF256
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5357   .debug_str:000000000000091d .LASF257
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4895   .debug_ranges:0000000000000000 .Ldebug_ranges0
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4905   .debug_line:0000000000000000 .Ldebug_line0
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5203   .debug_str:000000000000062e .LASF0
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5205   .debug_str:0000000000000634 .LASF1
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5033   .debug_str:00000000000002d5 .LASF2
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4985   .debug_str:00000000000001e3 .LASF5
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5045   .debug_str:0000000000000319 .LASF3
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5349   .debug_str:00000000000008fc .LASF4
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5075   .debug_str:00000000000003b2 .LASF6
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5407   .debug_str:0000000000000a22 .LASF7
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5001   .debug_str:0000000000000236 .LASF8
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5163   .debug_str:0000000000000570 .LASF9
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5119   .debug_str:000000000000048d .LASF10
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5171   .debug_str:0000000000000598 .LASF11
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5115   .debug_str:000000000000047d .LASF12
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5289   .debug_str:00000000000007d9 .LASF13
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5035   .debug_str:00000000000002e1 .LASF14
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5291   .debug_str:00000000000007f0 .LASF15
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5391   .debug_str:00000000000009e0 .LASF16
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5353   .debug_str:000000000000090e .LASF17
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5127   .debug_str:00000000000004ba .LASF165
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5323   .debug_str:0000000000000891 .LASF18
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5331   .debug_str:00000000000008ae .LASF19
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5333   .debug_str:00000000000008b7 .LASF20
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5207   .debug_str:0000000000000641 .LASF21
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5381   .debug_str:00000000000009b4 .LASF22
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5151   .debug_str:000000000000053b .LASF23
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4945   .debug_str:00000000000000a4 .LASF24
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4947   .debug_str:00000000000000af .LASF25
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4949   .debug_str:00000000000000ba .LASF26
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4951   .debug_str:00000000000000c5 .LASF27
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4953   .debug_str:00000000000000d0 .LASF28
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4955   .debug_str:00000000000000db .LASF29
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 25
+
+
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5243   .debug_str:00000000000006e8 .LASF30
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5027   .debug_str:00000000000002b6 .LASF31
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5029   .debug_str:00000000000002bf .LASF32
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4963   .debug_str:0000000000000108 .LASF33
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4965   .debug_str:0000000000000113 .LASF34
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4929   .debug_str:0000000000000058 .LASF35
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4931   .debug_str:0000000000000062 .LASF36
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5393   .debug_str:00000000000009e9 .LASF37
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5395   .debug_str:00000000000009f2 .LASF38
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5061   .debug_str:000000000000037e .LASF39
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5063   .debug_str:0000000000000387 .LASF40
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5367   .debug_str:0000000000000982 .LASF41
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4921   .debug_str:0000000000000034 .LASF42
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5037   .debug_str:00000000000002e9 .LASF43
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5265   .debug_str:0000000000000755 .LASF44
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5131   .debug_str:00000000000004da .LASF45
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5175   .debug_str:00000000000005b2 .LASF46
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5177   .debug_str:00000000000005bc .LASF47
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5179   .debug_str:00000000000005c6 .LASF48
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5181   .debug_str:00000000000005d0 .LASF49
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5183   .debug_str:00000000000005da .LASF50
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5167   .debug_str:0000000000000586 .LASF51
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5169   .debug_str:000000000000058f .LASF52
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4943   .debug_str:0000000000000099 .LASF53
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5025   .debug_str:00000000000002ad .LASF54
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4961   .debug_str:00000000000000fd .LASF55
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5255   .debug_str:0000000000000729 .LASF56
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5337   .debug_str:00000000000008ca .LASF57
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5403   .debug_str:0000000000000a16 .LASF58
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5275   .debug_str:000000000000078c .LASF59
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4909   .debug_str:0000000000000008 .LASF60
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4983   .debug_str:00000000000001dd .LASF61
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5277   .debug_str:0000000000000794 .LASF62
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5245   .debug_str:00000000000006f2 .LASF63
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4913   .debug_str:000000000000001c .LASF64
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5327   .debug_str:000000000000089e .LASF65
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5389   .debug_str:00000000000009d8 .LASF66
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5133   .debug_str:00000000000004e1 .LASF67
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5317   .debug_str:000000000000087a .LASF68
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5147   .debug_str:000000000000052b .LASF73
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5341   .debug_str:00000000000008db .LASF69
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5149   .debug_str:0000000000000533 .LASF70
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5201   .debug_str:0000000000000628 .LASF71
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5097   .debug_str:0000000000000417 .LASF72
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4935   .debug_str:0000000000000074 .LASF74
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4941   .debug_str:0000000000000090 .LASF75
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5429   .debug_str:0000000000000aac .LASF76
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5411   .debug_str:0000000000000a3e .LASF77
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5219   .debug_str:0000000000000682 .LASF78
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5019   .debug_str:0000000000000293 .LASF79
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5365   .debug_str:0000000000000978 .LASF80
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5253   .debug_str:000000000000071f .LASF81
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5261   .debug_str:0000000000000746 .LASF82
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5423   .debug_str:0000000000000a96 .LASF83
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4993   .debug_str:0000000000000208 .LASF84
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5419   .debug_str:0000000000000a82 .LASF85
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5295   .debug_str:0000000000000808 .LASF86
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 26
+
+
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5361   .debug_str:0000000000000967 .LASF87
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5379   .debug_str:00000000000009ac .LASF88
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5239   .debug_str:00000000000006d9 .LASF89
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5373   .debug_str:0000000000000999 .LASF90
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5067   .debug_str:0000000000000395 .LASF91
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5377   .debug_str:00000000000009a5 .LASF92
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5307   .debug_str:0000000000000845 .LASF93
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5007   .debug_str:0000000000000255 .LASF94
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5121   .debug_str:000000000000049f .LASF95
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5235   .debug_str:00000000000006c6 .LASF96
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4991   .debug_str:0000000000000202 .LASF97
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5369   .debug_str:000000000000098b .LASF98
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5093   .debug_str:00000000000003ff .LASF99
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4919   .debug_str:000000000000002e .LASF100
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4923   .debug_str:000000000000003c .LASF101
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5273   .debug_str:0000000000000786 .LASF102
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5071   .debug_str:00000000000003a2 .LASF103
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5225   .debug_str:0000000000000696 .LASF104
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4939   .debug_str:000000000000008a .LASF105
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5303   .debug_str:0000000000000831 .LASF106
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5107   .debug_str:0000000000000454 .LASF107
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5343   .debug_str:00000000000008e1 .LASF108
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4971   .debug_str:0000000000000131 .LASF109
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5231   .debug_str:00000000000006b2 .LASF110
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5125   .debug_str:00000000000004b2 .LASF111
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5055   .debug_str:0000000000000357 .LASF112
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5139   .debug_str:0000000000000508 .LASF113
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5079   .debug_str:00000000000003c7 .LASF114
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5299   .debug_str:000000000000081c .LASF115
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5227   .debug_str:000000000000069c .LASF116
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5371   .debug_str:0000000000000994 .LASF117
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5165   .debug_str:000000000000057b .LASF118
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5049   .debug_str:000000000000032f .LASF119
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5387   .debug_str:00000000000009d0 .LASF120
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5123   .debug_str:00000000000004a7 .LASF121
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5153   .debug_str:0000000000000545 .LASF122
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5397   .debug_str:00000000000009fb .LASF123
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5005   .debug_str:000000000000024b .LASF124
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5117   .debug_str:0000000000000488 .LASF125
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5195   .debug_str:0000000000000612 .LASF126
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4927   .debug_str:0000000000000050 .LASF127
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5109   .debug_str:000000000000045c .LASF128
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5223   .debug_str:0000000000000691 .LASF129
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5155   .debug_str:000000000000054f .LASF130
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5101   .debug_str:000000000000042d .LASF131
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5187   .debug_str:00000000000005eb .LASF132
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4915   .debug_str:0000000000000024 .LASF133
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5065   .debug_str:0000000000000390 .LASF134
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5321   .debug_str:000000000000088a .LASF135
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5199   .debug_str:0000000000000622 .LASF136
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5185   .debug_str:00000000000005e4 .LASF137
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5197   .debug_str:000000000000061c .LASF138
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5297   .debug_str:0000000000000814 .LASF139
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5267   .debug_str:000000000000075d .LASF140
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4975   .debug_str:00000000000001b1 .LASF141
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5405   .debug_str:0000000000000a1d .LASF142
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5031   .debug_str:00000000000002c8 .LASF143
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 27
+
+
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5311   .debug_str:0000000000000853 .LASF144
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4925   .debug_str:0000000000000043 .LASF145
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5011   .debug_str:0000000000000263 .LASF146
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5193   .debug_str:0000000000000603 .LASF147
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5233   .debug_str:00000000000006bb .LASF148
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5329   .debug_str:00000000000008a9 .LASF149
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5347   .debug_str:00000000000008ef .LASF150
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5283   .debug_str:00000000000007af .LASF151
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5229   .debug_str:00000000000006a4 .LASF152
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5279   .debug_str:000000000000079b .LASF153
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5143   .debug_str:0000000000000517 .LASF154
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5431   .debug_str:0000000000000ab5 .LASF155
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4999   .debug_str:0000000000000228 .LASF156
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5313   .debug_str:0000000000000860 .LASF157
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5413   .debug_str:0000000000000a48 .LASF158
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5215   .debug_str:000000000000066e .LASF159
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4937   .debug_str:0000000000000079 .LASF160
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5211   .debug_str:000000000000065c .LASF161
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5383   .debug_str:00000000000009bd .LASF162
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5189   .debug_str:00000000000005f3 .LASF163
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4933   .debug_str:000000000000006c .LASF164
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4911   .debug_str:0000000000000011 .LASF258
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5003   .debug_str:000000000000023f .LASF166
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5059   .debug_str:000000000000036b .LASF167
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5359   .debug_str:000000000000095d .LASF168
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5315   .debug_str:000000000000086f .LASF169
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4969   .debug_str:0000000000000124 .LASF170
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5083   .debug_str:00000000000003d6 .LASF171
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4987   .debug_str:00000000000001ed .LASF172
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5263   .debug_str:0000000000000750 .LASF173
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5247   .debug_str:00000000000006fa .LASF174
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5081   .debug_str:00000000000003ce .LASF175
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5051   .debug_str:0000000000000348 .LASF176
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5221   .debug_str:000000000000068c .LASF177
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5241   .debug_str:00000000000006e1 .LASF178
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5425   .debug_str:0000000000000aa1 .LASF179
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5213   .debug_str:0000000000000665 .LASF180
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5281   .debug_str:00000000000007a5 .LASF181
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5257   .debug_str:0000000000000735 .LASF182
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4979   .debug_str:00000000000001cc .LASF183
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5103   .debug_str:0000000000000437 .LASF184
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5073   .debug_str:00000000000003a9 .LASF185
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4967   .debug_str:000000000000011e .LASF186
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5309   .debug_str:000000000000084b .LASF187
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5141   .debug_str:000000000000050f .LASF188
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5047   .debug_str:0000000000000327 .LASF189
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5287   .debug_str:00000000000007d0 .LASF190
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4907   .debug_str:0000000000000000 .LASF191
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5355   .debug_str:0000000000000917 .LASF192
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5135   .debug_str:00000000000004f3 .LASF193
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5157   .debug_str:0000000000000558 .LASF194
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5325   .debug_str:0000000000000897 .LASF195
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5351   .debug_str:0000000000000906 .LASF196
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5039   .debug_str:00000000000002f1 .LASF197
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5217   .debug_str:000000000000067d .LASF198
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4917   .debug_str:0000000000000029 .LASF199
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5023   .debug_str:00000000000002a7 .LASF200
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 28
+
+
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4995   .debug_str:0000000000000216 .LASF201
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5041   .debug_str:00000000000002f9 .LASF202
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5345   .debug_str:00000000000008e7 .LASF203
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5399   .debug_str:0000000000000a03 .LASF204
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5385   .debug_str:00000000000009c4 .LASF205
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5021   .debug_str:000000000000029c .LASF206
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5057   .debug_str:000000000000035e .LASF207
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5259   .debug_str:000000000000073b .LASF208
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5089   .debug_str:00000000000003ec .LASF209
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4989   .debug_str:00000000000001f2 .LASF210
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5077   .debug_str:00000000000003bd .LASF211
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5409   .debug_str:0000000000000a35 .LASF212
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5271   .debug_str:0000000000000774 .LASF213
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5017   .debug_str:0000000000000280 .LASF214
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5099   .debug_str:000000000000041c .LASF215
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5249   .debug_str:0000000000000700 .LASF216
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5415   .debug_str:0000000000000a59 .LASF217
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5251   .debug_str:000000000000070f .LASF218
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5305   .debug_str:000000000000083a .LASF219
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5161   .debug_str:0000000000000566 .LASF220
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5209   .debug_str:0000000000000649 .LASF221
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5043   .debug_str:0000000000000302 .LASF222
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4977   .debug_str:00000000000001b7 .LASF223
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5091   .debug_str:00000000000003f7 .LASF224
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5159   .debug_str:000000000000055d .LASF259
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:100    .text.SendToSD:0000000000000000 .LFB8
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:217    .text.SendToSD:00000000000000d8 .LFE8
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4518   .debug_loc:0000000000000000 .LLST1
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5427   .debug_str:0000000000000aa7 .LASF260
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4536   .debug_loc:000000000000002d .LLST2
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5085   .debug_str:00000000000003db .LASF225
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5237   .debug_str:00000000000006cd .LASF226
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:135    .text.SendToSD:0000000000000026 .LVL13
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:139    .text.SendToSD:0000000000000032 .LVL14
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:150    .text.SendToSD:000000000000004a .LVL15
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:158    .text.SendToSD:000000000000005e .LVL16
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:162    .text.SendToSD:0000000000000068 .LVL17
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:170    .text.SendToSD:000000000000007c .LVL18
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:179    .text.SendToSD:000000000000008a .LVL19
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:185    .text.SendToSD:000000000000009a .LVL20
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:193    .text.SendToSD:00000000000000aa .LVL21
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:197    .text.SendToSD:00000000000000b4 .LVL22
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:201    .text.SendToSD:00000000000000be .LVL23
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:205    .text.SendToSD:00000000000000ca .LVL24
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5285   .debug_str:00000000000007bd .LASF261
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:14     .text.Initialize_Project:0000000000000000 .LFB7
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:93     .text.Initialize_Project:00000000000000a2 .LFE7
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4554   .debug_loc:0000000000000059 .LLST0
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:32     .text.Initialize_Project:0000000000000010 .LVL0
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:36     .text.Initialize_Project:000000000000001c .LVL1
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:40     .text.Initialize_Project:0000000000000028 .LVL2
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:48     .text.Initialize_Project:0000000000000040 .LVL3
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:53     .text.Initialize_Project:0000000000000050 .LVL4
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:57     .text.Initialize_Project:000000000000005c .LVL5
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:64     .text.Initialize_Project:0000000000000070 .LVL6
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:68     .text.Initialize_Project:000000000000007a .LVL7
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:72     .text.Initialize_Project:0000000000000086 .LVL8
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 29
+
+
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:76     .text.Initialize_Project:0000000000000090 .LVL9
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:91     .text.Initialize_Project:00000000000000a2 .LVL10
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5015   .debug_str:000000000000027b .LASF262
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:232    .text.startup.main:0000000000000000 .LFB6
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:643    .text.startup.main:000000000000028c .LFE6
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4572   .debug_loc:0000000000000085 .LLST3
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4585   .debug_loc:00000000000000a6 .LLST4
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4612   .debug_loc:00000000000000da .LLST5
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4654   .debug_loc:0000000000000141 .LLST6
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4682   .debug_loc:0000000000000188 .LLST7
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4715   .debug_loc:00000000000001dc .LLST8
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4957   .debug_str:00000000000000e6 .LASF227
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4745   .debug_loc:0000000000000229 .LLST9
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5069   .debug_str:000000000000039a .LASF228
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4766   .debug_loc:000000000000025b .LLST10
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5319   .debug_str:0000000000000883 .LASF229
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5401   .debug_str:0000000000000a09 .LASF230
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5013   .debug_str:0000000000000272 .LASF231
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5087   .debug_str:00000000000003e0 .LASF232
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4778   .debug_loc:000000000000027a .LLST11
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5173   .debug_str:00000000000005a6 .LASF233
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4997   .debug_str:000000000000021b .LASF234
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5301   .debug_str:0000000000000824 .LASF235
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5095   .debug_str:0000000000000407 .LASF236
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4835   .debug_loc:00000000000002e2 .LLST12
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4959   .debug_str:00000000000000ed .LASF237
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:268    .text.startup.main:0000000000000024 .LVL26
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:284    .text.startup.main:000000000000002c .LVL27
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:353    .text.startup.main:00000000000000ae .LVL30
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:367    .text.startup.main:00000000000000c0 .LVL33
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:379    .text.startup.main:00000000000000d2 .LVL36
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:383    .text.startup.main:00000000000000de .LVL37
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:387    .text.startup.main:00000000000000e8 .LVL38
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:391    .text.startup.main:00000000000000f4 .LVL39
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:398    .text.startup.main:00000000000000fe .LVL41
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:440    .text.startup.main:000000000000015c .LVL50
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:447    .text.startup.main:000000000000016a .LVL51
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:465    .text.startup.main:0000000000000184 .LVL55
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:475    .text.startup.main:0000000000000196 .LVL56
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:483    .text.startup.main:00000000000001a0 .LVL58
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:564    .text.startup.main:000000000000022c .LVL75
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:577    .text.startup.main:000000000000023e .LVL79
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:617    .text.startup.main:000000000000026c .LVL85
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:627    .text.startup.main:000000000000027a .LVL88
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:637    .text.startup.main:0000000000000288 .LVL90
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5421   .debug_str:0000000000000a8a .LASF238
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5339   .debug_str:00000000000008d1 .LASF239
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5145   .debug_str:0000000000000523 .LASF240
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5363   .debug_str:0000000000000970 .LASF241
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5053   .debug_str:0000000000000350 .LASF242
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:4981   .debug_str:00000000000001d6 .LASF243
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5375   .debug_str:000000000000099e .LASF244
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5009   .debug_str:000000000000025b .LASF245
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5111   .debug_str:0000000000000464 .LASF246
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5113   .debug_str:000000000000046c .LASF247
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5417   .debug_str:0000000000000a6a .LASF248
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5335   .debug_str:00000000000008c0 .LASF249
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 30
+
+
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5129   .debug_str:00000000000004ca .LASF250
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5293   .debug_str:00000000000007f9 .LASF251
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5137   .debug_str:00000000000004f8 .LASF252
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5105   .debug_str:0000000000000441 .LASF253
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:5269   .debug_str:0000000000000763 .LASF254
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:110    .text.SendToSD:0000000000000004 .LCFI2
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:213    .text.SendToSD:00000000000000d6 .LCFI3
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:103    .text.SendToSD:0000000000000000 .LVL11
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:126    .text.SendToSD:0000000000000018 .LVL12
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:211    .text.SendToSD:00000000000000d2 .LVL25
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:21     .text.Initialize_Project:0000000000000002 .LCFI0
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:87     .text.Initialize_Project:000000000000009a .LCFI1
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:238    .text.startup.main:0000000000000002 .LCFI4
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:479    .text.startup.main:0000000000000198 .LVL57
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:571    .text.startup.main:0000000000000234 .LVL77
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:586    .text.startup.main:0000000000000244 .LVL80
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:345    .text.startup.main:00000000000000a0 .LVL29
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:363    .text.startup.main:00000000000000b8 .LVL32
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:393    .text.startup.main:00000000000000f6 .LVL40
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:455    .text.startup.main:0000000000000174 .LVL53
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:458    .text.startup.main:0000000000000176 .LVL54
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:604    .text.startup.main:000000000000025c .LVL83
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:622    .text.startup.main:0000000000000270 .LVL87
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:640    .text.startup.main:000000000000028a .LVL91
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:556    .text.startup.main:0000000000000222 .LVL73
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:559    .text.startup.main:0000000000000224 .LVL74
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:620    .text.startup.main:000000000000026e .LVL86
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:629    .text.startup.main:000000000000027c .LVL89
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:374    .text.startup.main:00000000000000c8 .LVL35
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:492    .text.startup.main:00000000000001a6 .LVL60
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:550    .text.startup.main:000000000000021e .LVL72
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:598    .text.startup.main:0000000000000258 .LVL82
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:357    .text.startup.main:00000000000000b4 .LVL31
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:370    .text.startup.main:00000000000000c4 .LVL34
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:451    .text.startup.main:0000000000000170 .LVL52
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:575    .text.startup.main:0000000000000236 .LVL78
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:304    .text.startup.main:0000000000000058 .LVL28
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:567    .text.startup.main:0000000000000230 .LVL76
+C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s:700    .debug_info:0000000000000000 .Ldebug_info0
+
+UNDEFINED SYMBOLS
+T1powerUpInitPWM
+rcu_periph_clock_enable
+gpio_init
+mpu6500_install
+T1setPWMmotorB
+delay_1ms
+set_fattime
+sprintf
+f_mount
+f_sync
+f_open
+strlen
+f_write
+f_close
+__floatundidf
+__floatunsidf
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cc0gUAqU.s 			page 31
+
+
+__divdf3
+__muldf3
+__gtdf2
+__mulsf3
+__extendsfdf2
+__ltdf2
+get_timer_value
+SystemCoreClock
+gpio_input_bit_get
+mpu6500_getAccel

@@ -1,0 +1,35 @@
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccEpvNuq.s 			page 1
+
+
+   1              		.file	"ffsystem.c"
+   2              		.option nopic
+   3              		.attribute arch, "rv32i2p0_m2p0_a2p0_c2p0"
+   4              		.attribute unaligned_access, 0
+   5              		.attribute stack_align, 16
+   6              		.text
+   7              	.Ltext0:
+   8              		.cfi_sections	.debug_frame
+   9              	.Letext0:
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccEpvNuq.s 			page 2
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 ffsystem.c
+C:\Users\Kalle\AppData\Local\Temp\ccEpvNuq.s:68     .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+C:\Users\Kalle\AppData\Local\Temp\ccEpvNuq.s:140    .debug_str:00000000000000bb .LASF10
+C:\Users\Kalle\AppData\Local\Temp\ccEpvNuq.s:142    .debug_str:0000000000000135 .LASF11
+C:\Users\Kalle\AppData\Local\Temp\ccEpvNuq.s:124    .debug_str:000000000000001f .LASF12
+C:\Users\Kalle\AppData\Local\Temp\ccEpvNuq.s:118    .debug_line:0000000000000000 .Ldebug_line0
+C:\Users\Kalle\AppData\Local\Temp\ccEpvNuq.s:126    .debug_str:000000000000005f .LASF0
+C:\Users\Kalle\AppData\Local\Temp\ccEpvNuq.s:136    .debug_str:00000000000000a4 .LASF1
+C:\Users\Kalle\AppData\Local\Temp\ccEpvNuq.s:130    .debug_str:000000000000007e .LASF2
+C:\Users\Kalle\AppData\Local\Temp\ccEpvNuq.s:128    .debug_str:000000000000006b .LASF3
+C:\Users\Kalle\AppData\Local\Temp\ccEpvNuq.s:138    .debug_str:00000000000000b2 .LASF4
+C:\Users\Kalle\AppData\Local\Temp\ccEpvNuq.s:122    .debug_str:000000000000000d .LASF5
+C:\Users\Kalle\AppData\Local\Temp\ccEpvNuq.s:144    .debug_str:000000000000014e .LASF6
+C:\Users\Kalle\AppData\Local\Temp\ccEpvNuq.s:134    .debug_str:000000000000008d .LASF7
+C:\Users\Kalle\AppData\Local\Temp\ccEpvNuq.s:120    .debug_str:0000000000000000 .LASF8
+C:\Users\Kalle\AppData\Local\Temp\ccEpvNuq.s:132    .debug_str:0000000000000088 .LASF9
+C:\Users\Kalle\AppData\Local\Temp\ccEpvNuq.s:11     .debug_info:0000000000000000 .Ldebug_info0
+
+NO UNDEFINED SYMBOLS

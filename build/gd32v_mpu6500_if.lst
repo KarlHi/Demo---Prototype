@@ -1,0 +1,1595 @@
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 1
+
+
+   1              		.file	"gd32v_mpu6500_if.c"
+   2              		.option nopic
+   3              		.attribute arch, "rv32i2p0_m2p0_a2p0_c2p0"
+   4              		.attribute unaligned_access, 0
+   5              		.attribute stack_align, 16
+   6              		.text
+   7              	.Ltext0:
+   8              		.cfi_sections	.debug_frame
+   9              		.globl	__floatundidf
+  10              		.globl	__floatunsidf
+  11              		.globl	__divdf3
+  12              		.globl	__floatsidf
+  13              		.globl	__muldf3
+  14              		.globl	__ltdf2
+  15              		.section	.text.mpu_delay,"ax",@progbits
+  16              		.align	1
+  17              		.globl	mpu_delay
+  19              	mpu_delay:
+  20              	.LFB7:
+  21              		.file 1 "lib/mpu6500/src/gd32v_mpu6500_if.c"
+   1:lib/mpu6500/src/gd32v_mpu6500_if.c **** #include "gd32v_mpu6500_if.h"
+   2:lib/mpu6500/src/gd32v_mpu6500_if.c **** #include "mpu6500_driver.h"
+   3:lib/mpu6500/src/gd32v_mpu6500_if.c **** #include "gd32vf103.h"
+   4:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+   5:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+   6:lib/mpu6500/src/gd32v_mpu6500_if.c **** uint32_t i2c_port;
+   7:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+   8:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+   9:lib/mpu6500/src/gd32v_mpu6500_if.c **** void mpu6500_install(uint32_t port){
+  10:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	i2c_port = port;
+  11:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	i2c_master_init(i2c_port);
+  12:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	mpu6500_init(&i2c_master_read_register, &i2c_master_write_register, &mpu_delay, (void*)&i2c_port);
+  13:lib/mpu6500/src/gd32v_mpu6500_if.c **** }
+  14:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+  15:lib/mpu6500/src/gd32v_mpu6500_if.c **** void i2c_master_init(uint32_t port)
+  16:lib/mpu6500/src/gd32v_mpu6500_if.c **** {
+  17:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_clock_config(port, 100000, I2C_DTCY_2);
+  18:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_enable(port);
+  19:lib/mpu6500/src/gd32v_mpu6500_if.c **** }
+  20:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+  21:lib/mpu6500/src/gd32v_mpu6500_if.c **** void mpu_delay(int millis){
+  22              		.loc 1 21 27
+  23              		.cfi_startproc
+  24              	.LVL0:
+  22:lib/mpu6500/src/gd32v_mpu6500_if.c ****     uint64_t start_mtime, delta_mtime;
+  25              		.loc 1 22 5
+  23:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+  24:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	// Don't start measuruing until we see an mtime tick
+  25:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	uint64_t tmp = get_timer_value();
+  26              		.loc 1 25 2
+  21:lib/mpu6500/src/gd32v_mpu6500_if.c ****     uint64_t start_mtime, delta_mtime;
+  27              		.loc 1 21 27 is_stmt 0
+  28 0000 7971     		addi	sp,sp,-48
+  29              	.LCFI0:
+  30              		.cfi_def_cfa_offset 48
+  31 0002 4AD0     		sw	s2,32(sp)
+  32 0004 4ECE     		sw	s3,28(sp)
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 2
+
+
+  33 0006 5EC6     		sw	s7,12(sp)
+  34 0008 06D6     		sw	ra,44(sp)
+  35 000a 22D4     		sw	s0,40(sp)
+  36 000c 26D2     		sw	s1,36(sp)
+  37 000e 52CC     		sw	s4,24(sp)
+  38 0010 56CA     		sw	s5,20(sp)
+  39 0012 5AC8     		sw	s6,16(sp)
+  40 0014 62C4     		sw	s8,8(sp)
+  41 0016 66C2     		sw	s9,4(sp)
+  42              		.cfi_offset 18, -16
+  43              		.cfi_offset 19, -20
+  44              		.cfi_offset 23, -36
+  45              		.cfi_offset 1, -4
+  46              		.cfi_offset 8, -8
+  47              		.cfi_offset 9, -12
+  48              		.cfi_offset 20, -24
+  49              		.cfi_offset 21, -28
+  50              		.cfi_offset 22, -32
+  51              		.cfi_offset 24, -40
+  52              		.cfi_offset 25, -44
+  21:lib/mpu6500/src/gd32v_mpu6500_if.c ****     uint64_t start_mtime, delta_mtime;
+  53              		.loc 1 21 27
+  54 0018 AA8B     		mv	s7,a0
+  55              		.loc 1 25 17
+  56 001a 97000000 		call	get_timer_value
+  56      E7800000 
+  57              	.LVL1:
+  58 0022 2A89     		mv	s2,a0
+  59 0024 AE89     		mv	s3,a1
+  60              	.LVL2:
+  61              	.L2:
+  26:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	do {
+  62              		.loc 1 26 2 is_stmt 1 discriminator 1
+  27:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	start_mtime = get_timer_value();
+  63              		.loc 1 27 2 discriminator 1
+  64              		.loc 1 27 16 is_stmt 0 discriminator 1
+  65 0026 97000000 		call	get_timer_value
+  65      E7800000 
+  66              	.LVL3:
+  67 002e 2A84     		mv	s0,a0
+  68 0030 AE84     		mv	s1,a1
+  69              	.LVL4:
+  28:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	} while (start_mtime == tmp);
+  70              		.loc 1 28 2 discriminator 1
+  71 0032 6314A900 		bne	s2,a0,.L3
+  72 0036 E388B9FE 		beq	s3,a1,.L2
+  73              	.L3:
+  74 003a B7070000 		lui	a5,%hi(.LC0)
+  29:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+  30:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	do {
+  31:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	delta_mtime = get_timer_value() - start_mtime;
+  32:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	}while(delta_mtime <(SystemCoreClock/4000.0 * millis ));
+  75              		.loc 1 32 38 discriminator 1
+  76 003e 03A90700 		lw	s2,%lo(.LC0)(a5)
+  77              	.LVL5:
+  78 0042 83A94700 		lw	s3,%lo(.LC0+4)(a5)
+  79 0046 370B0000 		lui	s6,%hi(SystemCoreClock)
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 3
+
+
+  80              	.L4:
+  30:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	delta_mtime = get_timer_value() - start_mtime;
+  81              		.loc 1 30 2 is_stmt 1 discriminator 1
+  31:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	}while(delta_mtime <(SystemCoreClock/4000.0 * millis ));
+  82              		.loc 1 31 2 discriminator 1
+  31:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	}while(delta_mtime <(SystemCoreClock/4000.0 * millis ));
+  83              		.loc 1 31 16 is_stmt 0 discriminator 1
+  84 004a 97000000 		call	get_timer_value
+  84      E7800000 
+  85              	.LVL6:
+  86 0052 AA87     		mv	a5,a0
+  87              	.LVL7:
+  31:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	}while(delta_mtime <(SystemCoreClock/4000.0 * millis ));
+  88              		.loc 1 31 14 discriminator 1
+  89 0054 018D     		sub	a0,a0,s0
+  90              	.LVL8:
+  91 0056 B3B7A700 		sgtu	a5,a0,a5
+  92              	.LVL9:
+  93 005a 858D     		sub	a1,a1,s1
+  94              		.loc 1 32 21 discriminator 1
+  95 005c 9D8D     		sub	a1,a1,a5
+  96 005e 97000000 		call	__floatundidf
+  96      E7800000 
+  97              	.LVL10:
+  98 0066 2A8A     		mv	s4,a0
+  99              		.loc 1 32 38 discriminator 1
+ 100 0068 03250B00 		lw	a0,%lo(SystemCoreClock)(s6)
+ 101              		.loc 1 32 21 discriminator 1
+ 102 006c AE8A     		mv	s5,a1
+ 103              		.loc 1 32 38 discriminator 1
+ 104 006e 97000000 		call	__floatunsidf
+ 104      E7800000 
+ 105              	.LVL11:
+ 106 0076 4A86     		mv	a2,s2
+ 107 0078 CE86     		mv	a3,s3
+ 108 007a 97000000 		call	__divdf3
+ 108      E7800000 
+ 109              	.LVL12:
+ 110 0082 2A8C     		mv	s8,a0
+ 111              		.loc 1 32 46 discriminator 1
+ 112 0084 5E85     		mv	a0,s7
+ 113              		.loc 1 32 38 discriminator 1
+ 114 0086 AE8C     		mv	s9,a1
+ 115              		.loc 1 32 46 discriminator 1
+ 116 0088 97000000 		call	__floatsidf
+ 116      E7800000 
+ 117              	.LVL13:
+ 118 0090 2A86     		mv	a2,a0
+ 119 0092 AE86     		mv	a3,a1
+ 120 0094 6285     		mv	a0,s8
+ 121 0096 E685     		mv	a1,s9
+ 122 0098 97000000 		call	__muldf3
+ 122      E7800000 
+ 123              	.LVL14:
+ 124              		.loc 1 32 2 discriminator 1
+ 125 00a0 2A86     		mv	a2,a0
+ 126 00a2 AE86     		mv	a3,a1
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 4
+
+
+ 127 00a4 5285     		mv	a0,s4
+ 128 00a6 D685     		mv	a1,s5
+ 129 00a8 97000000 		call	__ltdf2
+ 129      E7800000 
+ 130              	.LVL15:
+ 131 00b0 E34D05F8 		blt	a0,zero,.L4
+  33:lib/mpu6500/src/gd32v_mpu6500_if.c **** }
+ 132              		.loc 1 33 1
+ 133 00b4 B250     		lw	ra,44(sp)
+ 134              		.cfi_restore 1
+ 135 00b6 2254     		lw	s0,40(sp)
+ 136              		.cfi_restore 8
+ 137              	.LVL16:
+ 138 00b8 9254     		lw	s1,36(sp)
+ 139              		.cfi_restore 9
+ 140 00ba 0259     		lw	s2,32(sp)
+ 141              		.cfi_restore 18
+ 142 00bc F249     		lw	s3,28(sp)
+ 143              		.cfi_restore 19
+ 144 00be 624A     		lw	s4,24(sp)
+ 145              		.cfi_restore 20
+ 146 00c0 D24A     		lw	s5,20(sp)
+ 147              		.cfi_restore 21
+ 148 00c2 424B     		lw	s6,16(sp)
+ 149              		.cfi_restore 22
+ 150 00c4 B24B     		lw	s7,12(sp)
+ 151              		.cfi_restore 23
+ 152              	.LVL17:
+ 153 00c6 224C     		lw	s8,8(sp)
+ 154              		.cfi_restore 24
+ 155 00c8 924C     		lw	s9,4(sp)
+ 156              		.cfi_restore 25
+ 157 00ca 4561     		addi	sp,sp,48
+ 158              	.LCFI1:
+ 159              		.cfi_def_cfa_offset 0
+ 160 00cc 8280     		jr	ra
+ 161              		.cfi_endproc
+ 162              	.LFE7:
+ 164              		.section	.text.i2c_master_read_register,"ax",@progbits
+ 165              		.align	1
+ 166              		.globl	i2c_master_read_register
+ 168              	i2c_master_read_register:
+ 169              	.LFB8:
+  34:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+  35:lib/mpu6500/src/gd32v_mpu6500_if.c **** void i2c_master_read_register(void* handle, uint8_t addr, uint8_t reg, uint8_t size, uint8_t *data)
+  36:lib/mpu6500/src/gd32v_mpu6500_if.c **** {
+ 170              		.loc 1 36 1 is_stmt 1
+ 171              		.cfi_startproc
+ 172              	.LVL18:
+  37:lib/mpu6500/src/gd32v_mpu6500_if.c ****     int32_t port = *((uint32_t*)handle);
+ 173              		.loc 1 37 5
+  36:lib/mpu6500/src/gd32v_mpu6500_if.c ****     int32_t port = *((uint32_t*)handle);
+ 174              		.loc 1 36 1 is_stmt 0
+ 175 0000 0111     		addi	sp,sp,-32
+ 176              	.LCFI2:
+ 177              		.cfi_def_cfa_offset 32
+ 178 0002 22CC     		sw	s0,24(sp)
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 5
+
+
+ 179              		.cfi_offset 8, -8
+ 180              		.loc 1 37 20
+ 181 0004 0041     		lw	s0,0(a0)
+ 182              	.LVL19:
+  38:lib/mpu6500/src/gd32v_mpu6500_if.c ****     
+  39:lib/mpu6500/src/gd32v_mpu6500_if.c ****     /* send a NACK for the next data byte which will be received into the shift register */
+  40:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	//i2c_ackpos_config(port, I2C_ACKPOS_NEXT);
+  41:lib/mpu6500/src/gd32v_mpu6500_if.c ****     //while(i2c_flag_get(port, I2C_FLAG_I2CBSY));
+  42:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+  43:lib/mpu6500/src/gd32v_mpu6500_if.c ****     /* send a start condition to I2C bus */
+  44:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_start_on_bus(port);
+ 183              		.loc 1 44 5 is_stmt 1
+  36:lib/mpu6500/src/gd32v_mpu6500_if.c ****     int32_t port = *((uint32_t*)handle);
+ 184              		.loc 1 36 1 is_stmt 0
+ 185 0006 26CA     		sw	s1,20(sp)
+ 186 0008 4AC8     		sw	s2,16(sp)
+ 187              		.loc 1 44 5
+ 188 000a 2285     		mv	a0,s0
+ 189              	.LVL20:
+  36:lib/mpu6500/src/gd32v_mpu6500_if.c ****     int32_t port = *((uint32_t*)handle);
+ 190              		.loc 1 36 1
+ 191 000c 4EC6     		sw	s3,12(sp)
+ 192 000e 52C4     		sw	s4,8(sp)
+ 193 0010 06CE     		sw	ra,28(sp)
+ 194              		.cfi_offset 9, -12
+ 195              		.cfi_offset 18, -16
+ 196              		.cfi_offset 19, -20
+ 197              		.cfi_offset 20, -24
+ 198              		.cfi_offset 1, -4
+  36:lib/mpu6500/src/gd32v_mpu6500_if.c ****     int32_t port = *((uint32_t*)handle);
+ 199              		.loc 1 36 1
+ 200 0012 AE84     		mv	s1,a1
+ 201 0014 B289     		mv	s3,a2
+ 202 0016 3689     		mv	s2,a3
+ 203 0018 3A8A     		mv	s4,a4
+ 204              		.loc 1 44 5
+ 205 001a 97000000 		call	i2c_start_on_bus
+ 205      E7800000 
+ 206              	.LVL21:
+  45:lib/mpu6500/src/gd32v_mpu6500_if.c ****     while(!i2c_flag_get(port, I2C_FLAG_SBSEND));
+ 207              		.loc 1 45 5 is_stmt 1
+ 208              	.L9:
+ 209              		.loc 1 45 48 discriminator 1
+ 210              		.loc 1 45 12 is_stmt 0 discriminator 1
+ 211 0022 93050050 		li	a1,1280
+ 212 0026 2285     		mv	a0,s0
+ 213 0028 97000000 		call	i2c_flag_get
+ 213      E7800000 
+ 214              	.LVL22:
+ 215              		.loc 1 45 10 discriminator 1
+ 216 0030 6DD9     		beq	a0,zero,.L9
+  46:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+  47:lib/mpu6500/src/gd32v_mpu6500_if.c ****     /* send slave address to I2C bus */
+  48:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_master_addressing(port, addr << 1, I2C_TRANSMITTER);
+ 217              		.loc 1 48 5 is_stmt 1
+ 218              		.loc 1 48 38 is_stmt 0
+ 219 0032 8604     		slli	s1,s1,1
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 6
+
+
+ 220              		.loc 1 48 5
+ 221 0034 7956     		li	a2,-2
+ 222 0036 A685     		mv	a1,s1
+ 223 0038 2285     		mv	a0,s0
+ 224 003a 97000000 		call	i2c_master_addressing
+ 224      E7800000 
+ 225              	.LVL23:
+  49:lib/mpu6500/src/gd32v_mpu6500_if.c ****     /* disable ACK before clearing ADDSEND bit */
+  50:lib/mpu6500/src/gd32v_mpu6500_if.c ****     //i2c_ack_config(port, I2C_ACK_DISABLE);
+  51:lib/mpu6500/src/gd32v_mpu6500_if.c ****     while(!i2c_flag_get(port, I2C_FLAG_ADDSEND));
+ 226              		.loc 1 51 5 is_stmt 1
+ 227              	.L10:
+ 228              		.loc 1 51 49 discriminator 1
+ 229              		.loc 1 51 12 is_stmt 0 discriminator 1
+ 230 0042 93051050 		li	a1,1281
+ 231 0046 2285     		mv	a0,s0
+ 232 0048 97000000 		call	i2c_flag_get
+ 232      E7800000 
+ 233              	.LVL24:
+ 234              		.loc 1 51 10 discriminator 1
+ 235 0050 6DD9     		beq	a0,zero,.L10
+  52:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_flag_clear(port, I2C_FLAG_ADDSEND);
+ 236              		.loc 1 52 5 is_stmt 1
+ 237 0052 93051050 		li	a1,1281
+ 238 0056 2285     		mv	a0,s0
+ 239 0058 97000000 		call	i2c_flag_clear
+ 239      E7800000 
+ 240              	.LVL25:
+  53:lib/mpu6500/src/gd32v_mpu6500_if.c ****     while(!i2c_flag_get(port, I2C_FLAG_TBE));
+ 241              		.loc 1 53 5
+ 242              	.L11:
+ 243              		.loc 1 53 45 discriminator 1
+ 244              		.loc 1 53 12 is_stmt 0 discriminator 1
+ 245 0060 93057050 		li	a1,1287
+ 246 0064 2285     		mv	a0,s0
+ 247 0066 97000000 		call	i2c_flag_get
+ 247      E7800000 
+ 248              	.LVL26:
+ 249              		.loc 1 53 10 discriminator 1
+ 250 006e 6DD9     		beq	a0,zero,.L11
+  54:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+  55:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+  56:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_data_transmit(port, reg);
+ 251              		.loc 1 56 5 is_stmt 1
+ 252 0070 CE85     		mv	a1,s3
+ 253 0072 2285     		mv	a0,s0
+ 254 0074 97000000 		call	i2c_data_transmit
+ 254      E7800000 
+ 255              	.LVL27:
+  57:lib/mpu6500/src/gd32v_mpu6500_if.c ****     /* wait until the TBE bit is set */
+  58:lib/mpu6500/src/gd32v_mpu6500_if.c ****     while(!i2c_flag_get(port, I2C_FLAG_TBE));
+ 256              		.loc 1 58 5
+ 257              	.L12:
+ 258              		.loc 1 58 45 discriminator 1
+ 259              		.loc 1 58 12 is_stmt 0 discriminator 1
+ 260 007c 93057050 		li	a1,1287
+ 261 0080 2285     		mv	a0,s0
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 7
+
+
+ 262 0082 97000000 		call	i2c_flag_get
+ 262      E7800000 
+ 263              	.LVL28:
+ 264              		.loc 1 58 10 discriminator 1
+ 265 008a 6DD9     		beq	a0,zero,.L12
+  59:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+  60:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_start_on_bus(port);
+ 266              		.loc 1 60 5 is_stmt 1
+ 267 008c 2285     		mv	a0,s0
+ 268 008e 97000000 		call	i2c_start_on_bus
+ 268      E7800000 
+ 269              	.LVL29:
+  61:lib/mpu6500/src/gd32v_mpu6500_if.c ****     while( ! i2c_flag_get(port, I2C_FLAG_SBSEND) );
+ 270              		.loc 1 61 5
+ 271              	.L13:
+ 272              		.loc 1 61 51 discriminator 1
+ 273              		.loc 1 61 14 is_stmt 0 discriminator 1
+ 274 0096 93050050 		li	a1,1280
+ 275 009a 2285     		mv	a0,s0
+ 276 009c 97000000 		call	i2c_flag_get
+ 276      E7800000 
+ 277              	.LVL30:
+ 278              		.loc 1 61 10 discriminator 1
+ 279 00a4 6DD9     		beq	a0,zero,.L13
+  62:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+  63:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_master_addressing(port, addr << 1, I2C_RECEIVER);
+ 280              		.loc 1 63 5 is_stmt 1
+ 281 00a6 0546     		li	a2,1
+ 282 00a8 A685     		mv	a1,s1
+ 283 00aa 2285     		mv	a0,s0
+ 284 00ac 97000000 		call	i2c_master_addressing
+ 284      E7800000 
+ 285              	.LVL31:
+  64:lib/mpu6500/src/gd32v_mpu6500_if.c ****     while( ! i2c_flag_get(port, I2C_FLAG_ADDSEND) );
+ 286              		.loc 1 64 5
+ 287              	.L14:
+ 288              		.loc 1 64 52 discriminator 1
+ 289              		.loc 1 64 14 is_stmt 0 discriminator 1
+ 290 00b4 93051050 		li	a1,1281
+ 291 00b8 2285     		mv	a0,s0
+ 292 00ba 97000000 		call	i2c_flag_get
+ 292      E7800000 
+ 293              	.LVL32:
+ 294              		.loc 1 64 10 discriminator 1
+ 295 00c2 6DD9     		beq	a0,zero,.L14
+  65:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_flag_clear(port, I2C_FLAG_ADDSEND);
+ 296              		.loc 1 65 5 is_stmt 1
+ 297 00c4 93051050 		li	a1,1281
+ 298 00c8 2285     		mv	a0,s0
+ 299 00ca 97000000 		call	i2c_flag_clear
+ 299      E7800000 
+ 300              	.LVL33:
+  66:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+  67:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_ack_config(port, I2C_ACK_ENABLE);
+ 301              		.loc 1 67 5
+ 302 00d2 8545     		li	a1,1
+ 303 00d4 2285     		mv	a0,s0
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 8
+
+
+ 304 00d6 97000000 		call	i2c_ack_config
+ 304      E7800000 
+ 305              	.LVL34:
+  68:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+  69:lib/mpu6500/src/gd32v_mpu6500_if.c ****     for(int i = 0; i < size; i++) {
+ 306              		.loc 1 69 5
+ 307              	.LBB4:
+ 308              		.loc 1 69 9
+ 309 00de 9309F9FF 		addi	s3,s2,-1
+ 310              		.loc 1 69 13 is_stmt 0
+ 311 00e2 8144     		li	s1,0
+ 312              		.loc 1 69 5
+ 313 00e4 63080902 		beq	s2,zero,.L20
+ 314              	.LVL35:
+ 315              	.L19:
+  70:lib/mpu6500/src/gd32v_mpu6500_if.c ****         if(i == size - 1) {
+ 316              		.loc 1 70 9 is_stmt 1
+ 317              		.loc 1 70 11 is_stmt 0
+ 318 00e8 63879904 		beq	s3,s1,.L39
+ 319              	.L18:
+  71:lib/mpu6500/src/gd32v_mpu6500_if.c ****             i2c_ack_config(port, I2C_ACK_DISABLE);
+  72:lib/mpu6500/src/gd32v_mpu6500_if.c ****         }
+  73:lib/mpu6500/src/gd32v_mpu6500_if.c ****         while(!i2c_flag_get(port, I2C_FLAG_RBNE));
+ 320              		.loc 1 73 50 is_stmt 1 discriminator 1
+ 321              		.loc 1 73 16 is_stmt 0 discriminator 1
+ 322 00ec 93056050 		li	a1,1286
+ 323 00f0 2285     		mv	a0,s0
+ 324 00f2 97000000 		call	i2c_flag_get
+ 324      E7800000 
+ 325              	.LVL36:
+ 326              		.loc 1 73 14 discriminator 1
+ 327 00fa 6DD9     		beq	a0,zero,.L18
+  74:lib/mpu6500/src/gd32v_mpu6500_if.c ****         *data++ = i2c_data_receive(port);
+ 328              		.loc 1 74 9 is_stmt 1 discriminator 2
+ 329              	.LVL37:
+ 330              		.loc 1 74 19 is_stmt 0 discriminator 2
+ 331 00fc 2285     		mv	a0,s0
+ 332 00fe 97000000 		call	i2c_data_receive
+ 332      E7800000 
+ 333              	.LVL38:
+ 334              		.loc 1 74 17 discriminator 2
+ 335 0106 B3079A00 		add	a5,s4,s1
+ 336 010a 2380A700 		sb	a0,0(a5)
+  69:lib/mpu6500/src/gd32v_mpu6500_if.c ****         if(i == size - 1) {
+ 337              		.loc 1 69 31 discriminator 2
+ 338 010e 8504     		addi	s1,s1,1
+ 339              	.LVL39:
+  69:lib/mpu6500/src/gd32v_mpu6500_if.c ****         if(i == size - 1) {
+ 340              		.loc 1 69 5 discriminator 2
+ 341 0110 E39C24FD 		bne	s1,s2,.L19
+ 342              	.LVL40:
+ 343              	.L20:
+ 344              	.LBE4:
+  75:lib/mpu6500/src/gd32v_mpu6500_if.c ****     }
+  76:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+  77:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_stop_on_bus(port);
+ 345              		.loc 1 77 5 is_stmt 1
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 9
+
+
+ 346 0114 2285     		mv	a0,s0
+ 347 0116 97000000 		call	i2c_stop_on_bus
+ 347      E7800000 
+ 348              	.LVL41:
+  78:lib/mpu6500/src/gd32v_mpu6500_if.c ****     while( I2C_CTL0(port) & I2C_CTL0_STOP );
+ 349              		.loc 1 78 5
+ 350              	.L16:
+ 351              		.loc 1 78 44 discriminator 1
+ 352              		.loc 1 78 12 is_stmt 0 discriminator 1
+ 353 011e 1C40     		lw	a5,0(s0)
+ 354              		.loc 1 78 27 discriminator 1
+ 355 0120 93F70720 		andi	a5,a5,512
+ 356              		.loc 1 78 10 discriminator 1
+ 357 0124 EDFF     		bne	a5,zero,.L16
+  79:lib/mpu6500/src/gd32v_mpu6500_if.c **** }
+ 358              		.loc 1 79 1
+ 359 0126 F240     		lw	ra,28(sp)
+ 360              		.cfi_remember_state
+ 361              		.cfi_restore 1
+ 362 0128 6244     		lw	s0,24(sp)
+ 363              		.cfi_restore 8
+ 364              	.LVL42:
+ 365 012a D244     		lw	s1,20(sp)
+ 366              		.cfi_restore 9
+ 367 012c 4249     		lw	s2,16(sp)
+ 368              		.cfi_restore 18
+ 369 012e B249     		lw	s3,12(sp)
+ 370              		.cfi_restore 19
+ 371 0130 224A     		lw	s4,8(sp)
+ 372              		.cfi_restore 20
+ 373 0132 0561     		addi	sp,sp,32
+ 374              	.LCFI3:
+ 375              		.cfi_def_cfa_offset 0
+ 376 0134 8280     		jr	ra
+ 377              	.LVL43:
+ 378              	.L39:
+ 379              	.LCFI4:
+ 380              		.cfi_restore_state
+ 381              	.LBB5:
+  71:lib/mpu6500/src/gd32v_mpu6500_if.c ****         }
+ 382              		.loc 1 71 13 is_stmt 1
+ 383 0136 8145     		li	a1,0
+ 384 0138 2285     		mv	a0,s0
+ 385 013a 97000000 		call	i2c_ack_config
+ 385      E7800000 
+ 386              	.LVL44:
+ 387 0142 6DB7     		j	.L18
+ 388              	.LBE5:
+ 389              		.cfi_endproc
+ 390              	.LFE8:
+ 392              		.section	.text.i2c_master_write_register,"ax",@progbits
+ 393              		.align	1
+ 394              		.globl	i2c_master_write_register
+ 396              	i2c_master_write_register:
+ 397              	.LFB9:
+  80:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+  81:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 10
+
+
+  82:lib/mpu6500/src/gd32v_mpu6500_if.c **** void i2c_master_write_register(void* handle, uint8_t addr, uint8_t reg, uint8_t size, uint8_t *data
+  83:lib/mpu6500/src/gd32v_mpu6500_if.c **** {
+ 398              		.loc 1 83 1
+ 399              		.cfi_startproc
+ 400              	.LVL45:
+  84:lib/mpu6500/src/gd32v_mpu6500_if.c ****     int32_t port = *((uint32_t*)handle);
+ 401              		.loc 1 84 5
+  83:lib/mpu6500/src/gd32v_mpu6500_if.c ****     int32_t port = *((uint32_t*)handle);
+ 402              		.loc 1 83 1 is_stmt 0
+ 403 0000 0111     		addi	sp,sp,-32
+ 404              	.LCFI5:
+ 405              		.cfi_def_cfa_offset 32
+ 406 0002 22CC     		sw	s0,24(sp)
+ 407              		.cfi_offset 8, -8
+ 408              		.loc 1 84 20
+ 409 0004 0041     		lw	s0,0(a0)
+ 410              	.LVL46:
+  85:lib/mpu6500/src/gd32v_mpu6500_if.c ****     
+  86:lib/mpu6500/src/gd32v_mpu6500_if.c ****     /* send a NACK for the next data byte which will be received into the shift register */
+  87:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	//i2c_ackpos_config(port, I2C_ACKPOS_NEXT);
+  88:lib/mpu6500/src/gd32v_mpu6500_if.c ****     while(i2c_flag_get(port, I2C_FLAG_I2CBSY));
+ 411              		.loc 1 88 5 is_stmt 1
+  83:lib/mpu6500/src/gd32v_mpu6500_if.c ****     int32_t port = *((uint32_t*)handle);
+ 412              		.loc 1 83 1 is_stmt 0
+ 413 0006 26CA     		sw	s1,20(sp)
+ 414 0008 4AC8     		sw	s2,16(sp)
+ 415 000a 4EC6     		sw	s3,12(sp)
+ 416 000c 52C4     		sw	s4,8(sp)
+ 417 000e 06CE     		sw	ra,28(sp)
+ 418              		.cfi_offset 9, -12
+ 419              		.cfi_offset 18, -16
+ 420              		.cfi_offset 19, -20
+ 421              		.cfi_offset 20, -24
+ 422              		.cfi_offset 1, -4
+  83:lib/mpu6500/src/gd32v_mpu6500_if.c ****     int32_t port = *((uint32_t*)handle);
+ 423              		.loc 1 83 1
+ 424 0010 2E8A     		mv	s4,a1
+ 425 0012 3289     		mv	s2,a2
+ 426 0014 B689     		mv	s3,a3
+ 427 0016 BA84     		mv	s1,a4
+ 428              	.LVL47:
+ 429              	.L41:
+ 430              		.loc 1 88 47 is_stmt 1 discriminator 1
+ 431              		.loc 1 88 11 is_stmt 0 discriminator 1
+ 432 0018 93051060 		li	a1,1537
+ 433 001c 2285     		mv	a0,s0
+ 434 001e 97000000 		call	i2c_flag_get
+ 434      E7800000 
+ 435              	.LVL48:
+ 436              		.loc 1 88 10 discriminator 1
+ 437 0026 6DF9     		bne	a0,zero,.L41
+  89:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+  90:lib/mpu6500/src/gd32v_mpu6500_if.c ****     /* send a start condition to I2C bus */
+  91:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_start_on_bus(port);
+ 438              		.loc 1 91 5 is_stmt 1
+ 439 0028 2285     		mv	a0,s0
+ 440 002a 97000000 		call	i2c_start_on_bus
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 11
+
+
+ 440      E7800000 
+ 441              	.LVL49:
+  92:lib/mpu6500/src/gd32v_mpu6500_if.c ****     while(!i2c_flag_get(port, I2C_FLAG_SBSEND));
+ 442              		.loc 1 92 5
+ 443              	.L42:
+ 444              		.loc 1 92 48 discriminator 1
+ 445              		.loc 1 92 12 is_stmt 0 discriminator 1
+ 446 0032 93050050 		li	a1,1280
+ 447 0036 2285     		mv	a0,s0
+ 448 0038 97000000 		call	i2c_flag_get
+ 448      E7800000 
+ 449              	.LVL50:
+ 450              		.loc 1 92 10 discriminator 1
+ 451 0040 6DD9     		beq	a0,zero,.L42
+  93:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+  94:lib/mpu6500/src/gd32v_mpu6500_if.c ****     /* send slave address to I2C bus */
+  95:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_master_addressing(port, addr << 1, I2C_TRANSMITTER);
+ 452              		.loc 1 95 5 is_stmt 1
+ 453 0042 7956     		li	a2,-2
+ 454 0044 93151A00 		slli	a1,s4,1
+ 455 0048 2285     		mv	a0,s0
+ 456 004a 97000000 		call	i2c_master_addressing
+ 456      E7800000 
+ 457              	.LVL51:
+  96:lib/mpu6500/src/gd32v_mpu6500_if.c ****     /* disable ACK before clearing ADDSEND bit */
+  97:lib/mpu6500/src/gd32v_mpu6500_if.c ****     //i2c_ack_config(port, I2C_ACK_DISABLE);
+  98:lib/mpu6500/src/gd32v_mpu6500_if.c ****     while(!i2c_flag_get(port, I2C_FLAG_ADDSEND));
+ 458              		.loc 1 98 5
+ 459              	.L43:
+ 460              		.loc 1 98 49 discriminator 1
+ 461              		.loc 1 98 12 is_stmt 0 discriminator 1
+ 462 0052 93051050 		li	a1,1281
+ 463 0056 2285     		mv	a0,s0
+ 464 0058 97000000 		call	i2c_flag_get
+ 464      E7800000 
+ 465              	.LVL52:
+ 466              		.loc 1 98 10 discriminator 1
+ 467 0060 6DD9     		beq	a0,zero,.L43
+  99:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_flag_clear(port, I2C_FLAG_ADDSEND);
+ 468              		.loc 1 99 5 is_stmt 1
+ 469 0062 93051050 		li	a1,1281
+ 470 0066 2285     		mv	a0,s0
+ 471 0068 97000000 		call	i2c_flag_clear
+ 471      E7800000 
+ 472              	.LVL53:
+ 100:lib/mpu6500/src/gd32v_mpu6500_if.c ****     while(!i2c_flag_get(port, I2C_FLAG_TBE));
+ 473              		.loc 1 100 5
+ 474              	.L44:
+ 475              		.loc 1 100 45 discriminator 1
+ 476              		.loc 1 100 12 is_stmt 0 discriminator 1
+ 477 0070 93057050 		li	a1,1287
+ 478 0074 2285     		mv	a0,s0
+ 479 0076 97000000 		call	i2c_flag_get
+ 479      E7800000 
+ 480              	.LVL54:
+ 481              		.loc 1 100 10 discriminator 1
+ 482 007e 6DD9     		beq	a0,zero,.L44
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 12
+
+
+ 101:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+ 102:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_data_transmit(port, reg);
+ 483              		.loc 1 102 5 is_stmt 1
+ 484 0080 CA85     		mv	a1,s2
+ 485 0082 2285     		mv	a0,s0
+ 486 0084 97000000 		call	i2c_data_transmit
+ 486      E7800000 
+ 487              	.LVL55:
+ 103:lib/mpu6500/src/gd32v_mpu6500_if.c ****         /* wait until the TBE bit is set */
+ 104:lib/mpu6500/src/gd32v_mpu6500_if.c ****     while(!i2c_flag_get(port, I2C_FLAG_TBE));
+ 488              		.loc 1 104 5
+ 489              	.L45:
+ 490              		.loc 1 104 45 discriminator 1
+ 491              		.loc 1 104 12 is_stmt 0 discriminator 1
+ 492 008c 93057050 		li	a1,1287
+ 493 0090 2285     		mv	a0,s0
+ 494 0092 97000000 		call	i2c_flag_get
+ 494      E7800000 
+ 495              	.LVL56:
+ 496              		.loc 1 104 10 discriminator 1
+ 497 009a 6DD9     		beq	a0,zero,.L45
+ 498              	.LVL57:
+ 499 009c 33893401 		add	s2,s1,s3
+ 500              	.LBB6:
+ 105:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+ 106:lib/mpu6500/src/gd32v_mpu6500_if.c ****     for(int i = 0; i < size; i++){
+ 501              		.loc 1 106 5
+ 502 00a0 63840902 		beq	s3,zero,.L50
+ 503              	.LVL58:
+ 504              	.L49:
+ 107:lib/mpu6500/src/gd32v_mpu6500_if.c ****         i2c_data_transmit(port, *data++);
+ 505              		.loc 1 107 9 is_stmt 1
+ 506              		.loc 1 107 38 is_stmt 0
+ 507 00a4 8504     		addi	s1,s1,1
+ 508              	.LVL59:
+ 509              		.loc 1 107 9
+ 510 00a6 83C5F4FF 		lbu	a1,-1(s1)
+ 511 00aa 2285     		mv	a0,s0
+ 512 00ac 97000000 		call	i2c_data_transmit
+ 512      E7800000 
+ 513              	.LVL60:
+ 108:lib/mpu6500/src/gd32v_mpu6500_if.c ****         /* wait until the TBE bit is set */
+ 109:lib/mpu6500/src/gd32v_mpu6500_if.c ****         while(!i2c_flag_get(port, I2C_FLAG_TBE));
+ 514              		.loc 1 109 9 is_stmt 1
+ 515              	.L48:
+ 516              		.loc 1 109 49 discriminator 1
+ 517              		.loc 1 109 16 is_stmt 0 discriminator 1
+ 518 00b4 93057050 		li	a1,1287
+ 519 00b8 2285     		mv	a0,s0
+ 520 00ba 97000000 		call	i2c_flag_get
+ 520      E7800000 
+ 521              	.LVL61:
+ 522              		.loc 1 109 14 discriminator 1
+ 523 00c2 6DD9     		beq	a0,zero,.L48
+ 106:lib/mpu6500/src/gd32v_mpu6500_if.c ****         i2c_data_transmit(port, *data++);
+ 524              		.loc 1 106 5 discriminator 2
+ 525 00c4 E31099FE 		bne	s2,s1,.L49
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 13
+
+
+ 526              	.LVL62:
+ 527              	.L50:
+ 528              	.LBE6:
+ 110:lib/mpu6500/src/gd32v_mpu6500_if.c ****     }
+ 111:lib/mpu6500/src/gd32v_mpu6500_if.c **** 
+ 112:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_stop_on_bus(port);
+ 529              		.loc 1 112 5 is_stmt 1
+ 530 00c8 2285     		mv	a0,s0
+ 531 00ca 97000000 		call	i2c_stop_on_bus
+ 531      E7800000 
+ 532              	.LVL63:
+ 113:lib/mpu6500/src/gd32v_mpu6500_if.c ****     while( I2C_CTL0(port) & I2C_CTL0_STOP );
+ 533              		.loc 1 113 5
+ 534              	.L47:
+ 535              		.loc 1 113 44 discriminator 1
+ 536              		.loc 1 113 12 is_stmt 0 discriminator 1
+ 537 00d2 1C40     		lw	a5,0(s0)
+ 538              		.loc 1 113 27 discriminator 1
+ 539 00d4 93F70720 		andi	a5,a5,512
+ 540              		.loc 1 113 10 discriminator 1
+ 541 00d8 EDFF     		bne	a5,zero,.L47
+ 114:lib/mpu6500/src/gd32v_mpu6500_if.c **** }...
+ 542              		.loc 1 114 1
+ 543 00da F240     		lw	ra,28(sp)
+ 544              		.cfi_restore 1
+ 545 00dc 6244     		lw	s0,24(sp)
+ 546              		.cfi_restore 8
+ 547              	.LVL64:
+ 548 00de D244     		lw	s1,20(sp)
+ 549              		.cfi_restore 9
+ 550              	.LVL65:
+ 551 00e0 4249     		lw	s2,16(sp)
+ 552              		.cfi_restore 18
+ 553 00e2 B249     		lw	s3,12(sp)
+ 554              		.cfi_restore 19
+ 555 00e4 224A     		lw	s4,8(sp)
+ 556              		.cfi_restore 20
+ 557 00e6 0561     		addi	sp,sp,32
+ 558              	.LCFI6:
+ 559              		.cfi_def_cfa_offset 0
+ 560 00e8 8280     		jr	ra
+ 561              		.cfi_endproc
+ 562              	.LFE9:
+ 564              		.section	.text.mpu6500_install,"ax",@progbits
+ 565              		.align	1
+ 566              		.globl	mpu6500_install
+ 568              	mpu6500_install:
+ 569              	.LFB5:
+   9:lib/mpu6500/src/gd32v_mpu6500_if.c **** void mpu6500_install(uint32_t port){
+ 570              		.loc 1 9 36 is_stmt 1
+ 571              		.cfi_startproc
+ 572              	.LVL66:
+  10:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	i2c_port = port;
+ 573              		.loc 1 10 2
+   9:lib/mpu6500/src/gd32v_mpu6500_if.c **** void mpu6500_install(uint32_t port){
+ 574              		.loc 1 9 36 is_stmt 0
+ 575 0000 4111     		addi	sp,sp,-16
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 14
+
+
+ 576              	.LCFI7:
+ 577              		.cfi_def_cfa_offset 16
+ 578              	.LBB7:
+ 579              	.LBB8:
+  17:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_clock_config(port, 100000, I2C_DTCY_2);
+ 580              		.loc 1 17 5
+ 581 0002 E165     		li	a1,98304
+ 582              	.LBE8:
+ 583              	.LBE7:
+   9:lib/mpu6500/src/gd32v_mpu6500_if.c **** void mpu6500_install(uint32_t port){
+ 584              		.loc 1 9 36
+ 585 0004 22C4     		sw	s0,8(sp)
+ 586              	.LBB11:
+ 587              	.LBB9:
+  17:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_clock_config(port, 100000, I2C_DTCY_2);
+ 588              		.loc 1 17 5
+ 589 0006 0146     		li	a2,0
+ 590 0008 9385056A 		addi	a1,a1,1696
+ 591              		.cfi_offset 8, -8
+ 592              	.LBE9:
+ 593              	.LBE11:
+  10:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	i2c_port = port;
+ 594              		.loc 1 10 11
+ 595 000c 37040000 		lui	s0,%hi(i2c_port)
+   9:lib/mpu6500/src/gd32v_mpu6500_if.c **** void mpu6500_install(uint32_t port){
+ 596              		.loc 1 9 36
+ 597 0010 06C6     		sw	ra,12(sp)
+ 598 0012 26C2     		sw	s1,4(sp)
+ 599              		.cfi_offset 1, -4
+ 600              		.cfi_offset 9, -12
+  10:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	i2c_port = port;
+ 601              		.loc 1 10 11
+ 602 0014 2320A400 		sw	a0,%lo(i2c_port)(s0)
+  11:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	i2c_master_init(i2c_port);
+ 603              		.loc 1 11 2 is_stmt 1
+   9:lib/mpu6500/src/gd32v_mpu6500_if.c **** void mpu6500_install(uint32_t port){
+ 604              		.loc 1 9 36 is_stmt 0
+ 605 0018 AA84     		mv	s1,a0
+ 606              	.LVL67:
+ 607              	.LBB12:
+ 608              	.LBB10:
+  17:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_clock_config(port, 100000, I2C_DTCY_2);
+ 609              		.loc 1 17 5 is_stmt 1
+ 610 001a 97000000 		call	i2c_clock_config
+ 610      E7800000 
+ 611              	.LVL68:
+  18:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_enable(port);
+ 612              		.loc 1 18 5
+ 613 0022 2685     		mv	a0,s1
+ 614 0024 97000000 		call	i2c_enable
+ 614      E7800000 
+ 615              	.LVL69:
+ 616              	.LBE10:
+ 617              	.LBE12:
+  12:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	mpu6500_init(&i2c_master_read_register, &i2c_master_write_register, &mpu_delay, (void*)&i2c_port);
+ 618              		.loc 1 12 2
+ 619 002c 93060400 		addi	a3,s0,%lo(i2c_port)
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 15
+
+
+  13:lib/mpu6500/src/gd32v_mpu6500_if.c **** }
+ 620              		.loc 1 13 1 is_stmt 0
+ 621 0030 2244     		lw	s0,8(sp)
+ 622              		.cfi_restore 8
+ 623 0032 B240     		lw	ra,12(sp)
+ 624              		.cfi_restore 1
+ 625 0034 9244     		lw	s1,4(sp)
+ 626              		.cfi_restore 9
+ 627              	.LVL70:
+  12:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	mpu6500_init(&i2c_master_read_register, &i2c_master_write_register, &mpu_delay, (void*)&i2c_port);
+ 628              		.loc 1 12 2
+ 629 0036 37060000 		lui	a2,%hi(mpu_delay)
+ 630 003a B7050000 		lui	a1,%hi(i2c_master_write_register)
+ 631 003e 37050000 		lui	a0,%hi(i2c_master_read_register)
+  13:lib/mpu6500/src/gd32v_mpu6500_if.c **** }
+ 632              		.loc 1 13 1
+  12:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	mpu6500_init(&i2c_master_read_register, &i2c_master_write_register, &mpu_delay, (void*)&i2c_port);
+ 633              		.loc 1 12 2
+ 634 0042 13060600 		addi	a2,a2,%lo(mpu_delay)
+ 635 0046 93850500 		addi	a1,a1,%lo(i2c_master_write_register)
+ 636 004a 13050500 		addi	a0,a0,%lo(i2c_master_read_register)
+  13:lib/mpu6500/src/gd32v_mpu6500_if.c **** }
+ 637              		.loc 1 13 1
+ 638 004e 4101     		addi	sp,sp,16
+ 639              	.LCFI8:
+ 640              		.cfi_def_cfa_offset 0
+  12:lib/mpu6500/src/gd32v_mpu6500_if.c **** 	mpu6500_init(&i2c_master_read_register, &i2c_master_write_register, &mpu_delay, (void*)&i2c_port);
+ 641              		.loc 1 12 2
+ 642 0050 17030000 		tail	mpu6500_init
+ 642      67000300 
+ 643              	.LVL71:
+ 644              		.cfi_endproc
+ 645              	.LFE5:
+ 647              		.section	.text.i2c_master_init,"ax",@progbits
+ 648              		.align	1
+ 649              		.globl	i2c_master_init
+ 651              	i2c_master_init:
+ 652              	.LFB6:
+  16:lib/mpu6500/src/gd32v_mpu6500_if.c **** {
+ 653              		.loc 1 16 1 is_stmt 1
+ 654              		.cfi_startproc
+ 655              	.LVL72:
+  17:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_clock_config(port, 100000, I2C_DTCY_2);
+ 656              		.loc 1 17 5
+ 657 0000 E165     		li	a1,98304
+  16:lib/mpu6500/src/gd32v_mpu6500_if.c **** {
+ 658              		.loc 1 16 1 is_stmt 0
+ 659 0002 4111     		addi	sp,sp,-16
+ 660              	.LCFI9:
+ 661              		.cfi_def_cfa_offset 16
+  17:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_clock_config(port, 100000, I2C_DTCY_2);
+ 662              		.loc 1 17 5
+ 663 0004 0146     		li	a2,0
+ 664 0006 9385056A 		addi	a1,a1,1696
+  16:lib/mpu6500/src/gd32v_mpu6500_if.c **** {
+ 665              		.loc 1 16 1
+ 666 000a 22C4     		sw	s0,8(sp)
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 16
+
+
+ 667 000c 06C6     		sw	ra,12(sp)
+ 668              		.cfi_offset 8, -8
+ 669              		.cfi_offset 1, -4
+  16:lib/mpu6500/src/gd32v_mpu6500_if.c **** {
+ 670              		.loc 1 16 1
+ 671 000e 2A84     		mv	s0,a0
+  17:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_clock_config(port, 100000, I2C_DTCY_2);
+ 672              		.loc 1 17 5
+ 673 0010 97000000 		call	i2c_clock_config
+ 673      E7800000 
+ 674              	.LVL73:
+  18:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_enable(port);
+ 675              		.loc 1 18 5 is_stmt 1
+ 676 0018 2285     		mv	a0,s0
+  19:lib/mpu6500/src/gd32v_mpu6500_if.c **** }
+ 677              		.loc 1 19 1 is_stmt 0
+ 678 001a 2244     		lw	s0,8(sp)
+ 679              		.cfi_restore 8
+ 680              	.LVL74:
+ 681 001c B240     		lw	ra,12(sp)
+ 682              		.cfi_restore 1
+ 683 001e 4101     		addi	sp,sp,16
+ 684              	.LCFI10:
+ 685              		.cfi_def_cfa_offset 0
+  18:lib/mpu6500/src/gd32v_mpu6500_if.c ****     i2c_enable(port);
+ 686              		.loc 1 18 5
+ 687 0020 17030000 		tail	i2c_enable
+ 687      67000300 
+ 688              	.LVL75:
+ 689              		.cfi_endproc
+ 690              	.LFE6:
+ 692              		.comm	i2c_port,4,4
+ 693              		.section	.rodata.mpu_delay.cst8,"aM",@progbits,8
+ 694              		.align	3
+ 695              	.LC0:
+ 696 0000 00000000 		.word	0
+ 697 0004 0040AF40 		.word	1085227008
+ 698              		.text
+ 699              	.Letext0:
+ 700              		.file 2 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\machine\
+ 701              		.file 3 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\lib\\gcc\\riscv64-unknown-elf\\8.3.0\\
+ 702              		.file 4 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\sys\\_ty
+ 703              		.file 5 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\sys\\ree
+ 704              		.file 6 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\sys\\loc
+ 705              		.file 7 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\sys\\_st
+ 706              		.file 8 "../../firmware/GD32VF103_standard_peripheral/system_gd32vf103.h"
+ 707              		.file 9 "../../firmware/GD32VF103_standard_peripheral/Include/gd32vf103_i2c.h"
+ 708              		.file 10 "../../firmware/RISCV/drivers/n200_func.h"
+ 709              		.file 11 "lib/mpu6500/include/mpu6500_driver.h"
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 17
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 gd32v_mpu6500_if.c
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:19     .text.mpu_delay:0000000000000000 mpu_delay
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:23     .text.mpu_delay:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:25     .text.mpu_delay:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:26     .text.mpu_delay:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:27     .text.mpu_delay:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:28     .text.mpu_delay:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:30     .text.mpu_delay:0000000000000002 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:42     .text.mpu_delay:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:43     .text.mpu_delay:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:44     .text.mpu_delay:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:45     .text.mpu_delay:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:46     .text.mpu_delay:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:47     .text.mpu_delay:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:48     .text.mpu_delay:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:49     .text.mpu_delay:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:50     .text.mpu_delay:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:51     .text.mpu_delay:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:52     .text.mpu_delay:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:54     .text.mpu_delay:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:56     .text.mpu_delay:000000000000001a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:63     .text.mpu_delay:0000000000000026 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:64     .text.mpu_delay:0000000000000026 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:65     .text.mpu_delay:0000000000000026 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:71     .text.mpu_delay:0000000000000032 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:76     .text.mpu_delay:000000000000003e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:82     .text.mpu_delay:000000000000004a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:83     .text.mpu_delay:000000000000004a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:84     .text.mpu_delay:000000000000004a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:89     .text.mpu_delay:0000000000000054 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:95     .text.mpu_delay:000000000000005c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:100    .text.mpu_delay:0000000000000068 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:102    .text.mpu_delay:000000000000006c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:104    .text.mpu_delay:000000000000006e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:112    .text.mpu_delay:0000000000000084 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:114    .text.mpu_delay:0000000000000086 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:116    .text.mpu_delay:0000000000000088 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:125    .text.mpu_delay:00000000000000a0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:133    .text.mpu_delay:00000000000000b4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:134    .text.mpu_delay:00000000000000b6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:136    .text.mpu_delay:00000000000000b8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:139    .text.mpu_delay:00000000000000ba .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:141    .text.mpu_delay:00000000000000bc .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:143    .text.mpu_delay:00000000000000be .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:145    .text.mpu_delay:00000000000000c0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:147    .text.mpu_delay:00000000000000c2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:149    .text.mpu_delay:00000000000000c4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:151    .text.mpu_delay:00000000000000c6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:154    .text.mpu_delay:00000000000000c8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:156    .text.mpu_delay:00000000000000ca .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:159    .text.mpu_delay:00000000000000cc .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:161    .text.mpu_delay:00000000000000ce .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:168    .text.i2c_master_read_register:0000000000000000 i2c_master_read_register
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:171    .text.i2c_master_read_register:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:173    .text.i2c_master_read_register:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:174    .text.i2c_master_read_register:0000000000000000 .L0 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 18
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:175    .text.i2c_master_read_register:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:177    .text.i2c_master_read_register:0000000000000002 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:179    .text.i2c_master_read_register:0000000000000004 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:181    .text.i2c_master_read_register:0000000000000004 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:184    .text.i2c_master_read_register:0000000000000006 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:185    .text.i2c_master_read_register:0000000000000006 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:188    .text.i2c_master_read_register:000000000000000a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:191    .text.i2c_master_read_register:000000000000000c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:194    .text.i2c_master_read_register:0000000000000012 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:195    .text.i2c_master_read_register:0000000000000012 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:196    .text.i2c_master_read_register:0000000000000012 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:197    .text.i2c_master_read_register:0000000000000012 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:198    .text.i2c_master_read_register:0000000000000012 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:200    .text.i2c_master_read_register:0000000000000012 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:205    .text.i2c_master_read_register:000000000000001a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:209    .text.i2c_master_read_register:0000000000000022 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:210    .text.i2c_master_read_register:0000000000000022 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:211    .text.i2c_master_read_register:0000000000000022 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:216    .text.i2c_master_read_register:0000000000000030 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:218    .text.i2c_master_read_register:0000000000000032 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:219    .text.i2c_master_read_register:0000000000000032 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:221    .text.i2c_master_read_register:0000000000000034 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:228    .text.i2c_master_read_register:0000000000000042 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:229    .text.i2c_master_read_register:0000000000000042 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:230    .text.i2c_master_read_register:0000000000000042 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:235    .text.i2c_master_read_register:0000000000000050 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:237    .text.i2c_master_read_register:0000000000000052 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:243    .text.i2c_master_read_register:0000000000000060 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:244    .text.i2c_master_read_register:0000000000000060 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:245    .text.i2c_master_read_register:0000000000000060 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:250    .text.i2c_master_read_register:000000000000006e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:252    .text.i2c_master_read_register:0000000000000070 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:258    .text.i2c_master_read_register:000000000000007c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:259    .text.i2c_master_read_register:000000000000007c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:260    .text.i2c_master_read_register:000000000000007c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:265    .text.i2c_master_read_register:000000000000008a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:267    .text.i2c_master_read_register:000000000000008c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:272    .text.i2c_master_read_register:0000000000000096 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:273    .text.i2c_master_read_register:0000000000000096 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:274    .text.i2c_master_read_register:0000000000000096 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:279    .text.i2c_master_read_register:00000000000000a4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:281    .text.i2c_master_read_register:00000000000000a6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:288    .text.i2c_master_read_register:00000000000000b4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:289    .text.i2c_master_read_register:00000000000000b4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:290    .text.i2c_master_read_register:00000000000000b4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:295    .text.i2c_master_read_register:00000000000000c2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:297    .text.i2c_master_read_register:00000000000000c4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:302    .text.i2c_master_read_register:00000000000000d2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:308    .text.i2c_master_read_register:00000000000000de .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:309    .text.i2c_master_read_register:00000000000000de .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:311    .text.i2c_master_read_register:00000000000000e2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:313    .text.i2c_master_read_register:00000000000000e4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:317    .text.i2c_master_read_register:00000000000000e8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:318    .text.i2c_master_read_register:00000000000000e8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:321    .text.i2c_master_read_register:00000000000000ec .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:322    .text.i2c_master_read_register:00000000000000ec .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:327    .text.i2c_master_read_register:00000000000000fa .L0 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 19
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:330    .text.i2c_master_read_register:00000000000000fc .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:331    .text.i2c_master_read_register:00000000000000fc .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:335    .text.i2c_master_read_register:0000000000000106 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:338    .text.i2c_master_read_register:000000000000010e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:341    .text.i2c_master_read_register:0000000000000110 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:346    .text.i2c_master_read_register:0000000000000114 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:351    .text.i2c_master_read_register:000000000000011e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:352    .text.i2c_master_read_register:000000000000011e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:353    .text.i2c_master_read_register:000000000000011e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:355    .text.i2c_master_read_register:0000000000000120 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:357    .text.i2c_master_read_register:0000000000000124 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:359    .text.i2c_master_read_register:0000000000000126 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:360    .text.i2c_master_read_register:0000000000000128 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:361    .text.i2c_master_read_register:0000000000000128 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:363    .text.i2c_master_read_register:000000000000012a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:366    .text.i2c_master_read_register:000000000000012c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:368    .text.i2c_master_read_register:000000000000012e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:370    .text.i2c_master_read_register:0000000000000130 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:372    .text.i2c_master_read_register:0000000000000132 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:375    .text.i2c_master_read_register:0000000000000134 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:380    .text.i2c_master_read_register:0000000000000136 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:383    .text.i2c_master_read_register:0000000000000136 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:389    .text.i2c_master_read_register:0000000000000144 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:396    .text.i2c_master_write_register:0000000000000000 i2c_master_write_register
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:399    .text.i2c_master_write_register:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:401    .text.i2c_master_write_register:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:402    .text.i2c_master_write_register:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:403    .text.i2c_master_write_register:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:405    .text.i2c_master_write_register:0000000000000002 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:407    .text.i2c_master_write_register:0000000000000004 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:409    .text.i2c_master_write_register:0000000000000004 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:412    .text.i2c_master_write_register:0000000000000006 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:413    .text.i2c_master_write_register:0000000000000006 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:418    .text.i2c_master_write_register:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:419    .text.i2c_master_write_register:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:420    .text.i2c_master_write_register:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:421    .text.i2c_master_write_register:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:422    .text.i2c_master_write_register:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:424    .text.i2c_master_write_register:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:431    .text.i2c_master_write_register:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:432    .text.i2c_master_write_register:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:437    .text.i2c_master_write_register:0000000000000026 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:439    .text.i2c_master_write_register:0000000000000028 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:444    .text.i2c_master_write_register:0000000000000032 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:445    .text.i2c_master_write_register:0000000000000032 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:446    .text.i2c_master_write_register:0000000000000032 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:451    .text.i2c_master_write_register:0000000000000040 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:453    .text.i2c_master_write_register:0000000000000042 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:460    .text.i2c_master_write_register:0000000000000052 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:461    .text.i2c_master_write_register:0000000000000052 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:462    .text.i2c_master_write_register:0000000000000052 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:467    .text.i2c_master_write_register:0000000000000060 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:469    .text.i2c_master_write_register:0000000000000062 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:475    .text.i2c_master_write_register:0000000000000070 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:476    .text.i2c_master_write_register:0000000000000070 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:477    .text.i2c_master_write_register:0000000000000070 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:482    .text.i2c_master_write_register:000000000000007e .L0 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 20
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:484    .text.i2c_master_write_register:0000000000000080 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:490    .text.i2c_master_write_register:000000000000008c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:491    .text.i2c_master_write_register:000000000000008c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:492    .text.i2c_master_write_register:000000000000008c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:497    .text.i2c_master_write_register:000000000000009a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:502    .text.i2c_master_write_register:00000000000000a0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:506    .text.i2c_master_write_register:00000000000000a4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:507    .text.i2c_master_write_register:00000000000000a4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:510    .text.i2c_master_write_register:00000000000000a6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:516    .text.i2c_master_write_register:00000000000000b4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:517    .text.i2c_master_write_register:00000000000000b4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:518    .text.i2c_master_write_register:00000000000000b4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:523    .text.i2c_master_write_register:00000000000000c2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:525    .text.i2c_master_write_register:00000000000000c4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:530    .text.i2c_master_write_register:00000000000000c8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:535    .text.i2c_master_write_register:00000000000000d2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:536    .text.i2c_master_write_register:00000000000000d2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:537    .text.i2c_master_write_register:00000000000000d2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:539    .text.i2c_master_write_register:00000000000000d4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:541    .text.i2c_master_write_register:00000000000000d8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:543    .text.i2c_master_write_register:00000000000000da .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:544    .text.i2c_master_write_register:00000000000000dc .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:546    .text.i2c_master_write_register:00000000000000de .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:549    .text.i2c_master_write_register:00000000000000e0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:552    .text.i2c_master_write_register:00000000000000e2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:554    .text.i2c_master_write_register:00000000000000e4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:556    .text.i2c_master_write_register:00000000000000e6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:559    .text.i2c_master_write_register:00000000000000e8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:561    .text.i2c_master_write_register:00000000000000ea .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:568    .text.mpu6500_install:0000000000000000 mpu6500_install
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:571    .text.mpu6500_install:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:573    .text.mpu6500_install:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:574    .text.mpu6500_install:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:575    .text.mpu6500_install:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:577    .text.mpu6500_install:0000000000000002 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:581    .text.mpu6500_install:0000000000000002 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:585    .text.mpu6500_install:0000000000000004 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:589    .text.mpu6500_install:0000000000000006 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:591    .text.mpu6500_install:000000000000000c .L0 
+                            *COM*:0000000000000004 i2c_port
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:595    .text.mpu6500_install:000000000000000c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:597    .text.mpu6500_install:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:599    .text.mpu6500_install:0000000000000014 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:600    .text.mpu6500_install:0000000000000014 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:602    .text.mpu6500_install:0000000000000014 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:604    .text.mpu6500_install:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:605    .text.mpu6500_install:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:610    .text.mpu6500_install:000000000000001a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:613    .text.mpu6500_install:0000000000000022 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:619    .text.mpu6500_install:000000000000002c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:621    .text.mpu6500_install:0000000000000030 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:622    .text.mpu6500_install:0000000000000032 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:624    .text.mpu6500_install:0000000000000034 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:626    .text.mpu6500_install:0000000000000036 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:629    .text.mpu6500_install:0000000000000036 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:633    .text.mpu6500_install:0000000000000042 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:634    .text.mpu6500_install:0000000000000042 .L0 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 21
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:638    .text.mpu6500_install:000000000000004e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:640    .text.mpu6500_install:0000000000000050 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:642    .text.mpu6500_install:0000000000000050 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:644    .text.mpu6500_install:0000000000000058 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:651    .text.i2c_master_init:0000000000000000 i2c_master_init
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:654    .text.i2c_master_init:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:656    .text.i2c_master_init:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:657    .text.i2c_master_init:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:659    .text.i2c_master_init:0000000000000002 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:661    .text.i2c_master_init:0000000000000004 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:663    .text.i2c_master_init:0000000000000004 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:666    .text.i2c_master_init:000000000000000a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:668    .text.i2c_master_init:000000000000000e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:669    .text.i2c_master_init:000000000000000e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:671    .text.i2c_master_init:000000000000000e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:673    .text.i2c_master_init:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:676    .text.i2c_master_init:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:678    .text.i2c_master_init:000000000000001a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:679    .text.i2c_master_init:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:682    .text.i2c_master_init:000000000000001e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:685    .text.i2c_master_init:0000000000000020 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:687    .text.i2c_master_init:0000000000000020 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:689    .text.i2c_master_init:0000000000000028 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:164    .text.mpu_delay:00000000000000ce .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:392    .text.i2c_master_read_register:0000000000000144 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:564    .text.i2c_master_write_register:00000000000000ea .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:647    .text.mpu6500_install:0000000000000058 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:693    .text.i2c_master_init:0000000000000028 .L0 
+                     .debug_frame:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:695    .rodata.mpu_delay.cst8:0000000000000000 .LC0
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:73     .text.mpu_delay:000000000000003a .L3
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:61     .text.mpu_delay:0000000000000026 .L2
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:80     .text.mpu_delay:000000000000004a .L4
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:208    .text.i2c_master_read_register:0000000000000022 .L9
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:227    .text.i2c_master_read_register:0000000000000042 .L10
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:242    .text.i2c_master_read_register:0000000000000060 .L11
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:257    .text.i2c_master_read_register:000000000000007c .L12
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:271    .text.i2c_master_read_register:0000000000000096 .L13
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:287    .text.i2c_master_read_register:00000000000000b4 .L14
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:343    .text.i2c_master_read_register:0000000000000114 .L20
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:378    .text.i2c_master_read_register:0000000000000136 .L39
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:319    .text.i2c_master_read_register:00000000000000ec .L18
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:315    .text.i2c_master_read_register:00000000000000e8 .L19
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:350    .text.i2c_master_read_register:000000000000011e .L16
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:429    .text.i2c_master_write_register:0000000000000018 .L41
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:443    .text.i2c_master_write_register:0000000000000032 .L42
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:459    .text.i2c_master_write_register:0000000000000052 .L43
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:474    .text.i2c_master_write_register:0000000000000070 .L44
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:489    .text.i2c_master_write_register:000000000000008c .L45
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:527    .text.i2c_master_write_register:00000000000000c8 .L50
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:515    .text.i2c_master_write_register:00000000000000b4 .L48
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:504    .text.i2c_master_write_register:00000000000000a4 .L49
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:534    .text.i2c_master_write_register:00000000000000d2 .L47
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:3157   .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4578   .debug_str:0000000000000432 .LASF175
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4682   .debug_str:00000000000006d0 .LASF176
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4476   .debug_str:00000000000001da .LASF177
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 22
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4360   .debug_ranges:0000000000000000 .Ldebug_ranges0
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4388   .debug_line:0000000000000000 .Ldebug_line0
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4444   .debug_str:0000000000000149 .LASF0
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4406   .debug_str:0000000000000061 .LASF4
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4614   .debug_str:000000000000057e .LASF1
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4392   .debug_str:000000000000000c .LASF2
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4702   .debug_str:000000000000074d .LASF3
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4432   .debug_str:0000000000000104 .LASF5
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4466   .debug_str:00000000000001ae .LASF6
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4492   .debug_str:0000000000000266 .LASF7
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4520   .debug_str:00000000000002f2 .LASF8
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4480   .debug_str:0000000000000224 .LASF9
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4592   .debug_str:00000000000004f1 .LASF10
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4420   .debug_str:00000000000000bf .LASF11
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4686   .debug_str:00000000000006f9 .LASF12
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4672   .debug_str:00000000000006a1 .LASF13
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4658   .debug_str:0000000000000658 .LASF14
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4568   .debug_str:00000000000003f7 .LASF15
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4670   .debug_str:0000000000000699 .LASF16
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4724   .debug_str:00000000000007d4 .LASF17
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4546   .debug_str:0000000000000390 .LASF18
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4512   .debug_str:00000000000002cb .LASF19
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4660   .debug_str:000000000000065f .LASF20
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4662   .debug_str:0000000000000667 .LASF21
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4602   .debug_str:000000000000052b .LASF22
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4566   .debug_str:00000000000003ef .LASF23
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4604   .debug_str:0000000000000536 .LASF24
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4622   .debug_str:00000000000005a9 .LASF25
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4502   .debug_str:0000000000000298 .LASF30
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4692   .debug_str:0000000000000714 .LASF26
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4652   .debug_str:0000000000000643 .LASF27
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4690   .debug_str:000000000000070e .LASF28
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4718   .debug_str:00000000000007b6 .LASF29
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4510   .debug_str:00000000000002c6 .LASF31
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4438   .debug_str:000000000000012b .LASF32
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4704   .debug_str:0000000000000760 .LASF33
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4454   .debug_str:0000000000000171 .LASF34
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4750   .debug_str:0000000000000851 .LASF35
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4580   .debug_str:00000000000004ac .LASF36
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4560   .debug_str:00000000000003cb .LASF37
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4666   .debug_str:0000000000000675 .LASF38
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4624   .debug_str:00000000000005b2 .LASF39
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4736   .debug_str:0000000000000806 .LASF40
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4458   .debug_str:0000000000000180 .LASF41
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4396   .debug_str:0000000000000026 .LASF42
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4390   .debug_str:0000000000000000 .LASF43
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4698   .debug_str:0000000000000733 .LASF44
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4472   .debug_str:00000000000001cb .LASF45
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4582   .debug_str:00000000000004b5 .LASF46
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4642   .debug_str:0000000000000609 .LASF47
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4490   .debug_str:0000000000000261 .LASF48
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4626   .debug_str:00000000000005bc .LASF49
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4452   .debug_str:000000000000016b .LASF50
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4684   .debug_str:00000000000006f3 .LASF51
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4632   .debug_str:00000000000005d2 .LASF52
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4470   .debug_str:00000000000001c4 .LASF53
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4522   .debug_str:0000000000000304 .LASF54
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 23
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4422   .debug_str:00000000000000d6 .LASF55
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4460   .debug_str:000000000000018e .LASF56
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4508   .debug_str:00000000000002c0 .LASF57
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4558   .debug_str:00000000000003c4 .LASF58
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4664   .debug_str:000000000000066f .LASF59
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4442   .debug_str:0000000000000142 .LASF60
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4446   .debug_str:0000000000000155 .LASF61
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4730   .debug_str:00000000000007f1 .LASF62
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4680   .debug_str:00000000000006c7 .LASF63
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4484   .debug_str:000000000000023a .LASF64
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4528   .debug_str:0000000000000329 .LASF65
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4550   .debug_str:000000000000039b .LASF66
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4634   .debug_str:00000000000005da .LASF67
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4628   .debug_str:00000000000005c3 .LASF68
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4654   .debug_str:000000000000064b .LASF69
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4676   .debug_str:00000000000006bb .LASF70
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4474   .debug_str:00000000000001d3 .LASF71
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4516   .debug_str:00000000000002e2 .LASF72
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4500   .debug_str:0000000000000290 .LASF73
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4640   .debug_str:0000000000000604 .LASF74
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4402   .debug_str:0000000000000045 .LASF75
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4648   .debug_str:0000000000000620 .LASF76
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4644   .debug_str:000000000000060e .LASF77
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4584   .debug_str:00000000000004bd .LASF78
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4646   .debug_str:0000000000000616 .LASF79
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4544   .debug_str:0000000000000388 .LASF80
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4478   .debug_str:000000000000021a .LASF81
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4746   .debug_str:000000000000083c .LASF82
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4600   .debug_str:0000000000000521 .LASF83
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4518   .debug_str:00000000000002ea .LASF84
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4482   .debug_str:0000000000000232 .LASF85
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4548   .debug_str:0000000000000396 .LASF86
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4412   .debug_str:000000000000008a .LASF87
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4728   .debug_str:00000000000007e7 .LASF88
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4464   .debug_str:00000000000001a6 .LASF89
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4456   .debug_str:000000000000017b .LASF90
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4678   .debug_str:00000000000006c2 .LASF91
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4630   .debug_str:00000000000005cb .LASF92
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4720   .debug_str:00000000000007bb .LASF93
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4530   .debug_str:000000000000032f .LASF94
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4616   .debug_str:000000000000058c .LASF95
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4398   .debug_str:000000000000002e .LASF96
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4656   .debug_str:0000000000000652 .LASF97
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4552   .debug_str:00000000000003a1 .LASF98
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4706   .debug_str:0000000000000769 .LASF99
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4716   .debug_str:00000000000007a9 .LASF100
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4694   .debug_str:000000000000071a .LASF101
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4540   .debug_str:0000000000000376 .LASF102
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4738   .debug_str:0000000000000811 .LASF103
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4586   .debug_str:00000000000004c8 .LASF104
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4536   .debug_str:000000000000035f .LASF105
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4742   .debug_str:0000000000000829 .LASF106
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4608   .debug_str:0000000000000559 .LASF107
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4744   .debug_str:000000000000082e .LASF108
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4436   .debug_str:000000000000011d .LASF109
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4726   .debug_str:00000000000007dd .LASF110
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4538   .debug_str:000000000000036a .LASF111
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 24
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4410   .debug_str:000000000000007d .LASF112
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4488   .debug_str:0000000000000253 .LASF113
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4434   .debug_str:000000000000010e .LASF114
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4486   .debug_str:0000000000000242 .LASF115
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4416   .debug_str:000000000000009f .LASF116
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4418   .debug_str:00000000000000ae .LASF117
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4620   .debug_str:00000000000005a0 .LASF118
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4574   .debug_str:000000000000041d .LASF119
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4564   .debug_str:00000000000003e6 .LASF120
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4732   .debug_str:00000000000007f7 .LASF121
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4430   .debug_str:00000000000000f9 .LASF178
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4498   .debug_str:0000000000000284 .LASF122
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4712   .debug_str:000000000000078d .LASF123
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4688   .debug_str:0000000000000706 .LASF124
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4612   .debug_str:0000000000000576 .LASF125
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4714   .debug_str:00000000000007a0 .LASF126
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4570   .debug_str:00000000000003fe .LASF127
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4594   .debug_str:00000000000004fc .LASF128
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4514   .debug_str:00000000000002d2 .LASF129
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4394   .debug_str:0000000000000016 .LASF130
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4404   .debug_str:0000000000000050 .LASF131
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4468   .debug_str:00000000000001b7 .LASF132
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4722   .debug_str:00000000000007c1 .LASF133
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4636   .debug_str:00000000000005e3 .LASF134
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4618   .debug_str:0000000000000592 .LASF135
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4588   .debug_str:00000000000004d7 .LASF136
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4440   .debug_str:0000000000000134 .LASF137
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4700   .debug_str:000000000000073c .LASF138
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4576   .debug_str:0000000000000424 .LASF139
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4710   .debug_str:000000000000077e .LASF140
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4534   .debug_str:000000000000034f .LASF141
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4400   .debug_str:0000000000000036 .LASF142
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4504   .debug_str:00000000000002a0 .LASF143
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4462   .debug_str:0000000000000196 .LASF144
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4708   .debug_str:000000000000076e .LASF145
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4496   .debug_str:0000000000000278 .LASF146
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4674   .debug_str:00000000000006ad .LASF147
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4610   .debug_str:0000000000000566 .LASF148
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4506   .debug_str:00000000000002b0 .LASF149
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4556   .debug_str:00000000000003b4 .LASF150
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4740   .debug_str:0000000000000820 .LASF151
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4668   .debug_str:000000000000067f .LASF157
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:397    .text.i2c_master_write_register:0000000000000000 .LFB9
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:562    .text.i2c_master_write_register:00000000000000ea .LFE9
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:3937   .debug_loc:0000000000000000 .LLST12
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4734   .debug_str:00000000000007ff .LASF152
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:3955   .debug_loc:000000000000002c .LLST13
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4424   .debug_str:00000000000000df .LASF153
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:3969   .debug_loc:000000000000004d .LLST14
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:3983   .debug_loc:000000000000006e .LLST15
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4450   .debug_str:0000000000000166 .LASF154
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:3997   .debug_loc:000000000000008f .LLST16
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4426   .debug_str:00000000000000e4 .LASF155
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4011   .debug_loc:00000000000000b0 .LLST17
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4542   .debug_str:0000000000000383 .LASF156
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4022   .debug_loc:00000000000000ce .LLST18
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:500    .text.i2c_master_write_register:00000000000000a0 .LBB6
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 25
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:528    .text.i2c_master_write_register:00000000000000c8 .LBE6
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4029   .debug_loc:00000000000000e1 .LLST19
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:513    .text.i2c_master_write_register:00000000000000b4 .LVL60
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:521    .text.i2c_master_write_register:00000000000000c2 .LVL61
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:435    .text.i2c_master_write_register:0000000000000026 .LVL48
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:441    .text.i2c_master_write_register:0000000000000032 .LVL49
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:449    .text.i2c_master_write_register:0000000000000040 .LVL50
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:457    .text.i2c_master_write_register:0000000000000052 .LVL51
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:465    .text.i2c_master_write_register:0000000000000060 .LVL52
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:472    .text.i2c_master_write_register:0000000000000070 .LVL53
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:480    .text.i2c_master_write_register:000000000000007e .LVL54
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:487    .text.i2c_master_write_register:000000000000008c .LVL55
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:495    .text.i2c_master_write_register:000000000000009a .LVL56
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:532    .text.i2c_master_write_register:00000000000000d2 .LVL63
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4532   .debug_str:0000000000000336 .LASF158
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:169    .text.i2c_master_read_register:0000000000000000 .LFB8
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:390    .text.i2c_master_read_register:0000000000000144 .LFE8
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4037   .debug_loc:00000000000000f5 .LLST4
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4060   .debug_loc:000000000000012d .LLST5
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4074   .debug_loc:000000000000014e .LLST6
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4088   .debug_loc:000000000000016f .LLST7
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4102   .debug_loc:0000000000000190 .LLST8
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4116   .debug_loc:00000000000001b1 .LLST9
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4165   .debug_loc:0000000000000211 .LLST10
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4176   .debug_loc:000000000000022f .LLST11
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:325    .text.i2c_master_read_register:00000000000000fa .LVL36
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:333    .text.i2c_master_read_register:0000000000000106 .LVL38
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:386    .text.i2c_master_read_register:0000000000000142 .LVL44
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:206    .text.i2c_master_read_register:0000000000000022 .LVL21
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:214    .text.i2c_master_read_register:0000000000000030 .LVL22
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:225    .text.i2c_master_read_register:0000000000000042 .LVL23
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:233    .text.i2c_master_read_register:0000000000000050 .LVL24
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:240    .text.i2c_master_read_register:0000000000000060 .LVL25
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:248    .text.i2c_master_read_register:000000000000006e .LVL26
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:255    .text.i2c_master_read_register:000000000000007c .LVL27
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:263    .text.i2c_master_read_register:000000000000008a .LVL28
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:269    .text.i2c_master_read_register:0000000000000096 .LVL29
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:277    .text.i2c_master_read_register:00000000000000a4 .LVL30
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:285    .text.i2c_master_read_register:00000000000000b4 .LVL31
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:293    .text.i2c_master_read_register:00000000000000c2 .LVL32
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:300    .text.i2c_master_read_register:00000000000000d2 .LVL33
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:305    .text.i2c_master_read_register:00000000000000de .LVL34
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:348    .text.i2c_master_read_register:000000000000011e .LVL41
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4650   .debug_str:0000000000000639 .LASF159
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:20     .text.mpu_delay:0000000000000000 .LFB7
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:162    .text.mpu_delay:00000000000000ce .LFE7
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4192   .debug_loc:0000000000000259 .LLST0
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4494   .debug_str:0000000000000271 .LASF160
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4210   .debug_loc:0000000000000285 .LLST1
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4696   .debug_str:0000000000000727 .LASF161
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4228   .debug_loc:00000000000002b1 .LLST2
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4414   .debug_str:0000000000000093 .LASF179
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4240   .debug_loc:00000000000002c9 .LLST3
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:57     .text.mpu_delay:0000000000000022 .LVL1
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:66     .text.mpu_delay:000000000000002e .LVL3
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:85     .text.mpu_delay:0000000000000052 .LVL6
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4596   .debug_str:0000000000000502 .LASF180
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 26
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4526   .debug_str:0000000000000319 .LASF162
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:569    .text.mpu6500_install:0000000000000000 .LFB5
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:645    .text.mpu6500_install:0000000000000058 .LFE5
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4252   .debug_loc:00000000000002e1 .LLST20
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4270   .debug_loc:000000000000030d .LLST21
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:578    .text.mpu6500_install:0000000000000002 .LBB7
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4288   .debug_loc:0000000000000339 .LLST22
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:611    .text.mpu6500_install:0000000000000022 .LVL68
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:615    .text.mpu6500_install:000000000000002c .LVL69
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:643    .text.mpu6500_install:0000000000000058 .LVL71
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:652    .text.i2c_master_init:0000000000000000 .LFB6
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:690    .text.i2c_master_init:0000000000000028 .LFE6
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4299   .debug_loc:0000000000000357 .LLST23
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4317   .debug_loc:0000000000000383 .LLST24
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:674    .text.i2c_master_init:0000000000000018 .LVL73
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:688    .text.i2c_master_init:0000000000000028 .LVL75
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4408   .debug_str:000000000000006b .LASF163
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4590   .debug_str:00000000000004e4 .LASF164
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4606   .debug_str:0000000000000548 .LASF165
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4572   .debug_str:0000000000000407 .LASF166
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4598   .debug_str:0000000000000512 .LASF167
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4748   .debug_str:0000000000000841 .LASF168
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4638   .debug_str:00000000000005f3 .LASF169
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4524   .debug_str:000000000000030a .LASF170
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4428   .debug_str:00000000000000e9 .LASF171
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4562   .debug_str:00000000000003d5 .LASF172
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4448   .debug_str:000000000000015b .LASF173
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:4554   .debug_str:00000000000003a7 .LASF174
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:404    .text.i2c_master_write_register:0000000000000002 .LCFI5
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:558    .text.i2c_master_write_register:00000000000000e8 .LCFI6
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:400    .text.i2c_master_write_register:0000000000000000 .LVL45
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:428    .text.i2c_master_write_register:0000000000000018 .LVL47
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:550    .text.i2c_master_write_register:00000000000000e0 .LVL65
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:410    .text.i2c_master_write_register:0000000000000006 .LVL46
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:547    .text.i2c_master_write_register:00000000000000de .LVL64
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:498    .text.i2c_master_write_register:000000000000009c .LVL57
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:526    .text.i2c_master_write_register:00000000000000c8 .LVL62
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:176    .text.i2c_master_read_register:0000000000000002 .LCFI2
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:374    .text.i2c_master_read_register:0000000000000134 .LCFI3
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:379    .text.i2c_master_read_register:0000000000000136 .LCFI4
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:172    .text.i2c_master_read_register:0000000000000000 .LVL18
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:189    .text.i2c_master_read_register:000000000000000c .LVL20
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:314    .text.i2c_master_read_register:00000000000000e8 .LVL35
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:329    .text.i2c_master_read_register:00000000000000fc .LVL37
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:339    .text.i2c_master_read_register:0000000000000110 .LVL39
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:342    .text.i2c_master_read_register:0000000000000114 .LVL40
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:377    .text.i2c_master_read_register:0000000000000136 .LVL43
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:182    .text.i2c_master_read_register:0000000000000006 .LVL19
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:364    .text.i2c_master_read_register:000000000000012a .LVL42
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:29     .text.mpu_delay:0000000000000002 .LCFI0
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:158    .text.mpu_delay:00000000000000cc .LCFI1
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:24     .text.mpu_delay:0000000000000000 .LVL0
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:152    .text.mpu_delay:00000000000000c6 .LVL17
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:69     .text.mpu_delay:0000000000000032 .LVL4
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:137    .text.mpu_delay:00000000000000b8 .LVL16
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:60     .text.mpu_delay:0000000000000026 .LVL2
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:77     .text.mpu_delay:0000000000000042 .LVL5
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s 			page 27
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:576    .text.mpu6500_install:0000000000000002 .LCFI7
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:639    .text.mpu6500_install:0000000000000050 .LCFI8
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:572    .text.mpu6500_install:0000000000000000 .LVL66
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:627    .text.mpu6500_install:0000000000000036 .LVL70
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:606    .text.mpu6500_install:000000000000001a .LVL67
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:660    .text.i2c_master_init:0000000000000004 .LCFI9
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:684    .text.i2c_master_init:0000000000000020 .LCFI10
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:655    .text.i2c_master_init:0000000000000000 .LVL72
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:680    .text.i2c_master_init:000000000000001c .LVL74
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:711    .debug_info:0000000000000000 .Ldebug_info0
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:307    .text.i2c_master_read_register:00000000000000de .LBB4
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:344    .text.i2c_master_read_register:0000000000000114 .LBE4
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:381    .text.i2c_master_read_register:0000000000000136 .LBB5
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:388    .text.i2c_master_read_register:0000000000000144 .LBE5
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:583    .text.mpu6500_install:0000000000000004 .LBE7
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:586    .text.mpu6500_install:0000000000000006 .LBB11
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:593    .text.mpu6500_install:000000000000000c .LBE11
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:607    .text.mpu6500_install:000000000000001a .LBB12
+C:\Users\Kalle\AppData\Local\Temp\ccLIAohO.s:617    .text.mpu6500_install:000000000000002c .LBE12
+
+UNDEFINED SYMBOLS
+__floatundidf
+__floatunsidf
+__divdf3
+__floatsidf
+__muldf3
+__ltdf2
+get_timer_value
+SystemCoreClock
+i2c_start_on_bus
+i2c_flag_get
+i2c_master_addressing
+i2c_flag_clear
+i2c_data_transmit
+i2c_ack_config
+i2c_data_receive
+i2c_stop_on_bus
+i2c_clock_config
+i2c_enable
+mpu6500_init

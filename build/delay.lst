@@ -1,0 +1,1021 @@
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s 			page 1
+
+
+   1              		.file	"delay.c"
+   2              		.option nopic
+   3              		.attribute arch, "rv32i2p0_m2p0_a2p0_c2p0"
+   4              		.attribute unaligned_access, 0
+   5              		.attribute stack_align, 16
+   6              		.text
+   7              	.Ltext0:
+   8              		.cfi_sections	.debug_frame
+   9              		.globl	__floatundidf
+  10              		.globl	__floatunsidf
+  11              		.globl	__divdf3
+  12              		.globl	__muldf3
+  13              		.globl	__ltdf2
+  14              		.section	.text.delay_1ms,"ax",@progbits
+  15              		.align	1
+  16              		.globl	delay_1ms
+  18              	delay_1ms:
+  19              	.LFB2:
+  20              		.file 1 "lib/delay/src/delay.c"
+   1:lib/delay/src/delay.c **** /*!
+   2:lib/delay/src/delay.c ****     \file  systick.c
+   3:lib/delay/src/delay.c ****     \brief the systick configuration file
+   4:lib/delay/src/delay.c **** 
+   5:lib/delay/src/delay.c ****     \version 2019-6-5, V1.0.0, firmware for GD32VF103
+   6:lib/delay/src/delay.c **** */
+   7:lib/delay/src/delay.c **** 
+   8:lib/delay/src/delay.c **** /*
+   9:lib/delay/src/delay.c ****     Copyright (c) 2019, GigaDevice Semiconductor Inc.
+  10:lib/delay/src/delay.c **** 
+  11:lib/delay/src/delay.c ****     Redistribution and use in source and binary forms, with or without modification, 
+  12:lib/delay/src/delay.c **** are permitted provided that the following conditions are met:
+  13:lib/delay/src/delay.c **** 
+  14:lib/delay/src/delay.c ****     1. Redistributions of source code must retain the above copyright notice, this 
+  15:lib/delay/src/delay.c ****        list of conditions and the following disclaimer.
+  16:lib/delay/src/delay.c ****     2. Redistributions in binary form must reproduce the above copyright notice, 
+  17:lib/delay/src/delay.c ****        this list of conditions and the following disclaimer in the documentation 
+  18:lib/delay/src/delay.c ****        and/or other materials provided with the distribution.
+  19:lib/delay/src/delay.c ****     3. Neither the name of the copyright holder nor the names of its contributors 
+  20:lib/delay/src/delay.c ****        may be used to endorse or promote products derived from this software without 
+  21:lib/delay/src/delay.c ****        specific prior written permission.
+  22:lib/delay/src/delay.c **** 
+  23:lib/delay/src/delay.c ****     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+  24:lib/delay/src/delay.c **** AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+  25:lib/delay/src/delay.c **** WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+  26:lib/delay/src/delay.c **** IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+  27:lib/delay/src/delay.c **** INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+  28:lib/delay/src/delay.c **** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+  29:lib/delay/src/delay.c **** PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+  30:lib/delay/src/delay.c **** WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+  31:lib/delay/src/delay.c **** ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+  32:lib/delay/src/delay.c **** OF SUCH DAMAGE.
+  33:lib/delay/src/delay.c **** */
+  34:lib/delay/src/delay.c **** 
+  35:lib/delay/src/delay.c **** #include "gd32vf103.h"
+  36:lib/delay/src/delay.c **** #include "delay.h"
+  37:lib/delay/src/delay.c **** 
+  38:lib/delay/src/delay.c **** /*!
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s 			page 2
+
+
+  39:lib/delay/src/delay.c ****     \brief      delay a time in milliseconds
+  40:lib/delay/src/delay.c ****     \param[in]  count: count in milliseconds
+  41:lib/delay/src/delay.c ****     \param[out] none
+  42:lib/delay/src/delay.c ****     \retval     none
+  43:lib/delay/src/delay.c **** */
+  44:lib/delay/src/delay.c **** void delay_1ms(uint32_t count)
+  45:lib/delay/src/delay.c **** {
+  21              		.loc 1 45 1
+  22              		.cfi_startproc
+  23              	.LVL0:
+  46:lib/delay/src/delay.c **** 	uint64_t start_mtime, delta_mtime;
+  24              		.loc 1 46 2
+  47:lib/delay/src/delay.c **** 
+  48:lib/delay/src/delay.c **** 	// Don't start measuruing until we see an mtime tick
+  49:lib/delay/src/delay.c **** 	uint64_t tmp = get_timer_value();
+  25              		.loc 1 49 2
+  45:lib/delay/src/delay.c **** 	uint64_t start_mtime, delta_mtime;
+  26              		.loc 1 45 1 is_stmt 0
+  27 0000 7971     		addi	sp,sp,-48
+  28              	.LCFI0:
+  29              		.cfi_def_cfa_offset 48
+  30 0002 4AD0     		sw	s2,32(sp)
+  31 0004 4ECE     		sw	s3,28(sp)
+  32 0006 5EC6     		sw	s7,12(sp)
+  33 0008 06D6     		sw	ra,44(sp)
+  34 000a 22D4     		sw	s0,40(sp)
+  35 000c 26D2     		sw	s1,36(sp)
+  36 000e 52CC     		sw	s4,24(sp)
+  37 0010 56CA     		sw	s5,20(sp)
+  38 0012 5AC8     		sw	s6,16(sp)
+  39 0014 62C4     		sw	s8,8(sp)
+  40 0016 66C2     		sw	s9,4(sp)
+  41              		.cfi_offset 18, -16
+  42              		.cfi_offset 19, -20
+  43              		.cfi_offset 23, -36
+  44              		.cfi_offset 1, -4
+  45              		.cfi_offset 8, -8
+  46              		.cfi_offset 9, -12
+  47              		.cfi_offset 20, -24
+  48              		.cfi_offset 21, -28
+  49              		.cfi_offset 22, -32
+  50              		.cfi_offset 24, -40
+  51              		.cfi_offset 25, -44
+  45:lib/delay/src/delay.c **** 	uint64_t start_mtime, delta_mtime;
+  52              		.loc 1 45 1
+  53 0018 AA8B     		mv	s7,a0
+  54              		.loc 1 49 17
+  55 001a 97000000 		call	get_timer_value
+  55      E7800000 
+  56              	.LVL1:
+  57 0022 2A89     		mv	s2,a0
+  58 0024 AE89     		mv	s3,a1
+  59              	.LVL2:
+  60              	.L2:
+  50:lib/delay/src/delay.c **** 	do {
+  61              		.loc 1 50 2 is_stmt 1 discriminator 1
+  51:lib/delay/src/delay.c **** 	start_mtime = get_timer_value();
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s 			page 3
+
+
+  62              		.loc 1 51 2 discriminator 1
+  63              		.loc 1 51 16 is_stmt 0 discriminator 1
+  64 0026 97000000 		call	get_timer_value
+  64      E7800000 
+  65              	.LVL3:
+  66 002e 2A84     		mv	s0,a0
+  67 0030 AE84     		mv	s1,a1
+  68              	.LVL4:
+  52:lib/delay/src/delay.c **** 	} while (start_mtime == tmp);
+  69              		.loc 1 52 2 discriminator 1
+  70 0032 6314A900 		bne	s2,a0,.L3
+  71 0036 E388B9FE 		beq	s3,a1,.L2
+  72              	.L3:
+  73 003a B7070000 		lui	a5,%hi(.LC0)
+  53:lib/delay/src/delay.c **** 
+  54:lib/delay/src/delay.c **** 	do {
+  55:lib/delay/src/delay.c **** 	delta_mtime = get_timer_value() - start_mtime;
+  56:lib/delay/src/delay.c **** 	}while(delta_mtime <(SystemCoreClock/4000.0 *count ));
+  74              		.loc 1 56 38 discriminator 1
+  75 003e 03A90700 		lw	s2,%lo(.LC0)(a5)
+  76              	.LVL5:
+  77 0042 83A94700 		lw	s3,%lo(.LC0+4)(a5)
+  78 0046 370B0000 		lui	s6,%hi(SystemCoreClock)
+  79              	.L4:
+  54:lib/delay/src/delay.c **** 	delta_mtime = get_timer_value() - start_mtime;
+  80              		.loc 1 54 2 is_stmt 1 discriminator 1
+  55:lib/delay/src/delay.c **** 	}while(delta_mtime <(SystemCoreClock/4000.0 *count ));
+  81              		.loc 1 55 2 discriminator 1
+  55:lib/delay/src/delay.c **** 	}while(delta_mtime <(SystemCoreClock/4000.0 *count ));
+  82              		.loc 1 55 16 is_stmt 0 discriminator 1
+  83 004a 97000000 		call	get_timer_value
+  83      E7800000 
+  84              	.LVL6:
+  85 0052 AA87     		mv	a5,a0
+  86              	.LVL7:
+  55:lib/delay/src/delay.c **** 	}while(delta_mtime <(SystemCoreClock/4000.0 *count ));
+  87              		.loc 1 55 14 discriminator 1
+  88 0054 018D     		sub	a0,a0,s0
+  89              	.LVL8:
+  90 0056 B3B7A700 		sgtu	a5,a0,a5
+  91              	.LVL9:
+  92 005a 858D     		sub	a1,a1,s1
+  93              		.loc 1 56 21 discriminator 1
+  94 005c 9D8D     		sub	a1,a1,a5
+  95 005e 97000000 		call	__floatundidf
+  95      E7800000 
+  96              	.LVL10:
+  97 0066 2A8A     		mv	s4,a0
+  98              		.loc 1 56 38 discriminator 1
+  99 0068 03250B00 		lw	a0,%lo(SystemCoreClock)(s6)
+ 100              		.loc 1 56 21 discriminator 1
+ 101 006c AE8A     		mv	s5,a1
+ 102              		.loc 1 56 38 discriminator 1
+ 103 006e 97000000 		call	__floatunsidf
+ 103      E7800000 
+ 104              	.LVL11:
+ 105 0076 4A86     		mv	a2,s2
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s 			page 4
+
+
+ 106 0078 CE86     		mv	a3,s3
+ 107 007a 97000000 		call	__divdf3
+ 107      E7800000 
+ 108              	.LVL12:
+ 109 0082 2A8C     		mv	s8,a0
+ 110              		.loc 1 56 46 discriminator 1
+ 111 0084 5E85     		mv	a0,s7
+ 112              		.loc 1 56 38 discriminator 1
+ 113 0086 AE8C     		mv	s9,a1
+ 114              		.loc 1 56 46 discriminator 1
+ 115 0088 97000000 		call	__floatunsidf
+ 115      E7800000 
+ 116              	.LVL13:
+ 117 0090 2A86     		mv	a2,a0
+ 118 0092 AE86     		mv	a3,a1
+ 119 0094 6285     		mv	a0,s8
+ 120 0096 E685     		mv	a1,s9
+ 121 0098 97000000 		call	__muldf3
+ 121      E7800000 
+ 122              	.LVL14:
+ 123              		.loc 1 56 2 discriminator 1
+ 124 00a0 2A86     		mv	a2,a0
+ 125 00a2 AE86     		mv	a3,a1
+ 126 00a4 5285     		mv	a0,s4
+ 127 00a6 D685     		mv	a1,s5
+ 128 00a8 97000000 		call	__ltdf2
+ 128      E7800000 
+ 129              	.LVL15:
+ 130 00b0 E34D05F8 		blt	a0,zero,.L4
+  57:lib/delay/src/delay.c **** }
+ 131              		.loc 1 57 1
+ 132 00b4 B250     		lw	ra,44(sp)
+ 133              		.cfi_restore 1
+ 134 00b6 2254     		lw	s0,40(sp)
+ 135              		.cfi_restore 8
+ 136              	.LVL16:
+ 137 00b8 9254     		lw	s1,36(sp)
+ 138              		.cfi_restore 9
+ 139 00ba 0259     		lw	s2,32(sp)
+ 140              		.cfi_restore 18
+ 141 00bc F249     		lw	s3,28(sp)
+ 142              		.cfi_restore 19
+ 143 00be 624A     		lw	s4,24(sp)
+ 144              		.cfi_restore 20
+ 145 00c0 D24A     		lw	s5,20(sp)
+ 146              		.cfi_restore 21
+ 147 00c2 424B     		lw	s6,16(sp)
+ 148              		.cfi_restore 22
+ 149 00c4 B24B     		lw	s7,12(sp)
+ 150              		.cfi_restore 23
+ 151              	.LVL17:
+ 152 00c6 224C     		lw	s8,8(sp)
+ 153              		.cfi_restore 24
+ 154 00c8 924C     		lw	s9,4(sp)
+ 155              		.cfi_restore 25
+ 156 00ca 4561     		addi	sp,sp,48
+ 157              	.LCFI1:
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s 			page 5
+
+
+ 158              		.cfi_def_cfa_offset 0
+ 159 00cc 8280     		jr	ra
+ 160              		.cfi_endproc
+ 161              	.LFE2:
+ 163              		.section	.text.delay_1us,"ax",@progbits
+ 164              		.align	1
+ 165              		.globl	delay_1us
+ 167              	delay_1us:
+ 168              	.LFB3:
+  58:lib/delay/src/delay.c **** 
+  59:lib/delay/src/delay.c **** void delay_1us(uint32_t count)
+  60:lib/delay/src/delay.c **** {
+ 169              		.loc 1 60 1 is_stmt 1
+ 170              		.cfi_startproc
+ 171              	.LVL18:
+  61:lib/delay/src/delay.c **** 	uint64_t start_mtime, delta_mtime;
+ 172              		.loc 1 61 2
+  62:lib/delay/src/delay.c **** 
+  63:lib/delay/src/delay.c **** 	// Don't start measuruing until we see an mtime tick
+  64:lib/delay/src/delay.c **** 	uint64_t tmp = get_timer_value();
+ 173              		.loc 1 64 2
+  60:lib/delay/src/delay.c **** 	uint64_t start_mtime, delta_mtime;
+ 174              		.loc 1 60 1 is_stmt 0
+ 175 0000 7971     		addi	sp,sp,-48
+ 176              	.LCFI2:
+ 177              		.cfi_def_cfa_offset 48
+ 178 0002 4AD0     		sw	s2,32(sp)
+ 179 0004 4ECE     		sw	s3,28(sp)
+ 180 0006 5EC6     		sw	s7,12(sp)
+ 181 0008 06D6     		sw	ra,44(sp)
+ 182 000a 22D4     		sw	s0,40(sp)
+ 183 000c 26D2     		sw	s1,36(sp)
+ 184 000e 52CC     		sw	s4,24(sp)
+ 185 0010 56CA     		sw	s5,20(sp)
+ 186 0012 5AC8     		sw	s6,16(sp)
+ 187 0014 62C4     		sw	s8,8(sp)
+ 188 0016 66C2     		sw	s9,4(sp)
+ 189              		.cfi_offset 18, -16
+ 190              		.cfi_offset 19, -20
+ 191              		.cfi_offset 23, -36
+ 192              		.cfi_offset 1, -4
+ 193              		.cfi_offset 8, -8
+ 194              		.cfi_offset 9, -12
+ 195              		.cfi_offset 20, -24
+ 196              		.cfi_offset 21, -28
+ 197              		.cfi_offset 22, -32
+ 198              		.cfi_offset 24, -40
+ 199              		.cfi_offset 25, -44
+  60:lib/delay/src/delay.c **** 	uint64_t start_mtime, delta_mtime;
+ 200              		.loc 1 60 1
+ 201 0018 AA8B     		mv	s7,a0
+ 202              		.loc 1 64 17
+ 203 001a 97000000 		call	get_timer_value
+ 203      E7800000 
+ 204              	.LVL19:
+ 205 0022 2A89     		mv	s2,a0
+ 206 0024 AE89     		mv	s3,a1
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s 			page 6
+
+
+ 207              	.LVL20:
+ 208              	.L9:
+  65:lib/delay/src/delay.c **** 	do {
+ 209              		.loc 1 65 2 is_stmt 1 discriminator 1
+  66:lib/delay/src/delay.c **** 	start_mtime = get_timer_value();
+ 210              		.loc 1 66 2 discriminator 1
+ 211              		.loc 1 66 16 is_stmt 0 discriminator 1
+ 212 0026 97000000 		call	get_timer_value
+ 212      E7800000 
+ 213              	.LVL21:
+ 214 002e 2A84     		mv	s0,a0
+ 215 0030 AE84     		mv	s1,a1
+ 216              	.LVL22:
+  67:lib/delay/src/delay.c **** 	} while (start_mtime == tmp);
+ 217              		.loc 1 67 2 discriminator 1
+ 218 0032 6314A900 		bne	s2,a0,.L10
+ 219 0036 E388B9FE 		beq	s3,a1,.L9
+ 220              	.L10:
+ 221 003a B7070000 		lui	a5,%hi(.LC1)
+  68:lib/delay/src/delay.c **** 
+  69:lib/delay/src/delay.c **** 	do {
+  70:lib/delay/src/delay.c **** 	delta_mtime = get_timer_value() - start_mtime;
+  71:lib/delay/src/delay.c **** 	}while(delta_mtime <(SystemCoreClock/4000000.0 *count ));
+ 222              		.loc 1 71 38 discriminator 1
+ 223 003e 03A90700 		lw	s2,%lo(.LC1)(a5)
+ 224              	.LVL23:
+ 225 0042 83A94700 		lw	s3,%lo(.LC1+4)(a5)
+ 226 0046 370B0000 		lui	s6,%hi(SystemCoreClock)
+ 227              	.L11:
+  69:lib/delay/src/delay.c **** 	delta_mtime = get_timer_value() - start_mtime;
+ 228              		.loc 1 69 2 is_stmt 1 discriminator 1
+  70:lib/delay/src/delay.c **** 	}while(delta_mtime <(SystemCoreClock/4000000.0 *count ));
+ 229              		.loc 1 70 2 discriminator 1
+  70:lib/delay/src/delay.c **** 	}while(delta_mtime <(SystemCoreClock/4000000.0 *count ));
+ 230              		.loc 1 70 16 is_stmt 0 discriminator 1
+ 231 004a 97000000 		call	get_timer_value
+ 231      E7800000 
+ 232              	.LVL24:
+ 233 0052 AA87     		mv	a5,a0
+ 234              	.LVL25:
+  70:lib/delay/src/delay.c **** 	}while(delta_mtime <(SystemCoreClock/4000000.0 *count ));
+ 235              		.loc 1 70 14 discriminator 1
+ 236 0054 018D     		sub	a0,a0,s0
+ 237              	.LVL26:
+ 238 0056 B3B7A700 		sgtu	a5,a0,a5
+ 239              	.LVL27:
+ 240 005a 858D     		sub	a1,a1,s1
+ 241              		.loc 1 71 21 discriminator 1
+ 242 005c 9D8D     		sub	a1,a1,a5
+ 243 005e 97000000 		call	__floatundidf
+ 243      E7800000 
+ 244              	.LVL28:
+ 245 0066 2A8A     		mv	s4,a0
+ 246              		.loc 1 71 38 discriminator 1
+ 247 0068 03250B00 		lw	a0,%lo(SystemCoreClock)(s6)
+ 248              		.loc 1 71 21 discriminator 1
+ 249 006c AE8A     		mv	s5,a1
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s 			page 7
+
+
+ 250              		.loc 1 71 38 discriminator 1
+ 251 006e 97000000 		call	__floatunsidf
+ 251      E7800000 
+ 252              	.LVL29:
+ 253 0076 4A86     		mv	a2,s2
+ 254 0078 CE86     		mv	a3,s3
+ 255 007a 97000000 		call	__divdf3
+ 255      E7800000 
+ 256              	.LVL30:
+ 257 0082 2A8C     		mv	s8,a0
+ 258              		.loc 1 71 49 discriminator 1
+ 259 0084 5E85     		mv	a0,s7
+ 260              		.loc 1 71 38 discriminator 1
+ 261 0086 AE8C     		mv	s9,a1
+ 262              		.loc 1 71 49 discriminator 1
+ 263 0088 97000000 		call	__floatunsidf
+ 263      E7800000 
+ 264              	.LVL31:
+ 265 0090 2A86     		mv	a2,a0
+ 266 0092 AE86     		mv	a3,a1
+ 267 0094 6285     		mv	a0,s8
+ 268 0096 E685     		mv	a1,s9
+ 269 0098 97000000 		call	__muldf3
+ 269      E7800000 
+ 270              	.LVL32:
+ 271              		.loc 1 71 2 discriminator 1
+ 272 00a0 2A86     		mv	a2,a0
+ 273 00a2 AE86     		mv	a3,a1
+ 274 00a4 5285     		mv	a0,s4
+ 275 00a6 D685     		mv	a1,s5
+ 276 00a8 97000000 		call	__ltdf2
+ 276      E7800000 
+ 277              	.LVL33:
+ 278 00b0 E34D05F8 		blt	a0,zero,.L11
+  72:lib/delay/src/delay.c **** }
+ 279              		.loc 1 72 1
+ 280 00b4 B250     		lw	ra,44(sp)
+ 281              		.cfi_restore 1
+ 282 00b6 2254     		lw	s0,40(sp)
+ 283              		.cfi_restore 8
+ 284              	.LVL34:
+ 285 00b8 9254     		lw	s1,36(sp)
+ 286              		.cfi_restore 9
+ 287 00ba 0259     		lw	s2,32(sp)
+ 288              		.cfi_restore 18
+ 289 00bc F249     		lw	s3,28(sp)
+ 290              		.cfi_restore 19
+ 291 00be 624A     		lw	s4,24(sp)
+ 292              		.cfi_restore 20
+ 293 00c0 D24A     		lw	s5,20(sp)
+ 294              		.cfi_restore 21
+ 295 00c2 424B     		lw	s6,16(sp)
+ 296              		.cfi_restore 22
+ 297 00c4 B24B     		lw	s7,12(sp)
+ 298              		.cfi_restore 23
+ 299              	.LVL35:
+ 300 00c6 224C     		lw	s8,8(sp)
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s 			page 8
+
+
+ 301              		.cfi_restore 24
+ 302 00c8 924C     		lw	s9,4(sp)
+ 303              		.cfi_restore 25
+ 304 00ca 4561     		addi	sp,sp,48
+ 305              	.LCFI3:
+ 306              		.cfi_def_cfa_offset 0
+ 307 00cc 8280     		jr	ra
+ 308              		.cfi_endproc
+ 309              	.LFE3:
+ 311              		.section	.text.delay_until_1us,"ax",@progbits
+ 312              		.align	1
+ 313              		.globl	delay_until_1us
+ 315              	delay_until_1us:
+ 316              	.LFB4:
+  73:lib/delay/src/delay.c **** 
+  74:lib/delay/src/delay.c **** uint64_t delay_until = 0;
+  75:lib/delay/src/delay.c **** 
+  76:lib/delay/src/delay.c **** void delay_until_1us(uint32_t time){
+ 317              		.loc 1 76 36 is_stmt 1
+ 318              		.cfi_startproc
+ 319              	.LVL36:
+  77:lib/delay/src/delay.c ****     uint64_t current_time;
+ 320              		.loc 1 77 5
+  78:lib/delay/src/delay.c ****     current_time = get_timer_value();
+ 321              		.loc 1 78 5
+  76:lib/delay/src/delay.c ****     uint64_t current_time;
+ 322              		.loc 1 76 36 is_stmt 0
+ 323 0000 4111     		addi	sp,sp,-16
+ 324              	.LCFI4:
+ 325              		.cfi_def_cfa_offset 16
+ 326 0002 22C4     		sw	s0,8(sp)
+ 327 0004 06C6     		sw	ra,12(sp)
+ 328              		.cfi_offset 8, -8
+ 329              		.cfi_offset 1, -4
+  76:lib/delay/src/delay.c ****     uint64_t current_time;
+ 330              		.loc 1 76 36
+ 331 0006 2A84     		mv	s0,a0
+ 332              		.loc 1 78 20
+ 333 0008 97000000 		call	get_timer_value
+ 333      E7800000 
+ 334              	.LVL37:
+  79:lib/delay/src/delay.c ****     delay_until = (time * (SystemCoreClock/4000)) + current_time;
+ 335              		.loc 1 79 5 is_stmt 1
+ 336              		.loc 1 79 43 is_stmt 0
+ 337 0010 B7070000 		lui	a5,%hi(SystemCoreClock)
+ 338 0014 83A70700 		lw	a5,%lo(SystemCoreClock)(a5)
+ 339 0018 0567     		li	a4,4096
+ 340 001a 130707FA 		addi	a4,a4,-96
+ 341 001e B3D7E702 		divu	a5,a5,a4
+  80:lib/delay/src/delay.c **** }
+ 342              		.loc 1 80 1
+ 343 0022 B240     		lw	ra,12(sp)
+ 344              		.cfi_restore 1
+  79:lib/delay/src/delay.c ****     delay_until = (time * (SystemCoreClock/4000)) + current_time;
+ 345              		.loc 1 79 17
+ 346 0024 37070000 		lui	a4,%hi(.LANCHOR0)
+ 347 0028 13070700 		addi	a4,a4,%lo(.LANCHOR0)
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s 			page 9
+
+
+  79:lib/delay/src/delay.c ****     delay_until = (time * (SystemCoreClock/4000)) + current_time;
+ 348              		.loc 1 79 25
+ 349 002c B3878702 		mul	a5,a5,s0
+ 350              		.loc 1 80 1
+ 351 0030 2244     		lw	s0,8(sp)
+ 352              		.cfi_restore 8
+ 353              	.LVL38:
+  79:lib/delay/src/delay.c ****     delay_until = (time * (SystemCoreClock/4000)) + current_time;
+ 354              		.loc 1 79 51
+ 355 0032 3E95     		add	a0,a5,a0
+ 356              	.LVL39:
+ 357 0034 B337F500 		sltu	a5,a0,a5
+ 358 0038 AE97     		add	a5,a5,a1
+  79:lib/delay/src/delay.c ****     delay_until = (time * (SystemCoreClock/4000)) + current_time;
+ 359              		.loc 1 79 17
+ 360 003a 08C3     		sw	a0,0(a4)
+ 361 003c 5CC3     		sw	a5,4(a4)
+ 362              		.loc 1 80 1
+ 363 003e 4101     		addi	sp,sp,16
+ 364              	.LCFI5:
+ 365              		.cfi_def_cfa_offset 0
+ 366 0040 8280     		jr	ra
+ 367              		.cfi_endproc
+ 368              	.LFE4:
+ 370              		.section	.text.delay_until_1ms,"ax",@progbits
+ 371              		.align	1
+ 372              		.globl	delay_until_1ms
+ 374              	delay_until_1ms:
+ 375              	.LFB5:
+  81:lib/delay/src/delay.c **** 
+  82:lib/delay/src/delay.c **** void delay_until_1ms(uint32_t time){
+ 376              		.loc 1 82 36 is_stmt 1
+ 377              		.cfi_startproc
+ 378              	.LVL40:
+  83:lib/delay/src/delay.c ****     uint64_t current_time;
+ 379              		.loc 1 83 5
+  84:lib/delay/src/delay.c ****     current_time = get_timer_value();
+ 380              		.loc 1 84 5
+  82:lib/delay/src/delay.c ****     uint64_t current_time;
+ 381              		.loc 1 82 36 is_stmt 0
+ 382 0000 4111     		addi	sp,sp,-16
+ 383              	.LCFI6:
+ 384              		.cfi_def_cfa_offset 16
+ 385 0002 22C4     		sw	s0,8(sp)
+ 386 0004 06C6     		sw	ra,12(sp)
+ 387              		.cfi_offset 8, -8
+ 388              		.cfi_offset 1, -4
+  82:lib/delay/src/delay.c ****     uint64_t current_time;
+ 389              		.loc 1 82 36
+ 390 0006 2A84     		mv	s0,a0
+ 391              		.loc 1 84 20
+ 392 0008 97000000 		call	get_timer_value
+ 392      E7800000 
+ 393              	.LVL41:
+  85:lib/delay/src/delay.c ****     delay_until = (time * (SystemCoreClock/4000000)) + current_time;
+ 394              		.loc 1 85 5 is_stmt 1
+ 395              		.loc 1 85 43 is_stmt 0
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s 			page 10
+
+
+ 396 0010 B7070000 		lui	a5,%hi(SystemCoreClock)
+ 397 0014 83A70700 		lw	a5,%lo(SystemCoreClock)(a5)
+ 398 0018 37173D00 		li	a4,4001792
+ 399 001c 13070790 		addi	a4,a4,-1792
+ 400 0020 B3D7E702 		divu	a5,a5,a4
+  86:lib/delay/src/delay.c **** }
+ 401              		.loc 1 86 1
+ 402 0024 B240     		lw	ra,12(sp)
+ 403              		.cfi_restore 1
+  85:lib/delay/src/delay.c ****     delay_until = (time * (SystemCoreClock/4000000)) + current_time;
+ 404              		.loc 1 85 17
+ 405 0026 37070000 		lui	a4,%hi(.LANCHOR0)
+ 406 002a 13070700 		addi	a4,a4,%lo(.LANCHOR0)
+  85:lib/delay/src/delay.c ****     delay_until = (time * (SystemCoreClock/4000000)) + current_time;
+ 407              		.loc 1 85 25
+ 408 002e B3878702 		mul	a5,a5,s0
+ 409              		.loc 1 86 1
+ 410 0032 2244     		lw	s0,8(sp)
+ 411              		.cfi_restore 8
+ 412              	.LVL42:
+  85:lib/delay/src/delay.c ****     delay_until = (time * (SystemCoreClock/4000000)) + current_time;
+ 413              		.loc 1 85 54
+ 414 0034 3E95     		add	a0,a5,a0
+ 415              	.LVL43:
+ 416 0036 B337F500 		sltu	a5,a0,a5
+ 417 003a AE97     		add	a5,a5,a1
+  85:lib/delay/src/delay.c ****     delay_until = (time * (SystemCoreClock/4000000)) + current_time;
+ 418              		.loc 1 85 17
+ 419 003c 08C3     		sw	a0,0(a4)
+ 420 003e 5CC3     		sw	a5,4(a4)
+ 421              		.loc 1 86 1
+ 422 0040 4101     		addi	sp,sp,16
+ 423              	.LCFI7:
+ 424              		.cfi_def_cfa_offset 0
+ 425 0042 8280     		jr	ra
+ 426              		.cfi_endproc
+ 427              	.LFE5:
+ 429              		.section	.text.delay_finished,"ax",@progbits
+ 430              		.align	1
+ 431              		.globl	delay_finished
+ 433              	delay_finished:
+ 434              	.LFB6:
+  87:lib/delay/src/delay.c **** 
+  88:lib/delay/src/delay.c **** int delay_finished(){
+ 435              		.loc 1 88 21 is_stmt 1
+ 436              		.cfi_startproc
+  89:lib/delay/src/delay.c ****     uint64_t time;
+ 437              		.loc 1 89 5
+  90:lib/delay/src/delay.c ****     time = get_timer_value();
+ 438              		.loc 1 90 5
+  88:lib/delay/src/delay.c ****     uint64_t time;
+ 439              		.loc 1 88 21 is_stmt 0
+ 440 0000 4111     		addi	sp,sp,-16
+ 441              	.LCFI8:
+ 442              		.cfi_def_cfa_offset 16
+ 443 0002 06C6     		sw	ra,12(sp)
+ 444              		.cfi_offset 1, -4
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s 			page 11
+
+
+ 445              		.loc 1 90 12
+ 446 0004 97000000 		call	get_timer_value
+ 446      E7800000 
+ 447              	.LVL44:
+  91:lib/delay/src/delay.c ****     if(time < delay_until) return 1;
+ 448              		.loc 1 91 5 is_stmt 1
+ 449              		.loc 1 91 13 is_stmt 0
+ 450 000c B7070000 		lui	a5,%hi(.LANCHOR0)
+ 451 0010 93870700 		addi	a5,a5,%lo(.LANCHOR0)
+ 452              		.loc 1 91 7
+ 453 0014 D843     		lw	a4,4(a5)
+ 454 0016 63EFE500 		bgtu	a4,a1,.L21
+ 455 001a 630AB700 		beq	a4,a1,.L24
+ 456              	.L22:
+  92:lib/delay/src/delay.c ****     else delay_until = 0; return 0;
+ 457              		.loc 1 92 10 is_stmt 1
+  93:lib/delay/src/delay.c **** }...
+ 458              		.loc 1 93 1 is_stmt 0
+ 459 001e B240     		lw	ra,12(sp)
+ 460              		.cfi_remember_state
+ 461              		.cfi_restore 1
+  92:lib/delay/src/delay.c ****     else delay_until = 0; return 0;
+ 462              		.loc 1 92 22
+ 463 0020 8146     		li	a3,0
+ 464 0022 0147     		li	a4,0
+ 465 0024 94C3     		sw	a3,0(a5)
+ 466 0026 D8C3     		sw	a4,4(a5)
+  92:lib/delay/src/delay.c ****     else delay_until = 0; return 0;
+ 467              		.loc 1 92 27 is_stmt 1
+  92:lib/delay/src/delay.c ****     else delay_until = 0; return 0;
+ 468              		.loc 1 92 34 is_stmt 0
+ 469 0028 0145     		li	a0,0
+ 470              	.LVL45:
+ 471              		.loc 1 93 1
+ 472 002a 4101     		addi	sp,sp,16
+ 473              	.LCFI9:
+ 474              		.cfi_def_cfa_offset 0
+ 475 002c 8280     		jr	ra
+ 476              	.LVL46:
+ 477              	.L24:
+ 478              	.LCFI10:
+ 479              		.cfi_restore_state
+  91:lib/delay/src/delay.c ****     if(time < delay_until) return 1;
+ 480              		.loc 1 91 7
+ 481 002e 9843     		lw	a4,0(a5)
+ 482 0030 E377E5FE 		bleu	a4,a0,.L22
+ 483              	.L21:
+ 484              		.loc 1 93 1
+ 485 0034 B240     		lw	ra,12(sp)
+ 486              		.cfi_restore 1
+  91:lib/delay/src/delay.c ****     if(time < delay_until) return 1;
+ 487              		.loc 1 91 35
+ 488 0036 0545     		li	a0,1
+ 489              	.LVL47:
+ 490              		.loc 1 93 1
+ 491 0038 4101     		addi	sp,sp,16
+ 492              	.LCFI11:
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s 			page 12
+
+
+ 493              		.cfi_def_cfa_offset 0
+ 494 003a 8280     		jr	ra
+ 495              		.cfi_endproc
+ 496              	.LFE6:
+ 498              		.globl	delay_until
+ 499              		.section	.rodata.delay_1ms.cst8,"aM",@progbits,8
+ 500              		.align	3
+ 501              	.LC0:
+ 502 0000 00000000 		.word	0
+ 503 0004 0040AF40 		.word	1085227008
+ 504              		.section	.rodata.delay_1us.cst8,"aM",@progbits,8
+ 505              		.align	3
+ 506              	.LC1:
+ 507 0000 00000000 		.word	0
+ 508 0004 80844E41 		.word	1095664768
+ 509              		.section	.sbss.delay_until,"aw",@nobits
+ 510              		.align	3
+ 511              		.set	.LANCHOR0,. + 0
+ 514              	delay_until:
+ 515 0000 00000000 		.zero	8
+ 515      00000000 
+ 516              		.text
+ 517              	.Letext0:
+ 518              		.file 2 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\machine\
+ 519              		.file 3 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\sys\\_st
+ 520              		.file 4 "../../firmware/GD32VF103_standard_peripheral/system_gd32vf103.h"
+ 521              		.file 5 "../../firmware/RISCV/drivers/n200_func.h"
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s 			page 13
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 delay.c
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:18     .text.delay_1ms:0000000000000000 delay_1ms
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:22     .text.delay_1ms:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:24     .text.delay_1ms:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:25     .text.delay_1ms:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:26     .text.delay_1ms:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:27     .text.delay_1ms:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:29     .text.delay_1ms:0000000000000002 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:41     .text.delay_1ms:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:42     .text.delay_1ms:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:43     .text.delay_1ms:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:44     .text.delay_1ms:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:45     .text.delay_1ms:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:46     .text.delay_1ms:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:47     .text.delay_1ms:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:48     .text.delay_1ms:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:49     .text.delay_1ms:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:50     .text.delay_1ms:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:51     .text.delay_1ms:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:53     .text.delay_1ms:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:55     .text.delay_1ms:000000000000001a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:62     .text.delay_1ms:0000000000000026 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:63     .text.delay_1ms:0000000000000026 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:64     .text.delay_1ms:0000000000000026 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:70     .text.delay_1ms:0000000000000032 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:75     .text.delay_1ms:000000000000003e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:81     .text.delay_1ms:000000000000004a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:82     .text.delay_1ms:000000000000004a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:83     .text.delay_1ms:000000000000004a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:88     .text.delay_1ms:0000000000000054 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:94     .text.delay_1ms:000000000000005c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:99     .text.delay_1ms:0000000000000068 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:101    .text.delay_1ms:000000000000006c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:103    .text.delay_1ms:000000000000006e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:111    .text.delay_1ms:0000000000000084 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:113    .text.delay_1ms:0000000000000086 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:115    .text.delay_1ms:0000000000000088 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:124    .text.delay_1ms:00000000000000a0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:132    .text.delay_1ms:00000000000000b4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:133    .text.delay_1ms:00000000000000b6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:135    .text.delay_1ms:00000000000000b8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:138    .text.delay_1ms:00000000000000ba .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:140    .text.delay_1ms:00000000000000bc .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:142    .text.delay_1ms:00000000000000be .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:144    .text.delay_1ms:00000000000000c0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:146    .text.delay_1ms:00000000000000c2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:148    .text.delay_1ms:00000000000000c4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:150    .text.delay_1ms:00000000000000c6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:153    .text.delay_1ms:00000000000000c8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:155    .text.delay_1ms:00000000000000ca .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:158    .text.delay_1ms:00000000000000cc .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:160    .text.delay_1ms:00000000000000ce .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:167    .text.delay_1us:0000000000000000 delay_1us
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:170    .text.delay_1us:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:172    .text.delay_1us:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:173    .text.delay_1us:0000000000000000 .L0 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s 			page 14
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:174    .text.delay_1us:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:175    .text.delay_1us:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:177    .text.delay_1us:0000000000000002 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:189    .text.delay_1us:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:190    .text.delay_1us:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:191    .text.delay_1us:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:192    .text.delay_1us:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:193    .text.delay_1us:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:194    .text.delay_1us:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:195    .text.delay_1us:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:196    .text.delay_1us:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:197    .text.delay_1us:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:198    .text.delay_1us:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:199    .text.delay_1us:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:201    .text.delay_1us:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:203    .text.delay_1us:000000000000001a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:210    .text.delay_1us:0000000000000026 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:211    .text.delay_1us:0000000000000026 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:212    .text.delay_1us:0000000000000026 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:218    .text.delay_1us:0000000000000032 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:223    .text.delay_1us:000000000000003e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:229    .text.delay_1us:000000000000004a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:230    .text.delay_1us:000000000000004a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:231    .text.delay_1us:000000000000004a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:236    .text.delay_1us:0000000000000054 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:242    .text.delay_1us:000000000000005c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:247    .text.delay_1us:0000000000000068 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:249    .text.delay_1us:000000000000006c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:251    .text.delay_1us:000000000000006e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:259    .text.delay_1us:0000000000000084 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:261    .text.delay_1us:0000000000000086 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:263    .text.delay_1us:0000000000000088 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:272    .text.delay_1us:00000000000000a0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:280    .text.delay_1us:00000000000000b4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:281    .text.delay_1us:00000000000000b6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:283    .text.delay_1us:00000000000000b8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:286    .text.delay_1us:00000000000000ba .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:288    .text.delay_1us:00000000000000bc .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:290    .text.delay_1us:00000000000000be .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:292    .text.delay_1us:00000000000000c0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:294    .text.delay_1us:00000000000000c2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:296    .text.delay_1us:00000000000000c4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:298    .text.delay_1us:00000000000000c6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:301    .text.delay_1us:00000000000000c8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:303    .text.delay_1us:00000000000000ca .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:306    .text.delay_1us:00000000000000cc .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:308    .text.delay_1us:00000000000000ce .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:315    .text.delay_until_1us:0000000000000000 delay_until_1us
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:318    .text.delay_until_1us:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:320    .text.delay_until_1us:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:321    .text.delay_until_1us:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:322    .text.delay_until_1us:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:323    .text.delay_until_1us:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:325    .text.delay_until_1us:0000000000000002 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:328    .text.delay_until_1us:0000000000000006 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:329    .text.delay_until_1us:0000000000000006 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:331    .text.delay_until_1us:0000000000000006 .L0 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s 			page 15
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:333    .text.delay_until_1us:0000000000000008 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:336    .text.delay_until_1us:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:337    .text.delay_until_1us:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:343    .text.delay_until_1us:0000000000000022 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:344    .text.delay_until_1us:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:346    .text.delay_until_1us:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:349    .text.delay_until_1us:000000000000002c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:351    .text.delay_until_1us:0000000000000030 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:352    .text.delay_until_1us:0000000000000032 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:355    .text.delay_until_1us:0000000000000032 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:360    .text.delay_until_1us:000000000000003a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:363    .text.delay_until_1us:000000000000003e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:365    .text.delay_until_1us:0000000000000040 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:367    .text.delay_until_1us:0000000000000042 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:374    .text.delay_until_1ms:0000000000000000 delay_until_1ms
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:377    .text.delay_until_1ms:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:379    .text.delay_until_1ms:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:380    .text.delay_until_1ms:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:381    .text.delay_until_1ms:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:382    .text.delay_until_1ms:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:384    .text.delay_until_1ms:0000000000000002 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:387    .text.delay_until_1ms:0000000000000006 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:388    .text.delay_until_1ms:0000000000000006 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:390    .text.delay_until_1ms:0000000000000006 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:392    .text.delay_until_1ms:0000000000000008 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:395    .text.delay_until_1ms:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:396    .text.delay_until_1ms:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:402    .text.delay_until_1ms:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:403    .text.delay_until_1ms:0000000000000026 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:405    .text.delay_until_1ms:0000000000000026 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:408    .text.delay_until_1ms:000000000000002e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:410    .text.delay_until_1ms:0000000000000032 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:411    .text.delay_until_1ms:0000000000000034 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:414    .text.delay_until_1ms:0000000000000034 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:419    .text.delay_until_1ms:000000000000003c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:422    .text.delay_until_1ms:0000000000000040 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:424    .text.delay_until_1ms:0000000000000042 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:426    .text.delay_until_1ms:0000000000000044 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:433    .text.delay_finished:0000000000000000 delay_finished
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:436    .text.delay_finished:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:437    .text.delay_finished:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:438    .text.delay_finished:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:439    .text.delay_finished:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:440    .text.delay_finished:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:442    .text.delay_finished:0000000000000002 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:444    .text.delay_finished:0000000000000004 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:446    .text.delay_finished:0000000000000004 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:449    .text.delay_finished:000000000000000c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:450    .text.delay_finished:000000000000000c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:453    .text.delay_finished:0000000000000014 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:458    .text.delay_finished:000000000000001e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:459    .text.delay_finished:000000000000001e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:460    .text.delay_finished:0000000000000020 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:461    .text.delay_finished:0000000000000020 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:463    .text.delay_finished:0000000000000020 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:468    .text.delay_finished:0000000000000028 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:469    .text.delay_finished:0000000000000028 .L0 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s 			page 16
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:472    .text.delay_finished:000000000000002a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:474    .text.delay_finished:000000000000002c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:479    .text.delay_finished:000000000000002e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:481    .text.delay_finished:000000000000002e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:485    .text.delay_finished:0000000000000034 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:486    .text.delay_finished:0000000000000036 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:488    .text.delay_finished:0000000000000036 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:491    .text.delay_finished:0000000000000038 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:493    .text.delay_finished:000000000000003a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:495    .text.delay_finished:000000000000003c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:514    .sbss.delay_until:0000000000000000 delay_until
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:511    .sbss.delay_until:0000000000000000 .LANCHOR0
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:163    .text.delay_1ms:00000000000000ce .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:311    .text.delay_1us:00000000000000ce .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:370    .text.delay_until_1us:0000000000000042 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:429    .text.delay_until_1ms:0000000000000044 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:499    .text.delay_finished:000000000000003c .L0 
+                     .debug_frame:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:501    .rodata.delay_1ms.cst8:0000000000000000 .LC0
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:72     .text.delay_1ms:000000000000003a .L3
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:60     .text.delay_1ms:0000000000000026 .L2
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:79     .text.delay_1ms:000000000000004a .L4
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:506    .rodata.delay_1us.cst8:0000000000000000 .LC1
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:220    .text.delay_1us:000000000000003a .L10
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:208    .text.delay_1us:0000000000000026 .L9
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:227    .text.delay_1us:000000000000004a .L11
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:483    .text.delay_finished:0000000000000034 .L21
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:477    .text.delay_finished:000000000000002e .L24
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:456    .text.delay_finished:000000000000001e .L22
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:826    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1405   .debug_str:000000000000000c .LASF28
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1425   .debug_str:00000000000000f9 .LASF29
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1443   .debug_str:0000000000000175 .LASF30
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1387   .debug_ranges:0000000000000000 .Ldebug_ranges0
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1401   .debug_line:0000000000000000 .Ldebug_line0
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1429   .debug_str:000000000000011a .LASF0
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1461   .debug_str:000000000000020e .LASF1
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1407   .debug_str:0000000000000086 .LASF6
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1417   .debug_str:00000000000000bc .LASF2
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1447   .debug_str:00000000000001c5 .LASF3
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1421   .debug_str:00000000000000dc .LASF4
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1453   .debug_str:00000000000001e3 .LASF5
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1427   .debug_str:000000000000010f .LASF7
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1419   .debug_str:00000000000000ca .LASF8
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1441   .debug_str:0000000000000167 .LASF9
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1449   .debug_str:00000000000001cf .LASF10
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1433   .debug_str:0000000000000137 .LASF11
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1435   .debug_str:000000000000014e .LASF12
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1451   .debug_str:00000000000001da .LASF13
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1415   .debug_str:00000000000000b3 .LASF14
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1445   .debug_str:00000000000001b5 .LASF16
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1439   .debug_str:000000000000015b .LASF15
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1403   .debug_str:0000000000000000 .LASF17
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1465   .debug_str:000000000000022a .LASF18
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:434    .text.delay_finished:0000000000000000 .LFB6
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:496    .text.delay_finished:000000000000003c .LFE6
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1101   .debug_loc:0000000000000000 .LLST14
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s 			page 17
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1437   .debug_str:0000000000000156 .LASF20
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1129   .debug_loc:0000000000000044 .LLST15
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:447    .text.delay_finished:000000000000000c .LVL44
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1431   .debug_str:0000000000000127 .LASF19
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:375    .text.delay_until_1ms:0000000000000000 .LFB5
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:427    .text.delay_until_1ms:0000000000000044 .LFE5
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1150   .debug_loc:000000000000006c .LLST11
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1168   .debug_loc:0000000000000098 .LLST12
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1409   .debug_str:0000000000000090 .LASF21
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1186   .debug_loc:00000000000000c4 .LLST13
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:393    .text.delay_until_1ms:0000000000000010 .LVL41
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1463   .debug_str:000000000000021a .LASF22
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:316    .text.delay_until_1us:0000000000000000 .LFB4
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:368    .text.delay_until_1us:0000000000000042 .LFE4
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1198   .debug_loc:00000000000000dc .LLST8
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1216   .debug_loc:0000000000000108 .LLST9
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1234   .debug_loc:0000000000000134 .LLST10
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:334    .text.delay_until_1us:0000000000000010 .LVL37
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1459   .debug_str:0000000000000204 .LASF23
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:168    .text.delay_1us:0000000000000000 .LFB3
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:309    .text.delay_1us:00000000000000ce .LFE3
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1246   .debug_loc:000000000000014c .LLST4
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1413   .debug_str:00000000000000ad .LASF24
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1264   .debug_loc:0000000000000178 .LLST5
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1457   .debug_str:00000000000001f8 .LASF25
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1282   .debug_loc:00000000000001a4 .LLST6
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1455   .debug_str:00000000000001ec .LASF27
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1294   .debug_loc:00000000000001bc .LLST7
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:204    .text.delay_1us:0000000000000022 .LVL19
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:213    .text.delay_1us:000000000000002e .LVL21
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:232    .text.delay_1us:0000000000000052 .LVL24
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1423   .debug_str:00000000000000ef .LASF26
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:19     .text.delay_1ms:0000000000000000 .LFB2
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:161    .text.delay_1ms:00000000000000ce .LFE2
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1306   .debug_loc:00000000000001d4 .LLST0
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1324   .debug_loc:0000000000000200 .LLST1
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1342   .debug_loc:000000000000022c .LLST2
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1354   .debug_loc:0000000000000244 .LLST3
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:56     .text.delay_1ms:0000000000000022 .LVL1
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:65     .text.delay_1ms:000000000000002e .LVL3
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:84     .text.delay_1ms:0000000000000052 .LVL6
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:1411   .debug_str:000000000000009d .LASF31
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:441    .text.delay_finished:0000000000000002 .LCFI8
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:473    .text.delay_finished:000000000000002c .LCFI9
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:478    .text.delay_finished:000000000000002e .LCFI10
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:492    .text.delay_finished:000000000000003a .LCFI11
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:470    .text.delay_finished:000000000000002a .LVL45
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:476    .text.delay_finished:000000000000002e .LVL46
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:489    .text.delay_finished:0000000000000038 .LVL47
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:383    .text.delay_until_1ms:0000000000000002 .LCFI6
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:423    .text.delay_until_1ms:0000000000000042 .LCFI7
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:378    .text.delay_until_1ms:0000000000000000 .LVL40
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:412    .text.delay_until_1ms:0000000000000034 .LVL42
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:415    .text.delay_until_1ms:0000000000000036 .LVL43
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:324    .text.delay_until_1us:0000000000000002 .LCFI4
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:364    .text.delay_until_1us:0000000000000040 .LCFI5
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:319    .text.delay_until_1us:0000000000000000 .LVL36
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s 			page 18
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:353    .text.delay_until_1us:0000000000000032 .LVL38
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:356    .text.delay_until_1us:0000000000000034 .LVL39
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:176    .text.delay_1us:0000000000000002 .LCFI2
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:305    .text.delay_1us:00000000000000cc .LCFI3
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:171    .text.delay_1us:0000000000000000 .LVL18
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:299    .text.delay_1us:00000000000000c6 .LVL35
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:216    .text.delay_1us:0000000000000032 .LVL22
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:284    .text.delay_1us:00000000000000b8 .LVL34
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:207    .text.delay_1us:0000000000000026 .LVL20
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:224    .text.delay_1us:0000000000000042 .LVL23
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:28     .text.delay_1ms:0000000000000002 .LCFI0
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:157    .text.delay_1ms:00000000000000cc .LCFI1
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:23     .text.delay_1ms:0000000000000000 .LVL0
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:151    .text.delay_1ms:00000000000000c6 .LVL17
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:68     .text.delay_1ms:0000000000000032 .LVL4
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:136    .text.delay_1ms:00000000000000b8 .LVL16
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:59     .text.delay_1ms:0000000000000026 .LVL2
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:76     .text.delay_1ms:0000000000000042 .LVL5
+C:\Users\Kalle\AppData\Local\Temp\ccamSpQK.s:523    .debug_info:0000000000000000 .Ldebug_info0
+
+UNDEFINED SYMBOLS
+__floatundidf
+__floatunsidf
+__divdf3
+__muldf3
+__ltdf2
+get_timer_value
+SystemCoreClock

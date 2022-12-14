@@ -1,0 +1,964 @@
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s 			page 1
+
+
+   1              		.file	"pwm.c"
+   2              		.option nopic
+   3              		.attribute arch, "rv32i2p0_m2p0_a2p0_c2p0"
+   4              		.attribute unaligned_access, 0
+   5              		.attribute stack_align, 16
+   6              		.text
+   7              	.Ltext0:
+   8              		.cfi_sections	.debug_frame
+   9              		.section	.text.T1powerUpInitPWM,"ax",@progbits
+  10              		.align	1
+  11              		.globl	T1powerUpInitPWM
+  13              	T1powerUpInitPWM:
+  14              	.LFB2:
+  15              		.file 1 "lib/pwm/src/pwm.c"
+   1:lib/pwm/src/pwm.c **** #include "pwm.h"
+   2:lib/pwm/src/pwm.c **** 
+   3:lib/pwm/src/pwm.c **** void T1powerUpInitPWM(uint16_t ch){
+  16              		.loc 1 3 35
+  17              		.cfi_startproc
+  18              	.LVL0:
+   4:lib/pwm/src/pwm.c ****     timer_oc_parameter_struct timer_ocinitpara;
+  19              		.loc 1 4 5
+   5:lib/pwm/src/pwm.c ****     timer_parameter_struct timer_initpara;
+  20              		.loc 1 5 5
+   6:lib/pwm/src/pwm.c ****     rcu_periph_clock_enable(RCU_GPIOA);
+  21              		.loc 1 6 5
+   3:lib/pwm/src/pwm.c ****     timer_oc_parameter_struct timer_ocinitpara;
+  22              		.loc 1 3 35 is_stmt 0
+  23 0000 3971     		addi	sp,sp,-64
+  24              	.LCFI0:
+  25              		.cfi_def_cfa_offset 64
+  26 0002 22DC     		sw	s0,56(sp)
+  27              		.cfi_offset 8, -8
+  28 0004 2A84     		mv	s0,a0
+  29              		.loc 1 6 5
+  30 0006 13052060 		li	a0,1538
+  31              	.LVL1:
+   3:lib/pwm/src/pwm.c ****     timer_oc_parameter_struct timer_ocinitpara;
+  32              		.loc 1 3 35
+  33 000a 4ED6     		sw	s3,44(sp)
+  34 000c 06DE     		sw	ra,60(sp)
+  35 000e 26DA     		sw	s1,52(sp)
+  36 0010 4AD8     		sw	s2,48(sp)
+  37              		.cfi_offset 19, -20
+  38              		.cfi_offset 1, -4
+  39              		.cfi_offset 9, -12
+  40              		.cfi_offset 18, -16
+  41              		.loc 1 6 5
+  42 0012 97000000 		call	rcu_periph_clock_enable
+  42      E7800000 
+  43              	.LVL2:
+   7:lib/pwm/src/pwm.c ****     rcu_periph_clock_enable(RCU_AF);
+  44              		.loc 1 7 5 is_stmt 1
+  45 001a 93791400 		andi	s3,s0,1
+  46 001e 13050060 		li	a0,1536
+  47 0022 97000000 		call	rcu_periph_clock_enable
+  47      E7800000 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s 			page 2
+
+
+  48              	.LVL3:
+   8:lib/pwm/src/pwm.c ****     if (ch&0x1) gpio_init(GPIOA, GPIO_MODE_AF_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_0);
+  49              		.loc 1 8 5
+  50              		.loc 1 8 8 is_stmt 0
+  51 002a 63900924 		bne	s3,zero,.L52
+  52              	.L2:
+   9:lib/pwm/src/pwm.c ****     if (ch&0x2) gpio_init(GPIOA, GPIO_MODE_AF_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_1);
+  53              		.loc 1 9 5 is_stmt 1
+  54 002e 13792400 		andi	s2,s0,2
+  55              		.loc 1 9 8 is_stmt 0
+  56 0032 63100922 		bne	s2,zero,.L53
+  57              	.L3:
+  10:lib/pwm/src/pwm.c ****     if (ch&0x4) gpio_init(GPIOA, GPIO_MODE_AF_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_2);
+  58              		.loc 1 10 5 is_stmt 1
+  59 0036 93744400 		andi	s1,s0,4
+  60              		.loc 1 10 8 is_stmt 0
+  61 003a 63900420 		bne	s1,zero,.L54
+  62              	.L4:
+  11:lib/pwm/src/pwm.c ****     if (ch&0x8) gpio_init(GPIOA, GPIO_MODE_AF_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_3);
+  63              		.loc 1 11 5 is_stmt 1
+  64 003e 2188     		andi	s0,s0,8
+  65              		.loc 1 11 8 is_stmt 0
+  66 0040 6311041E 		bne	s0,zero,.L55
+  67              	.L5:
+  12:lib/pwm/src/pwm.c ****     rcu_periph_clock_enable(RCU_TIMER1);
+  68              		.loc 1 12 5 is_stmt 1
+  69 0044 13050070 		li	a0,1792
+  70 0048 97000000 		call	rcu_periph_clock_enable
+  70      E7800000 
+  71              	.LVL4:
+  13:lib/pwm/src/pwm.c **** 
+  14:lib/pwm/src/pwm.c ****     timer_deinit(TIMER1);
+  72              		.loc 1 14 5
+  73 0050 37050040 		li	a0,1073741824
+  74 0054 97000000 		call	timer_deinit
+  74      E7800000 
+  75              	.LVL5:
+  15:lib/pwm/src/pwm.c ****     timer_struct_para_init(&timer_initpara);
+  76              		.loc 1 15 5
+  77 005c 0808     		addi	a0,sp,16
+  78 005e 97000000 		call	timer_struct_para_init
+  78      E7800000 
+  79              	.LVL6:
+  16:lib/pwm/src/pwm.c ****     timer_initpara.prescaler            = 10;
+  80              		.loc 1 16 5
+  17:lib/pwm/src/pwm.c ****     timer_initpara.alignedmode          = TIMER_COUNTER_EDGE;
+  81              		.loc 1 17 5
+  18:lib/pwm/src/pwm.c ****     timer_initpara.counterdirection     = TIMER_COUNTER_UP;
+  82              		.loc 1 18 5
+  16:lib/pwm/src/pwm.c ****     timer_initpara.prescaler            = 10;
+  83              		.loc 1 16 41 is_stmt 0
+  84 0066 A947     		li	a5,10
+  85 0068 3EC8     		sw	a5,16(sp)
+  19:lib/pwm/src/pwm.c ****     timer_initpara.period               = 15999;
+  86              		.loc 1 19 41
+  87 006a 9167     		li	a5,16384
+  88 006c 9387F7E7 		addi	a5,a5,-385
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s 			page 3
+
+
+  20:lib/pwm/src/pwm.c ****     timer_initpara.clockdivision        = TIMER_CKDIV_DIV1;
+  21:lib/pwm/src/pwm.c ****     timer_initpara.repetitioncounter    = 0;
+  22:lib/pwm/src/pwm.c ****     timer_init(TIMER1, &timer_initpara);
+  89              		.loc 1 22 5
+  90 0070 0C08     		addi	a1,sp,16
+  91 0072 37050040 		li	a0,1073741824
+  19:lib/pwm/src/pwm.c ****     timer_initpara.period               = 15999;
+  92              		.loc 1 19 41
+  93 0076 3ECC     		sw	a5,24(sp)
+  18:lib/pwm/src/pwm.c ****     timer_initpara.period               = 15999;
+  94              		.loc 1 18 41
+  95 0078 231A0100 		sh	zero,20(sp)
+  19:lib/pwm/src/pwm.c ****     timer_initpara.period               = 15999;
+  96              		.loc 1 19 5 is_stmt 1
+  20:lib/pwm/src/pwm.c ****     timer_initpara.clockdivision        = TIMER_CKDIV_DIV1;
+  97              		.loc 1 20 5
+  20:lib/pwm/src/pwm.c ****     timer_initpara.clockdivision        = TIMER_CKDIV_DIV1;
+  98              		.loc 1 20 41 is_stmt 0
+  99 007c 231E0100 		sh	zero,28(sp)
+  21:lib/pwm/src/pwm.c ****     timer_init(TIMER1, &timer_initpara);
+ 100              		.loc 1 21 5 is_stmt 1
+  21:lib/pwm/src/pwm.c ****     timer_init(TIMER1, &timer_initpara);
+ 101              		.loc 1 21 41 is_stmt 0
+ 102 0080 230F0100 		sb	zero,30(sp)
+ 103              		.loc 1 22 5 is_stmt 1
+ 104 0084 97000000 		call	timer_init
+ 104      E7800000 
+ 105              	.LVL7:
+  23:lib/pwm/src/pwm.c **** 
+  24:lib/pwm/src/pwm.c ****     timer_channel_output_struct_para_init(&timer_ocinitpara);
+ 106              		.loc 1 24 5
+ 107 008c 4800     		addi	a0,sp,4
+ 108 008e 97000000 		call	timer_channel_output_struct_para_init
+ 108      E7800000 
+ 109              	.LVL8:
+  25:lib/pwm/src/pwm.c ****     timer_ocinitpara.outputstate    = TIMER_CCX_ENABLE;
+ 110              		.loc 1 25 5
+  26:lib/pwm/src/pwm.c ****     timer_ocinitpara.outputnstate   = TIMER_CCXN_ENABLE;
+ 111              		.loc 1 26 5
+  27:lib/pwm/src/pwm.c ****     timer_ocinitpara.ocpolarity     = TIMER_OC_POLARITY_HIGH;
+ 112              		.loc 1 27 5
+  28:lib/pwm/src/pwm.c ****     timer_ocinitpara.ocnpolarity    = TIMER_OCN_POLARITY_HIGH;
+ 113              		.loc 1 28 5
+  29:lib/pwm/src/pwm.c ****     timer_ocinitpara.ocidlestate    = TIMER_OC_IDLE_STATE_LOW;
+ 114              		.loc 1 29 5
+  30:lib/pwm/src/pwm.c ****     timer_ocinitpara.ocnidlestate   = TIMER_OCN_IDLE_STATE_LOW;
+ 115              		.loc 1 30 5
+  25:lib/pwm/src/pwm.c ****     timer_ocinitpara.outputnstate   = TIMER_CCXN_ENABLE;
+ 116              		.loc 1 25 37 is_stmt 0
+ 117 0096 B7070400 		li	a5,262144
+ 118 009a 8507     		addi	a5,a5,1
+ 119 009c 3EC2     		sw	a5,4(sp)
+  27:lib/pwm/src/pwm.c ****     timer_ocinitpara.ocnpolarity    = TIMER_OCN_POLARITY_HIGH;
+ 120              		.loc 1 27 37
+ 121 009e 02C4     		sw	zero,8(sp)
+  29:lib/pwm/src/pwm.c ****     timer_ocinitpara.ocnidlestate   = TIMER_OCN_IDLE_STATE_LOW;
+ 122              		.loc 1 29 37
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s 			page 4
+
+
+ 123 00a0 02C6     		sw	zero,12(sp)
+  31:lib/pwm/src/pwm.c ****     if (ch&0x1) timer_channel_output_config(TIMER1, TIMER_CH_0, &timer_ocinitpara);
+ 124              		.loc 1 31 5 is_stmt 1
+ 125              		.loc 1 31 8 is_stmt 0
+ 126 00a2 63950916 		bne	s3,zero,.L56
+  32:lib/pwm/src/pwm.c ****     if (ch&0x2) timer_channel_output_config(TIMER1, TIMER_CH_1, &timer_ocinitpara);
+ 127              		.loc 1 32 5 is_stmt 1
+ 128              		.loc 1 32 8 is_stmt 0
+ 129 00a6 63180914 		bne	s2,zero,.L57
+ 130              	.L7:
+  33:lib/pwm/src/pwm.c ****     if (ch&0x4) timer_channel_output_config(TIMER1, TIMER_CH_2, &timer_ocinitpara);
+ 131              		.loc 1 33 5 is_stmt 1
+ 132              		.loc 1 33 8 is_stmt 0
+ 133 00aa 639B0412 		bne	s1,zero,.L58
+ 134              	.L8:
+  34:lib/pwm/src/pwm.c ****     if (ch&0x8) timer_channel_output_config(TIMER1, TIMER_CH_3, &timer_ocinitpara);
+ 135              		.loc 1 34 5 is_stmt 1
+ 136              		.loc 1 34 8 is_stmt 0
+ 137 00ae 631E0410 		bne	s0,zero,.L59
+ 138              	.L9:
+  35:lib/pwm/src/pwm.c **** 
+  36:lib/pwm/src/pwm.c ****     if (ch&0x1){
+ 139              		.loc 1 36 5 is_stmt 1
+ 140              		.loc 1 36 8 is_stmt 0
+ 141 00b2 639E090C 		bne	s3,zero,.L60
+ 142              	.L10:
+  37:lib/pwm/src/pwm.c ****         timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_0, 11999);
+  38:lib/pwm/src/pwm.c ****         timer_channel_output_mode_config(TIMER1, TIMER_CH_0, TIMER_OC_MODE_PWM0);
+  39:lib/pwm/src/pwm.c ****         timer_channel_output_shadow_config(TIMER1, TIMER_CH_0, TIMER_OC_SHADOW_DISABLE);
+  40:lib/pwm/src/pwm.c ****     }
+  41:lib/pwm/src/pwm.c ****     if (ch&0x2){
+ 143              		.loc 1 41 5 is_stmt 1
+ 144              		.loc 1 41 8 is_stmt 0
+ 145 00b6 631F0908 		bne	s2,zero,.L61
+ 146              	.L11:
+  42:lib/pwm/src/pwm.c ****         timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_1, 11999);
+  43:lib/pwm/src/pwm.c ****         timer_channel_output_mode_config(TIMER1, TIMER_CH_1, TIMER_OC_MODE_PWM0);
+  44:lib/pwm/src/pwm.c ****         timer_channel_output_shadow_config(TIMER1, TIMER_CH_1, TIMER_OC_SHADOW_DISABLE);
+  45:lib/pwm/src/pwm.c ****     }
+  46:lib/pwm/src/pwm.c ****     if (ch&0x4){
+ 147              		.loc 1 46 5 is_stmt 1
+ 148              		.loc 1 46 8 is_stmt 0
+ 149 00ba 8DE4     		bne	s1,zero,.L62
+ 150              	.L12:
+  47:lib/pwm/src/pwm.c ****         timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_2, 11999);
+  48:lib/pwm/src/pwm.c ****         timer_channel_output_mode_config(TIMER1, TIMER_CH_2, TIMER_OC_MODE_PWM0);
+  49:lib/pwm/src/pwm.c ****         timer_channel_output_shadow_config(TIMER1, TIMER_CH_2, TIMER_OC_SHADOW_DISABLE);
+  50:lib/pwm/src/pwm.c ****     }
+  51:lib/pwm/src/pwm.c ****     if (ch&0x8){
+ 151              		.loc 1 51 5 is_stmt 1
+ 152              		.loc 1 51 8 is_stmt 0
+ 153 00bc 25E0     		bne	s0,zero,.L63
+ 154              	.L13:
+  52:lib/pwm/src/pwm.c ****         timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_3, 11999);
+  53:lib/pwm/src/pwm.c ****         timer_channel_output_mode_config(TIMER1, TIMER_CH_3, TIMER_OC_MODE_PWM0);
+  54:lib/pwm/src/pwm.c ****         timer_channel_output_shadow_config(TIMER1, TIMER_CH_3, TIMER_OC_SHADOW_DISABLE);
+  55:lib/pwm/src/pwm.c ****     }
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s 			page 5
+
+
+  56:lib/pwm/src/pwm.c **** 
+  57:lib/pwm/src/pwm.c ****     timer_auto_reload_shadow_enable(TIMER1);
+ 155              		.loc 1 57 5 is_stmt 1
+ 156 00be 37050040 		li	a0,1073741824
+ 157 00c2 97000000 		call	timer_auto_reload_shadow_enable
+ 157      E7800000 
+ 158              	.LVL9:
+  58:lib/pwm/src/pwm.c ****     timer_enable(TIMER1);
+ 159              		.loc 1 58 5
+ 160 00ca 37050040 		li	a0,1073741824
+ 161 00ce 97000000 		call	timer_enable
+ 161      E7800000 
+ 162              	.LVL10:
+  59:lib/pwm/src/pwm.c **** }
+ 163              		.loc 1 59 1 is_stmt 0
+ 164 00d6 F250     		lw	ra,60(sp)
+ 165              		.cfi_remember_state
+ 166              		.cfi_restore 1
+ 167 00d8 6254     		lw	s0,56(sp)
+ 168              		.cfi_restore 8
+ 169 00da D254     		lw	s1,52(sp)
+ 170              		.cfi_restore 9
+ 171 00dc 4259     		lw	s2,48(sp)
+ 172              		.cfi_restore 18
+ 173 00de B259     		lw	s3,44(sp)
+ 174              		.cfi_restore 19
+ 175 00e0 2161     		addi	sp,sp,64
+ 176              	.LCFI1:
+ 177              		.cfi_def_cfa_offset 0
+ 178 00e2 8280     		jr	ra
+ 179              	.L62:
+ 180              	.LCFI2:
+ 181              		.cfi_restore_state
+  47:lib/pwm/src/pwm.c ****         timer_channel_output_mode_config(TIMER1, TIMER_CH_2, TIMER_OC_MODE_PWM0);
+ 182              		.loc 1 47 9 is_stmt 1
+ 183 00e4 0D66     		li	a2,12288
+ 184 00e6 1306F6ED 		addi	a2,a2,-289
+ 185 00ea 8945     		li	a1,2
+ 186 00ec 37050040 		li	a0,1073741824
+ 187 00f0 97000000 		call	timer_channel_output_pulse_value_config
+ 187      E7800000 
+ 188              	.LVL11:
+  48:lib/pwm/src/pwm.c ****         timer_channel_output_shadow_config(TIMER1, TIMER_CH_2, TIMER_OC_SHADOW_DISABLE);
+ 189              		.loc 1 48 9
+ 190 00f8 13060006 		li	a2,96
+ 191 00fc 8945     		li	a1,2
+ 192 00fe 37050040 		li	a0,1073741824
+ 193 0102 97000000 		call	timer_channel_output_mode_config
+ 193      E7800000 
+ 194              	.LVL12:
+  49:lib/pwm/src/pwm.c ****     }
+ 195              		.loc 1 49 9
+ 196 010a 0146     		li	a2,0
+ 197 010c 8945     		li	a1,2
+ 198 010e 37050040 		li	a0,1073741824
+ 199 0112 97000000 		call	timer_channel_output_shadow_config
+ 199      E7800000 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s 			page 6
+
+
+ 200              	.LVL13:
+  51:lib/pwm/src/pwm.c ****         timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_3, 11999);
+ 201              		.loc 1 51 5
+  51:lib/pwm/src/pwm.c ****         timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_3, 11999);
+ 202              		.loc 1 51 8 is_stmt 0
+ 203 011a 55D0     		beq	s0,zero,.L13
+ 204              	.L63:
+  52:lib/pwm/src/pwm.c ****         timer_channel_output_mode_config(TIMER1, TIMER_CH_3, TIMER_OC_MODE_PWM0);
+ 205              		.loc 1 52 9 is_stmt 1
+ 206 011c 0D66     		li	a2,12288
+ 207 011e 1306F6ED 		addi	a2,a2,-289
+ 208 0122 8D45     		li	a1,3
+ 209 0124 37050040 		li	a0,1073741824
+ 210 0128 97000000 		call	timer_channel_output_pulse_value_config
+ 210      E7800000 
+ 211              	.LVL14:
+  53:lib/pwm/src/pwm.c ****         timer_channel_output_shadow_config(TIMER1, TIMER_CH_3, TIMER_OC_SHADOW_DISABLE);
+ 212              		.loc 1 53 9
+ 213 0130 13060006 		li	a2,96
+ 214 0134 8D45     		li	a1,3
+ 215 0136 37050040 		li	a0,1073741824
+ 216 013a 97000000 		call	timer_channel_output_mode_config
+ 216      E7800000 
+ 217              	.LVL15:
+  54:lib/pwm/src/pwm.c ****     }
+ 218              		.loc 1 54 9
+ 219 0142 0146     		li	a2,0
+ 220 0144 8D45     		li	a1,3
+ 221 0146 37050040 		li	a0,1073741824
+ 222 014a 97000000 		call	timer_channel_output_shadow_config
+ 222      E7800000 
+ 223              	.LVL16:
+ 224 0152 B5B7     		j	.L13
+ 225              	.L61:
+  42:lib/pwm/src/pwm.c ****         timer_channel_output_mode_config(TIMER1, TIMER_CH_1, TIMER_OC_MODE_PWM0);
+ 226              		.loc 1 42 9
+ 227 0154 0D66     		li	a2,12288
+ 228 0156 1306F6ED 		addi	a2,a2,-289
+ 229 015a 8545     		li	a1,1
+ 230 015c 37050040 		li	a0,1073741824
+ 231 0160 97000000 		call	timer_channel_output_pulse_value_config
+ 231      E7800000 
+ 232              	.LVL17:
+  43:lib/pwm/src/pwm.c ****         timer_channel_output_shadow_config(TIMER1, TIMER_CH_1, TIMER_OC_SHADOW_DISABLE);
+ 233              		.loc 1 43 9
+ 234 0168 13060006 		li	a2,96
+ 235 016c 8545     		li	a1,1
+ 236 016e 37050040 		li	a0,1073741824
+ 237 0172 97000000 		call	timer_channel_output_mode_config
+ 237      E7800000 
+ 238              	.LVL18:
+  44:lib/pwm/src/pwm.c ****     }
+ 239              		.loc 1 44 9
+ 240 017a 0146     		li	a2,0
+ 241 017c 8545     		li	a1,1
+ 242 017e 37050040 		li	a0,1073741824
+ 243 0182 97000000 		call	timer_channel_output_shadow_config
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s 			page 7
+
+
+ 243      E7800000 
+ 244              	.LVL19:
+  46:lib/pwm/src/pwm.c ****         timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_2, 11999);
+ 245              		.loc 1 46 5
+  46:lib/pwm/src/pwm.c ****         timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_2, 11999);
+ 246              		.loc 1 46 8 is_stmt 0
+ 247 018a 8DD8     		beq	s1,zero,.L12
+ 248 018c A1BF     		j	.L62
+ 249              	.L60:
+  37:lib/pwm/src/pwm.c ****         timer_channel_output_mode_config(TIMER1, TIMER_CH_0, TIMER_OC_MODE_PWM0);
+ 250              		.loc 1 37 9 is_stmt 1
+ 251 018e 0D66     		li	a2,12288
+ 252 0190 1306F6ED 		addi	a2,a2,-289
+ 253 0194 8145     		li	a1,0
+ 254 0196 37050040 		li	a0,1073741824
+ 255 019a 97000000 		call	timer_channel_output_pulse_value_config
+ 255      E7800000 
+ 256              	.LVL20:
+  38:lib/pwm/src/pwm.c ****         timer_channel_output_shadow_config(TIMER1, TIMER_CH_0, TIMER_OC_SHADOW_DISABLE);
+ 257              		.loc 1 38 9
+ 258 01a2 13060006 		li	a2,96
+ 259 01a6 8145     		li	a1,0
+ 260 01a8 37050040 		li	a0,1073741824
+ 261 01ac 97000000 		call	timer_channel_output_mode_config
+ 261      E7800000 
+ 262              	.LVL21:
+  39:lib/pwm/src/pwm.c ****     }
+ 263              		.loc 1 39 9
+ 264 01b4 0146     		li	a2,0
+ 265 01b6 8145     		li	a1,0
+ 266 01b8 37050040 		li	a0,1073741824
+ 267 01bc 97000000 		call	timer_channel_output_shadow_config
+ 267      E7800000 
+ 268              	.LVL22:
+  41:lib/pwm/src/pwm.c ****         timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_1, 11999);
+ 269              		.loc 1 41 5
+  41:lib/pwm/src/pwm.c ****         timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_1, 11999);
+ 270              		.loc 1 41 8 is_stmt 0
+ 271 01c4 E30B09EE 		beq	s2,zero,.L11
+ 272 01c8 71B7     		j	.L61
+ 273              	.L59:
+  34:lib/pwm/src/pwm.c **** 
+ 274              		.loc 1 34 17 is_stmt 1 discriminator 1
+ 275 01ca 5000     		addi	a2,sp,4
+ 276 01cc 8D45     		li	a1,3
+ 277 01ce 37050040 		li	a0,1073741824
+ 278 01d2 97000000 		call	timer_channel_output_config
+ 278      E7800000 
+ 279              	.LVL23:
+  36:lib/pwm/src/pwm.c ****         timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_0, 11999);
+ 280              		.loc 1 36 5 discriminator 1
+  36:lib/pwm/src/pwm.c ****         timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_0, 11999);
+ 281              		.loc 1 36 8 is_stmt 0 discriminator 1
+ 282 01da E38E09EC 		beq	s3,zero,.L10
+ 283 01de 45BF     		j	.L60
+ 284              	.L58:
+  33:lib/pwm/src/pwm.c ****     if (ch&0x8) timer_channel_output_config(TIMER1, TIMER_CH_3, &timer_ocinitpara);
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s 			page 8
+
+
+ 285              		.loc 1 33 17 is_stmt 1 discriminator 1
+ 286 01e0 5000     		addi	a2,sp,4
+ 287 01e2 8945     		li	a1,2
+ 288 01e4 37050040 		li	a0,1073741824
+ 289 01e8 97000000 		call	timer_channel_output_config
+ 289      E7800000 
+ 290              	.LVL24:
+  34:lib/pwm/src/pwm.c **** 
+ 291              		.loc 1 34 5 discriminator 1
+  34:lib/pwm/src/pwm.c **** 
+ 292              		.loc 1 34 8 is_stmt 0 discriminator 1
+ 293 01f0 E30104EC 		beq	s0,zero,.L9
+ 294 01f4 D9BF     		j	.L59
+ 295              	.L57:
+  32:lib/pwm/src/pwm.c ****     if (ch&0x4) timer_channel_output_config(TIMER1, TIMER_CH_2, &timer_ocinitpara);
+ 296              		.loc 1 32 17 is_stmt 1 discriminator 1
+ 297 01f6 5000     		addi	a2,sp,4
+ 298 01f8 8545     		li	a1,1
+ 299 01fa 37050040 		li	a0,1073741824
+ 300 01fe 97000000 		call	timer_channel_output_config
+ 300      E7800000 
+ 301              	.LVL25:
+  33:lib/pwm/src/pwm.c ****     if (ch&0x8) timer_channel_output_config(TIMER1, TIMER_CH_3, &timer_ocinitpara);
+ 302              		.loc 1 33 5 discriminator 1
+  33:lib/pwm/src/pwm.c ****     if (ch&0x8) timer_channel_output_config(TIMER1, TIMER_CH_3, &timer_ocinitpara);
+ 303              		.loc 1 33 8 is_stmt 0 discriminator 1
+ 304 0206 E38404EA 		beq	s1,zero,.L8
+ 305 020a D9BF     		j	.L58
+ 306              	.L56:
+  31:lib/pwm/src/pwm.c ****     if (ch&0x2) timer_channel_output_config(TIMER1, TIMER_CH_1, &timer_ocinitpara);
+ 307              		.loc 1 31 17 is_stmt 1 discriminator 1
+ 308 020c 5000     		addi	a2,sp,4
+ 309 020e 8145     		li	a1,0
+ 310 0210 37050040 		li	a0,1073741824
+ 311 0214 97000000 		call	timer_channel_output_config
+ 311      E7800000 
+ 312              	.LVL26:
+  32:lib/pwm/src/pwm.c ****     if (ch&0x4) timer_channel_output_config(TIMER1, TIMER_CH_2, &timer_ocinitpara);
+ 313              		.loc 1 32 5 discriminator 1
+  32:lib/pwm/src/pwm.c ****     if (ch&0x4) timer_channel_output_config(TIMER1, TIMER_CH_2, &timer_ocinitpara);
+ 314              		.loc 1 32 8 is_stmt 0 discriminator 1
+ 315 021c E30709E8 		beq	s2,zero,.L7
+ 316 0220 D9BF     		j	.L57
+ 317              	.L55:
+  11:lib/pwm/src/pwm.c ****     rcu_periph_clock_enable(RCU_TIMER1);
+ 318              		.loc 1 11 17 is_stmt 1 discriminator 1
+ 319 0222 37150140 		li	a0,1073811456
+ 320 0226 A146     		li	a3,8
+ 321 0228 0D46     		li	a2,3
+ 322 022a E145     		li	a1,24
+ 323 022c 13050580 		addi	a0,a0,-2048
+ 324 0230 97000000 		call	gpio_init
+ 324      E7800000 
+ 325              	.LVL27:
+ 326 0238 31B5     		j	.L5
+ 327              	.L54:
+  10:lib/pwm/src/pwm.c ****     if (ch&0x8) gpio_init(GPIOA, GPIO_MODE_AF_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_3);
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s 			page 9
+
+
+ 328              		.loc 1 10 17 discriminator 1
+ 329 023a 37150140 		li	a0,1073811456
+ 330 023e 9146     		li	a3,4
+ 331 0240 0D46     		li	a2,3
+ 332 0242 E145     		li	a1,24
+ 333 0244 13050580 		addi	a0,a0,-2048
+ 334 0248 97000000 		call	gpio_init
+ 334      E7800000 
+ 335              	.LVL28:
+ 336 0250 FDB3     		j	.L4
+ 337              	.L53:
+   9:lib/pwm/src/pwm.c ****     if (ch&0x4) gpio_init(GPIOA, GPIO_MODE_AF_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_2);
+ 338              		.loc 1 9 17 discriminator 1
+ 339 0252 37150140 		li	a0,1073811456
+ 340 0256 8946     		li	a3,2
+ 341 0258 0D46     		li	a2,3
+ 342 025a E145     		li	a1,24
+ 343 025c 13050580 		addi	a0,a0,-2048
+ 344 0260 97000000 		call	gpio_init
+ 344      E7800000 
+ 345              	.LVL29:
+ 346 0268 F9B3     		j	.L3
+ 347              	.L52:
+   8:lib/pwm/src/pwm.c ****     if (ch&0x2) gpio_init(GPIOA, GPIO_MODE_AF_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_1);
+ 348              		.loc 1 8 17 discriminator 1
+ 349 026a 37150140 		li	a0,1073811456
+ 350 026e 8546     		li	a3,1
+ 351 0270 0D46     		li	a2,3
+ 352 0272 E145     		li	a1,24
+ 353 0274 13050580 		addi	a0,a0,-2048
+ 354 0278 97000000 		call	gpio_init
+ 354      E7800000 
+ 355              	.LVL30:
+ 356 0280 7DB3     		j	.L2
+ 357              		.cfi_endproc
+ 358              	.LFE2:
+ 360              		.section	.text.T1setPWMch2,"ax",@progbits
+ 361              		.align	1
+ 362              		.globl	T1setPWMch2
+ 364              	T1setPWMch2:
+ 365              	.LFB3:
+  60:lib/pwm/src/pwm.c **** 
+  61:lib/pwm/src/pwm.c **** void T1setPWMch2(int value){
+ 366              		.loc 1 61 28
+ 367              		.cfi_startproc
+ 368              	.LVL31:
+  62:lib/pwm/src/pwm.c ****     timer_channel_output_pulse_value_config(TIMER1,TIMER_CH_2,value);
+ 369              		.loc 1 62 5
+ 370 0000 2A86     		mv	a2,a0
+ 371 0002 8945     		li	a1,2
+ 372 0004 37050040 		li	a0,1073741824
+ 373              	.LVL32:
+ 374 0008 17030000 		tail	timer_channel_output_pulse_value_config
+ 374      67000300 
+ 375              	.LVL33:
+ 376              		.cfi_endproc
+ 377              	.LFE3:
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s 			page 10
+
+
+ 379              		.section	.text.T1setPWMmotorB,"ax",@progbits
+ 380              		.align	1
+ 381              		.globl	T1setPWMmotorB
+ 383              	T1setPWMmotorB:
+ 384              	.LFB4:
+  63:lib/pwm/src/pwm.c **** }
+  64:lib/pwm/src/pwm.c **** 
+  65:lib/pwm/src/pwm.c **** void T1setPWMmotorB(int thrrottle){
+ 385              		.loc 1 65 35
+ 386              		.cfi_startproc
+ 387              	.LVL34:
+  66:lib/pwm/src/pwm.c ****     timer_channel_output_pulse_value_config(TIMER1,TIMER_CH_1,thrrottle*8000);
+ 388              		.loc 1 66 5
+ 389              		.loc 1 66 72 is_stmt 0
+ 390 0000 0966     		li	a2,8192
+ 391 0002 130606F4 		addi	a2,a2,-192
+ 392              		.loc 1 66 5
+ 393 0006 3306C502 		mul	a2,a0,a2
+  65:lib/pwm/src/pwm.c ****     timer_channel_output_pulse_value_config(TIMER1,TIMER_CH_1,thrrottle*8000);
+ 394              		.loc 1 65 35
+ 395 000a 4111     		addi	sp,sp,-16
+ 396              	.LCFI3:
+ 397              		.cfi_def_cfa_offset 16
+ 398              		.loc 1 66 5
+ 399 000c 8545     		li	a1,1
+ 400 000e 37050040 		li	a0,1073741824
+ 401              	.LVL35:
+  65:lib/pwm/src/pwm.c ****     timer_channel_output_pulse_value_config(TIMER1,TIMER_CH_1,thrrottle*8000);
+ 402              		.loc 1 65 35
+ 403 0012 06C6     		sw	ra,12(sp)
+ 404              		.cfi_offset 1, -4
+ 405              		.loc 1 66 5
+ 406 0014 97000000 		call	timer_channel_output_pulse_value_config
+ 406      E7800000 
+ 407              	.LVL36:
+  67:lib/pwm/src/pwm.c ****     timer_channel_output_pulse_value_config(TIMER1,TIMER_CH_0,0);
+ 408              		.loc 1 67 5 is_stmt 1
+  68:lib/pwm/src/pwm.c **** }...
+ 409              		.loc 1 68 1 is_stmt 0
+ 410 001c B240     		lw	ra,12(sp)
+ 411              		.cfi_restore 1
+  67:lib/pwm/src/pwm.c ****     timer_channel_output_pulse_value_config(TIMER1,TIMER_CH_0,0);
+ 412              		.loc 1 67 5
+ 413 001e 0146     		li	a2,0
+ 414              		.loc 1 68 1
+  67:lib/pwm/src/pwm.c ****     timer_channel_output_pulse_value_config(TIMER1,TIMER_CH_0,0);
+ 415              		.loc 1 67 5
+ 416 0020 8145     		li	a1,0
+ 417 0022 37050040 		li	a0,1073741824
+ 418              		.loc 1 68 1
+ 419 0026 4101     		addi	sp,sp,16
+ 420              	.LCFI4:
+ 421              		.cfi_def_cfa_offset 0
+  67:lib/pwm/src/pwm.c ****     timer_channel_output_pulse_value_config(TIMER1,TIMER_CH_0,0);
+ 422              		.loc 1 67 5
+ 423 0028 17030000 		tail	timer_channel_output_pulse_value_config
+ 423      67000300 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s 			page 11
+
+
+ 424              	.LVL37:
+ 425              		.cfi_endproc
+ 426              	.LFE4:
+ 428              		.text
+ 429              	.Letext0:
+ 430              		.file 2 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\machine\
+ 431              		.file 3 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\sys\\_st
+ 432              		.file 4 "../../firmware/GD32VF103_standard_peripheral/Include/gd32vf103_timer.h"
+ 433              		.file 5 "../../firmware/GD32VF103_standard_peripheral/Include/gd32vf103_rcu.h"
+ 434              		.file 6 "../../firmware/GD32VF103_standard_peripheral/Include/gd32vf103_gpio.h"
+ 435              		.file 7 "../../firmware/GD32VF103_standard_peripheral/system_gd32vf103.h"
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s 			page 12
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 pwm.c
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:13     .text.T1powerUpInitPWM:0000000000000000 T1powerUpInitPWM
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:17     .text.T1powerUpInitPWM:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:19     .text.T1powerUpInitPWM:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:20     .text.T1powerUpInitPWM:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:21     .text.T1powerUpInitPWM:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:22     .text.T1powerUpInitPWM:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:23     .text.T1powerUpInitPWM:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:25     .text.T1powerUpInitPWM:0000000000000002 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:27     .text.T1powerUpInitPWM:0000000000000004 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:30     .text.T1powerUpInitPWM:0000000000000006 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:33     .text.T1powerUpInitPWM:000000000000000a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:37     .text.T1powerUpInitPWM:0000000000000012 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:38     .text.T1powerUpInitPWM:0000000000000012 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:39     .text.T1powerUpInitPWM:0000000000000012 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:40     .text.T1powerUpInitPWM:0000000000000012 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:42     .text.T1powerUpInitPWM:0000000000000012 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:45     .text.T1powerUpInitPWM:000000000000001a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:50     .text.T1powerUpInitPWM:000000000000002a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:51     .text.T1powerUpInitPWM:000000000000002a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:54     .text.T1powerUpInitPWM:000000000000002e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:56     .text.T1powerUpInitPWM:0000000000000032 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:59     .text.T1powerUpInitPWM:0000000000000036 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:61     .text.T1powerUpInitPWM:000000000000003a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:64     .text.T1powerUpInitPWM:000000000000003e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:66     .text.T1powerUpInitPWM:0000000000000040 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:69     .text.T1powerUpInitPWM:0000000000000044 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:73     .text.T1powerUpInitPWM:0000000000000050 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:77     .text.T1powerUpInitPWM:000000000000005c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:81     .text.T1powerUpInitPWM:0000000000000066 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:82     .text.T1powerUpInitPWM:0000000000000066 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:83     .text.T1powerUpInitPWM:0000000000000066 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:84     .text.T1powerUpInitPWM:0000000000000066 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:87     .text.T1powerUpInitPWM:000000000000006a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:90     .text.T1powerUpInitPWM:0000000000000070 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:93     .text.T1powerUpInitPWM:0000000000000076 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:95     .text.T1powerUpInitPWM:0000000000000078 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:97     .text.T1powerUpInitPWM:000000000000007c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:98     .text.T1powerUpInitPWM:000000000000007c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:99     .text.T1powerUpInitPWM:000000000000007c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:101    .text.T1powerUpInitPWM:0000000000000080 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:102    .text.T1powerUpInitPWM:0000000000000080 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:104    .text.T1powerUpInitPWM:0000000000000084 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:107    .text.T1powerUpInitPWM:000000000000008c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:111    .text.T1powerUpInitPWM:0000000000000096 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:112    .text.T1powerUpInitPWM:0000000000000096 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:113    .text.T1powerUpInitPWM:0000000000000096 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:114    .text.T1powerUpInitPWM:0000000000000096 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:115    .text.T1powerUpInitPWM:0000000000000096 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:116    .text.T1powerUpInitPWM:0000000000000096 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:117    .text.T1powerUpInitPWM:0000000000000096 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:121    .text.T1powerUpInitPWM:000000000000009e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:123    .text.T1powerUpInitPWM:00000000000000a0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:125    .text.T1powerUpInitPWM:00000000000000a2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:126    .text.T1powerUpInitPWM:00000000000000a2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:128    .text.T1powerUpInitPWM:00000000000000a6 .L0 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s 			page 13
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:129    .text.T1powerUpInitPWM:00000000000000a6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:132    .text.T1powerUpInitPWM:00000000000000aa .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:133    .text.T1powerUpInitPWM:00000000000000aa .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:136    .text.T1powerUpInitPWM:00000000000000ae .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:137    .text.T1powerUpInitPWM:00000000000000ae .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:140    .text.T1powerUpInitPWM:00000000000000b2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:141    .text.T1powerUpInitPWM:00000000000000b2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:144    .text.T1powerUpInitPWM:00000000000000b6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:145    .text.T1powerUpInitPWM:00000000000000b6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:148    .text.T1powerUpInitPWM:00000000000000ba .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:149    .text.T1powerUpInitPWM:00000000000000ba .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:152    .text.T1powerUpInitPWM:00000000000000bc .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:153    .text.T1powerUpInitPWM:00000000000000bc .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:156    .text.T1powerUpInitPWM:00000000000000be .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:160    .text.T1powerUpInitPWM:00000000000000ca .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:164    .text.T1powerUpInitPWM:00000000000000d6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:165    .text.T1powerUpInitPWM:00000000000000d8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:166    .text.T1powerUpInitPWM:00000000000000d8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:168    .text.T1powerUpInitPWM:00000000000000da .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:170    .text.T1powerUpInitPWM:00000000000000dc .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:172    .text.T1powerUpInitPWM:00000000000000de .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:174    .text.T1powerUpInitPWM:00000000000000e0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:177    .text.T1powerUpInitPWM:00000000000000e2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:181    .text.T1powerUpInitPWM:00000000000000e4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:183    .text.T1powerUpInitPWM:00000000000000e4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:190    .text.T1powerUpInitPWM:00000000000000f8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:196    .text.T1powerUpInitPWM:000000000000010a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:202    .text.T1powerUpInitPWM:000000000000011a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:203    .text.T1powerUpInitPWM:000000000000011a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:206    .text.T1powerUpInitPWM:000000000000011c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:213    .text.T1powerUpInitPWM:0000000000000130 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:219    .text.T1powerUpInitPWM:0000000000000142 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:227    .text.T1powerUpInitPWM:0000000000000154 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:234    .text.T1powerUpInitPWM:0000000000000168 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:240    .text.T1powerUpInitPWM:000000000000017a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:246    .text.T1powerUpInitPWM:000000000000018a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:247    .text.T1powerUpInitPWM:000000000000018a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:251    .text.T1powerUpInitPWM:000000000000018e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:258    .text.T1powerUpInitPWM:00000000000001a2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:264    .text.T1powerUpInitPWM:00000000000001b4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:270    .text.T1powerUpInitPWM:00000000000001c4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:271    .text.T1powerUpInitPWM:00000000000001c4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:275    .text.T1powerUpInitPWM:00000000000001ca .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:281    .text.T1powerUpInitPWM:00000000000001da .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:282    .text.T1powerUpInitPWM:00000000000001da .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:286    .text.T1powerUpInitPWM:00000000000001e0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:292    .text.T1powerUpInitPWM:00000000000001f0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:293    .text.T1powerUpInitPWM:00000000000001f0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:297    .text.T1powerUpInitPWM:00000000000001f6 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:303    .text.T1powerUpInitPWM:0000000000000206 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:304    .text.T1powerUpInitPWM:0000000000000206 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:308    .text.T1powerUpInitPWM:000000000000020c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:314    .text.T1powerUpInitPWM:000000000000021c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:315    .text.T1powerUpInitPWM:000000000000021c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:319    .text.T1powerUpInitPWM:0000000000000222 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:329    .text.T1powerUpInitPWM:000000000000023a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:339    .text.T1powerUpInitPWM:0000000000000252 .L0 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s 			page 14
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:349    .text.T1powerUpInitPWM:000000000000026a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:357    .text.T1powerUpInitPWM:0000000000000282 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:364    .text.T1setPWMch2:0000000000000000 T1setPWMch2
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:367    .text.T1setPWMch2:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:369    .text.T1setPWMch2:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:370    .text.T1setPWMch2:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:376    .text.T1setPWMch2:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:383    .text.T1setPWMmotorB:0000000000000000 T1setPWMmotorB
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:386    .text.T1setPWMmotorB:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:388    .text.T1setPWMmotorB:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:389    .text.T1setPWMmotorB:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:390    .text.T1setPWMmotorB:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:393    .text.T1setPWMmotorB:0000000000000006 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:395    .text.T1setPWMmotorB:000000000000000a .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:397    .text.T1setPWMmotorB:000000000000000c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:399    .text.T1setPWMmotorB:000000000000000c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:403    .text.T1setPWMmotorB:0000000000000012 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:404    .text.T1setPWMmotorB:0000000000000014 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:406    .text.T1setPWMmotorB:0000000000000014 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:409    .text.T1setPWMmotorB:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:410    .text.T1setPWMmotorB:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:411    .text.T1setPWMmotorB:000000000000001e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:413    .text.T1setPWMmotorB:000000000000001e .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:415    .text.T1setPWMmotorB:0000000000000020 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:416    .text.T1setPWMmotorB:0000000000000020 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:419    .text.T1setPWMmotorB:0000000000000026 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:421    .text.T1setPWMmotorB:0000000000000028 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:423    .text.T1setPWMmotorB:0000000000000028 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:425    .text.T1setPWMmotorB:0000000000000030 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:360    .text.T1powerUpInitPWM:0000000000000282 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:379    .text.T1setPWMch2:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:428    .text.T1setPWMmotorB:0000000000000030 .L0 
+                     .debug_frame:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:347    .text.T1powerUpInitPWM:000000000000026a .L52
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:337    .text.T1powerUpInitPWM:0000000000000252 .L53
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:327    .text.T1powerUpInitPWM:000000000000023a .L54
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:317    .text.T1powerUpInitPWM:0000000000000222 .L55
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:306    .text.T1powerUpInitPWM:000000000000020c .L56
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:295    .text.T1powerUpInitPWM:00000000000001f6 .L57
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:284    .text.T1powerUpInitPWM:00000000000001e0 .L58
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:273    .text.T1powerUpInitPWM:00000000000001ca .L59
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:249    .text.T1powerUpInitPWM:000000000000018e .L60
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:225    .text.T1powerUpInitPWM:0000000000000154 .L61
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:179    .text.T1powerUpInitPWM:00000000000000e4 .L62
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:204    .text.T1powerUpInitPWM:000000000000011c .L63
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:154    .text.T1powerUpInitPWM:00000000000000be .L13
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:150    .text.T1powerUpInitPWM:00000000000000bc .L12
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:146    .text.T1powerUpInitPWM:00000000000000ba .L11
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:142    .text.T1powerUpInitPWM:00000000000000b6 .L10
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:138    .text.T1powerUpInitPWM:00000000000000b2 .L9
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:134    .text.T1powerUpInitPWM:00000000000000ae .L8
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:130    .text.T1powerUpInitPWM:00000000000000aa .L7
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:67     .text.T1powerUpInitPWM:0000000000000044 .L5
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:62     .text.T1powerUpInitPWM:000000000000003e .L4
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:57     .text.T1powerUpInitPWM:0000000000000036 .L3
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:52     .text.T1powerUpInitPWM:000000000000002e .L2
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:1620   .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s 			page 15
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2186   .debug_str:00000000000002b2 .LASF86
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2206   .debug_str:00000000000003bb .LASF87
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2182   .debug_str:000000000000025b .LASF88
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2076   .debug_ranges:0000000000000000 .Ldebug_ranges0
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2086   .debug_line:0000000000000000 .Ldebug_line0
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2190   .debug_str:0000000000000335 .LASF0
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2180   .debug_str:000000000000024f .LASF1
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2266   .debug_str:0000000000000550 .LASF4
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2170   .debug_str:000000000000020f .LASF2
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2148   .debug_str:0000000000000161 .LASF3
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2106   .debug_str:0000000000000060 .LASF5
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2200   .debug_str:0000000000000377 .LASF6
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2136   .debug_str:000000000000012a .LASF7
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2102   .debug_str:000000000000004d .LASF8
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2222   .debug_str:0000000000000419 .LASF9
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2100   .debug_str:000000000000003f .LASF10
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2184   .debug_str:000000000000029b .LASF11
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2118   .debug_str:00000000000000cb .LASF12
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2192   .debug_str:0000000000000342 .LASF13
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2188   .debug_str:000000000000032c .LASF14
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2216   .debug_str:00000000000003f9 .LASF89
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2120   .debug_str:00000000000000d3 .LASF15
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2218   .debug_str:0000000000000409 .LASF16
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2260   .debug_str:000000000000051f .LASF17
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2256   .debug_str:000000000000050a .LASF18
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2236   .debug_str:0000000000000470 .LASF19
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2154   .debug_str:000000000000019e .LASF20
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2156   .debug_str:00000000000001a9 .LASF21
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2158   .debug_str:00000000000001b4 .LASF22
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2160   .debug_str:00000000000001bf .LASF23
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2162   .debug_str:00000000000001ca .LASF24
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2164   .debug_str:00000000000001d5 .LASF25
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2130   .debug_str:0000000000000106 .LASF26
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2140   .debug_str:000000000000013c .LASF27
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2142   .debug_str:0000000000000145 .LASF28
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2232   .debug_str:000000000000045a .LASF29
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2234   .debug_str:0000000000000465 .LASF30
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2238   .debug_str:000000000000047a .LASF31
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2240   .debug_str:0000000000000484 .LASF32
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2208   .debug_str:00000000000003cd .LASF33
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2210   .debug_str:00000000000003d6 .LASF34
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2126   .debug_str:00000000000000f4 .LASF35
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2128   .debug_str:00000000000000fd .LASF36
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2178   .debug_str:0000000000000246 .LASF37
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2176   .debug_str:000000000000023e .LASF38
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2262   .debug_str:0000000000000527 .LASF39
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2104   .debug_str:0000000000000058 .LASF40
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2220   .debug_str:0000000000000412 .LASF41
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2090   .debug_str:000000000000000d .LASF42
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2092   .debug_str:0000000000000017 .LASF43
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2094   .debug_str:0000000000000021 .LASF44
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2096   .debug_str:000000000000002b .LASF45
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2098   .debug_str:0000000000000035 .LASF46
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2174   .debug_str:0000000000000235 .LASF47
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2214   .debug_str:00000000000003f0 .LASF48
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2152   .debug_str:0000000000000193 .LASF49
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2138   .debug_str:0000000000000133 .LASF50
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s 			page 16
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2230   .debug_str:000000000000044f .LASF51
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2196   .debug_str:000000000000035c .LASF52
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2144   .debug_str:000000000000014e .LASF53
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2212   .debug_str:00000000000003df .LASF54
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2146   .debug_str:000000000000015a .LASF55
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2112   .debug_str:00000000000000a8 .LASF56
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2242   .debug_str:000000000000048e .LASF57
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2110   .debug_str:0000000000000091 .LASF58
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2124   .debug_str:00000000000000e8 .LASF59
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2228   .debug_str:0000000000000442 .LASF60
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2246   .debug_str:00000000000004c0 .LASF61
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2258   .debug_str:0000000000000513 .LASF62
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2122   .debug_str:00000000000000dc .LASF63
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2224   .debug_str:000000000000042b .LASF64
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2204   .debug_str:00000000000003a1 .LASF65
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2166   .debug_str:00000000000001e0 .LASF66
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2132   .debug_str:0000000000000110 .LASF67
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:384    .text.T1setPWMmotorB:0000000000000000 .LFB4
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:426    .text.T1setPWMmotorB:0000000000000030 .LFE4
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:1972   .debug_loc:0000000000000000 .LLST3
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2248   .debug_str:00000000000004cb .LASF69
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:1990   .debug_loc:000000000000002c .LLST4
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:407    .text.T1setPWMmotorB:000000000000001c .LVL36
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:424    .text.T1setPWMmotorB:0000000000000030 .LVL37
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2252   .debug_str:00000000000004f1 .LASF68
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:365    .text.T1setPWMch2:0000000000000000 .LFB3
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:377    .text.T1setPWMch2:0000000000000010 .LFE3
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2114   .debug_str:00000000000000b6 .LASF70
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2004   .debug_loc:000000000000004d .LLST2
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:375    .text.T1setPWMch2:0000000000000010 .LVL33
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2198   .debug_str:0000000000000366 .LASF71
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:14     .text.T1powerUpInitPWM:0000000000000000 .LFB2
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:358    .text.T1powerUpInitPWM:0000000000000282 .LFE2
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2022   .debug_loc:0000000000000079 .LLST0
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2045   .debug_loc:00000000000000b3 .LLST1
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2194   .debug_str:000000000000034b .LASF72
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2116   .debug_str:00000000000000bc .LASF73
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:43     .text.T1powerUpInitPWM:000000000000001a .LVL2
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:48     .text.T1powerUpInitPWM:000000000000002a .LVL3
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:71     .text.T1powerUpInitPWM:0000000000000050 .LVL4
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:75     .text.T1powerUpInitPWM:000000000000005c .LVL5
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:79     .text.T1powerUpInitPWM:0000000000000066 .LVL6
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:105    .text.T1powerUpInitPWM:000000000000008c .LVL7
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:109    .text.T1powerUpInitPWM:0000000000000096 .LVL8
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:158    .text.T1powerUpInitPWM:00000000000000ca .LVL9
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:162    .text.T1powerUpInitPWM:00000000000000d6 .LVL10
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:188    .text.T1powerUpInitPWM:00000000000000f8 .LVL11
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:194    .text.T1powerUpInitPWM:000000000000010a .LVL12
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:200    .text.T1powerUpInitPWM:000000000000011a .LVL13
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:211    .text.T1powerUpInitPWM:0000000000000130 .LVL14
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:217    .text.T1powerUpInitPWM:0000000000000142 .LVL15
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:223    .text.T1powerUpInitPWM:0000000000000152 .LVL16
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:232    .text.T1powerUpInitPWM:0000000000000168 .LVL17
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:238    .text.T1powerUpInitPWM:000000000000017a .LVL18
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:244    .text.T1powerUpInitPWM:000000000000018a .LVL19
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:256    .text.T1powerUpInitPWM:00000000000001a2 .LVL20
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:262    .text.T1powerUpInitPWM:00000000000001b4 .LVL21
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s 			page 17
+
+
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:268    .text.T1powerUpInitPWM:00000000000001c4 .LVL22
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:279    .text.T1powerUpInitPWM:00000000000001da .LVL23
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:290    .text.T1powerUpInitPWM:00000000000001f0 .LVL24
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:301    .text.T1powerUpInitPWM:0000000000000206 .LVL25
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:312    .text.T1powerUpInitPWM:000000000000021c .LVL26
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:325    .text.T1powerUpInitPWM:0000000000000238 .LVL27
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:335    .text.T1powerUpInitPWM:0000000000000250 .LVL28
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:345    .text.T1powerUpInitPWM:0000000000000268 .LVL29
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:355    .text.T1powerUpInitPWM:0000000000000280 .LVL30
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2150   .debug_str:000000000000016b .LASF74
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2172   .debug_str:000000000000021d .LASF75
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2254   .debug_str:00000000000004fd .LASF76
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2202   .debug_str:000000000000038a .LASF77
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2134   .debug_str:000000000000011f .LASF78
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2108   .debug_str:000000000000006b .LASF79
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2244   .debug_str:00000000000004a0 .LASF80
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2088   .debug_str:0000000000000000 .LASF81
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2264   .debug_str:000000000000052f .LASF82
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2168   .debug_str:00000000000001ec .LASF83
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2250   .debug_str:00000000000004d5 .LASF84
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:2226   .debug_str:0000000000000438 .LASF85
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:396    .text.T1setPWMmotorB:000000000000000c .LCFI3
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:420    .text.T1setPWMmotorB:0000000000000028 .LCFI4
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:387    .text.T1setPWMmotorB:0000000000000000 .LVL34
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:401    .text.T1setPWMmotorB:0000000000000012 .LVL35
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:368    .text.T1setPWMch2:0000000000000000 .LVL31
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:373    .text.T1setPWMch2:0000000000000008 .LVL32
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:24     .text.T1powerUpInitPWM:0000000000000002 .LCFI0
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:176    .text.T1powerUpInitPWM:00000000000000e2 .LCFI1
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:180    .text.T1powerUpInitPWM:00000000000000e4 .LCFI2
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:18     .text.T1powerUpInitPWM:0000000000000000 .LVL0
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:31     .text.T1powerUpInitPWM:000000000000000a .LVL1
+C:\Users\Kalle\AppData\Local\Temp\ccDEgUS4.s:437    .debug_info:0000000000000000 .Ldebug_info0
+
+UNDEFINED SYMBOLS
+rcu_periph_clock_enable
+timer_deinit
+timer_struct_para_init
+timer_init
+timer_channel_output_struct_para_init
+timer_auto_reload_shadow_enable
+timer_enable
+timer_channel_output_pulse_value_config
+timer_channel_output_mode_config
+timer_channel_output_shadow_config
+timer_channel_output_config
+gpio_init

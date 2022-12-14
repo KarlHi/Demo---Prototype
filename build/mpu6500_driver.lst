@@ -1,0 +1,1816 @@
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 1
+
+
+   1              		.file	"mpu6500_driver.c"
+   2              		.option nopic
+   3              		.attribute arch, "rv32i2p0_m2p0_a2p0_c2p0"
+   4              		.attribute unaligned_access, 0
+   5              		.attribute stack_align, 16
+   6              		.text
+   7              	.Ltext0:
+   8              		.cfi_sections	.debug_frame
+   9              		.section	.text.read_mpu,"ax",@progbits
+  10              		.align	1
+  11              		.globl	read_mpu
+  13              	read_mpu:
+  14              	.LFB3:
+  15              		.file 1 "lib/mpu6500/src/mpu6500_driver.c"
+   1:lib/mpu6500/src/mpu6500_driver.c **** #include "mpu6500_driver.h"
+   2:lib/mpu6500/src/mpu6500_driver.c **** #include "stdint.h"
+   3:lib/mpu6500/src/mpu6500_driver.c **** 
+   4:lib/mpu6500/src/mpu6500_driver.c **** typedef struct{
+   5:lib/mpu6500/src/mpu6500_driver.c **** 	void (*read)(void* pHandle, uint8_t addr, uint8_t reg, uint8_t size, uint8_t* pData);
+   6:lib/mpu6500/src/mpu6500_driver.c **** 	void (*write)(void* pHandle, uint8_t addr, uint8_t reg, uint8_t size, uint8_t* pData);
+   7:lib/mpu6500/src/mpu6500_driver.c **** 	void (*delay)(int millis);
+   8:lib/mpu6500/src/mpu6500_driver.c **** 	void* pHandle;
+   9:lib/mpu6500/src/mpu6500_driver.c **** }mpu6500_comms_t;
+  10:lib/mpu6500/src/mpu6500_driver.c **** 
+  11:lib/mpu6500/src/mpu6500_driver.c **** mpu6500_comms_t cb;
+  12:lib/mpu6500/src/mpu6500_driver.c **** 
+  13:lib/mpu6500/src/mpu6500_driver.c **** void read_mpu(uint8_t reg, uint8_t size, uint8_t* data){
+  16              		.loc 1 13 56
+  17              		.cfi_startproc
+  18              	.LVL0:
+  14:lib/mpu6500/src/mpu6500_driver.c **** 	cb.read(cb.pHandle, MPU6500_ADDR, reg, size, data);
+  19              		.loc 1 14 2
+  20 0000 B7070000 		lui	a5,%hi(cb)
+  21 0004 93870700 		addi	a5,a5,%lo(cb)
+  22 0008 3287     		mv	a4,a2
+  23 000a 03A30700 		lw	t1,0(a5)
+  24 000e 2A86     		mv	a2,a0
+  25              	.LVL1:
+  26 0010 C847     		lw	a0,12(a5)
+  27              	.LVL2:
+  28 0012 AE86     		mv	a3,a1
+  29 0014 93058006 		li	a1,104
+  30              	.LVL3:
+  31 0018 0283     		jr	t1
+  32              	.LVL4:
+  33              		.cfi_endproc
+  34              	.LFE3:
+  36              		.section	.text.write_mpu,"ax",@progbits
+  37              		.align	1
+  38              		.globl	write_mpu
+  40              	write_mpu:
+  41              	.LFB4:
+  15:lib/mpu6500/src/mpu6500_driver.c **** }
+  16:lib/mpu6500/src/mpu6500_driver.c **** 
+  17:lib/mpu6500/src/mpu6500_driver.c **** void write_mpu(uint8_t reg, uint8_t size, uint8_t* data){
+  42              		.loc 1 17 57
+  43              		.cfi_startproc
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 2
+
+
+  44              	.LVL5:
+  18:lib/mpu6500/src/mpu6500_driver.c **** 	cb.write(cb.pHandle, MPU6500_ADDR, reg, size, data);
+  45              		.loc 1 18 2
+  46 0000 B7070000 		lui	a5,%hi(cb)
+  47 0004 93870700 		addi	a5,a5,%lo(cb)
+  48 0008 3287     		mv	a4,a2
+  49 000a 03A34700 		lw	t1,4(a5)
+  50 000e 2A86     		mv	a2,a0
+  51              	.LVL6:
+  52 0010 C847     		lw	a0,12(a5)
+  53              	.LVL7:
+  54 0012 AE86     		mv	a3,a1
+  55 0014 93058006 		li	a1,104
+  56              	.LVL8:
+  57 0018 0283     		jr	t1
+  58              	.LVL9:
+  59              		.cfi_endproc
+  60              	.LFE4:
+  62              		.section	.text.flip_bytes,"ax",@progbits
+  63              		.align	1
+  64              		.globl	flip_bytes
+  66              	flip_bytes:
+  67              	.LFB5:
+  19:lib/mpu6500/src/mpu6500_driver.c **** }
+  20:lib/mpu6500/src/mpu6500_driver.c **** 
+  21:lib/mpu6500/src/mpu6500_driver.c **** int16_t flip_bytes(int16_t bt){
+  68              		.loc 1 21 31
+  69              		.cfi_startproc
+  70              	.LVL10:
+  22:lib/mpu6500/src/mpu6500_driver.c **** 	uint8_t* pByte = (uint8_t*)&bt;
+  71              		.loc 1 22 2
+  23:lib/mpu6500/src/mpu6500_driver.c **** 	uint8_t temp = pByte[1];
+  24:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[1] = pByte[0];
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[0] = temp;
+  72              		.loc 1 25 11 is_stmt 0
+  73 0000 93170501 		slli	a5,a0,16
+  74 0004 C183     		srli	a5,a5,16
+  75 0006 2205     		slli	a0,a0,8
+  76              	.LVL11:
+  77 0008 A183     		srli	a5,a5,8
+  78 000a 5D8D     		or	a0,a0,a5
+  21:lib/mpu6500/src/mpu6500_driver.c **** 	uint8_t* pByte = (uint8_t*)&bt;
+  79              		.loc 1 21 31
+  80 000c 4111     		addi	sp,sp,-16
+  81              	.LCFI0:
+  82              		.cfi_def_cfa_offset 16
+  83              	.LVL12:
+  23:lib/mpu6500/src/mpu6500_driver.c **** 	uint8_t temp = pByte[1];
+  84              		.loc 1 23 2 is_stmt 1
+  24:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[0] = temp;
+  85              		.loc 1 24 2
+  86              		.loc 1 25 2
+  26:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+  87              		.loc 1 26 2
+  27:lib/mpu6500/src/mpu6500_driver.c **** }
+  88              		.loc 1 27 1 is_stmt 0
+  89 000e 4205     		slli	a0,a0,16
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 3
+
+
+  90 0010 4185     		srai	a0,a0,16
+  91 0012 4101     		addi	sp,sp,16
+  92              	.LCFI1:
+  93              		.cfi_def_cfa_offset 0
+  94              	.LVL13:
+  95 0014 8280     		jr	ra
+  96              		.cfi_endproc
+  97              	.LFE5:
+  99              		.section	.text.mpu6500_init,"ax",@progbits
+ 100              		.align	1
+ 101              		.globl	mpu6500_init
+ 103              	mpu6500_init:
+ 104              	.LFB6:
+  28:lib/mpu6500/src/mpu6500_driver.c **** 
+  29:lib/mpu6500/src/mpu6500_driver.c **** int mpu6500_init(void (*read_cb)(void* pHandle, uint8_t addr, uint8_t reg, uint8_t size, uint8_t* p
+  30:lib/mpu6500/src/mpu6500_driver.c **** 				 void (*write_cb)(void* pHandle, uint8_t addr, uint8_t reg, uint8_t size, uint8_t* pData),
+  31:lib/mpu6500/src/mpu6500_driver.c **** 				 void (*delay_cb)(int millis),
+  32:lib/mpu6500/src/mpu6500_driver.c **** 				 void* pHandle){
+ 105              		.loc 1 32 20 is_stmt 1
+ 106              		.cfi_startproc
+ 107              	.LVL14:
+  33:lib/mpu6500/src/mpu6500_driver.c **** 	uint8_t read_buffer[4];
+ 108              		.loc 1 33 2
+  34:lib/mpu6500/src/mpu6500_driver.c **** 	uint8_t write_buffer[4];
+ 109              		.loc 1 34 2
+  35:lib/mpu6500/src/mpu6500_driver.c **** 	cb.read = read_cb;
+ 110              		.loc 1 35 2
+  32:lib/mpu6500/src/mpu6500_driver.c **** 	uint8_t read_buffer[4];
+ 111              		.loc 1 32 20 is_stmt 0
+ 112 0000 0111     		addi	sp,sp,-32
+ 113              	.LCFI2:
+ 114              		.cfi_def_cfa_offset 32
+ 115 0002 22CC     		sw	s0,24(sp)
+ 116              		.cfi_offset 8, -8
+ 117              		.loc 1 35 10
+ 118 0004 37040000 		lui	s0,%hi(cb)
+ 119 0008 13040400 		addi	s0,s0,%lo(cb)
+  32:lib/mpu6500/src/mpu6500_driver.c **** 	uint8_t read_buffer[4];
+ 120              		.loc 1 32 20
+ 121 000c AA87     		mv	a5,a0
+  36:lib/mpu6500/src/mpu6500_driver.c **** 	cb.write = write_cb;
+ 122              		.loc 1 36 11
+ 123 000e 4CC0     		sw	a1,4(s0)
+  32:lib/mpu6500/src/mpu6500_driver.c **** 	uint8_t read_buffer[4];
+ 124              		.loc 1 32 20
+ 125 0010 3685     		mv	a0,a3
+ 126              	.LVL15:
+  37:lib/mpu6500/src/mpu6500_driver.c **** 	cb.delay = delay_cb;
+ 127              		.loc 1 37 11
+ 128 0012 10C4     		sw	a2,8(s0)
+  35:lib/mpu6500/src/mpu6500_driver.c **** 	cb.write = write_cb;
+ 129              		.loc 1 35 10
+ 130 0014 1CC0     		sw	a5,0(s0)
+  36:lib/mpu6500/src/mpu6500_driver.c **** 	cb.write = write_cb;
+ 131              		.loc 1 36 2 is_stmt 1
+ 132              		.loc 1 37 2
+  38:lib/mpu6500/src/mpu6500_driver.c **** 	cb.pHandle = pHandle;
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 4
+
+
+ 133              		.loc 1 38 2
+ 134              		.loc 1 38 13 is_stmt 0
+ 135 0016 54C4     		sw	a3,12(s0)
+  39:lib/mpu6500/src/mpu6500_driver.c **** 
+  40:lib/mpu6500/src/mpu6500_driver.c **** 
+  41:lib/mpu6500/src/mpu6500_driver.c **** 
+  42:lib/mpu6500/src/mpu6500_driver.c **** 	read_mpu(MPU6500_WHO_AM_I, 1, read_buffer);
+ 136              		.loc 1 42 2 is_stmt 1
+ 137              	.LVL16:
+ 138              	.LBB40:
+ 139              	.LBB41:
+  14:lib/mpu6500/src/mpu6500_driver.c **** }
+ 140              		.loc 1 14 2
+ 141 0018 3800     		addi	a4,sp,8
+ 142              	.LVL17:
+ 143              	.LBE41:
+ 144              	.LBE40:
+  32:lib/mpu6500/src/mpu6500_driver.c **** 	uint8_t read_buffer[4];
+ 145              		.loc 1 32 20 is_stmt 0
+ 146 001a 06CE     		sw	ra,28(sp)
+ 147 001c 26CA     		sw	s1,20(sp)
+ 148              		.cfi_offset 1, -4
+ 149              		.cfi_offset 9, -12
+ 150              	.LBB43:
+ 151              	.LBB42:
+  14:lib/mpu6500/src/mpu6500_driver.c **** }
+ 152              		.loc 1 14 2
+ 153 001e 8546     		li	a3,1
+ 154              	.LVL18:
+ 155 0020 13065007 		li	a2,117
+ 156              	.LVL19:
+ 157 0024 93058006 		li	a1,104
+ 158              	.LVL20:
+ 159 0028 8297     		jalr	a5
+ 160              	.LVL21:
+ 161              	.LBE42:
+ 162              	.LBE43:
+  43:lib/mpu6500/src/mpu6500_driver.c **** 	if(read_buffer[0] != MPU6500_WHO_AM_I_ID) return -1;
+ 163              		.loc 1 43 2 is_stmt 1
+ 164              		.loc 1 43 4 is_stmt 0
+ 165 002a 03478100 		lbu	a4,8(sp)
+ 166 002e D947     		li	a5,22
+ 167              		.loc 1 43 51
+ 168 0030 7D55     		li	a0,-1
+ 169              		.loc 1 43 4
+ 170 0032 6312F710 		bne	a4,a5,.L6
+  44:lib/mpu6500/src/mpu6500_driver.c **** 
+  45:lib/mpu6500/src/mpu6500_driver.c **** 	write_buffer[0] = MPU6500_DEVICE_RESET;
+ 171              		.loc 1 45 2 is_stmt 1
+ 172              	.LBB44:
+ 173              	.LBB45:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 174              		.loc 1 18 2 is_stmt 0
+ 175 0036 4844     		lw	a0,12(s0)
+ 176 0038 5C40     		lw	a5,4(s0)
+ 177              	.LBE45:
+ 178              	.LBE44:
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 5
+
+
+ 179              		.loc 1 45 18
+ 180 003a 130800F8 		li	a6,-128
+ 181              	.LBB48:
+ 182              	.LBB46:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 183              		.loc 1 18 2
+ 184 003e 7800     		addi	a4,sp,12
+ 185 0040 8546     		li	a3,1
+ 186 0042 1306B006 		li	a2,107
+ 187 0046 93058006 		li	a1,104
+ 188              	.LBE46:
+ 189              	.LBE48:
+ 190              		.loc 1 45 18
+ 191 004a 23060101 		sb	a6,12(sp)
+  46:lib/mpu6500/src/mpu6500_driver.c **** 	write_mpu(MPU6500_PWR_MGMT_1, 1, write_buffer);
+ 192              		.loc 1 46 2 is_stmt 1
+ 193              	.LVL22:
+ 194              	.LBB49:
+ 195              	.LBB47:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 196              		.loc 1 18 2
+ 197 004e 8297     		jalr	a5
+ 198              	.LVL23:
+ 199              	.LBE47:
+ 200              	.LBE49:
+  47:lib/mpu6500/src/mpu6500_driver.c **** 
+  48:lib/mpu6500/src/mpu6500_driver.c **** 	cb.delay(100);
+ 201              		.loc 1 48 2
+ 202 0050 1C44     		lw	a5,8(s0)
+ 203 0052 13054006 		li	a0,100
+ 204 0056 8297     		jalr	a5
+ 205              	.LVL24:
+  49:lib/mpu6500/src/mpu6500_driver.c **** 
+  50:lib/mpu6500/src/mpu6500_driver.c **** 	while(read_buffer[0] & MPU6500_DEVICE_RESET) read_mpu(MPU6500_PWR_MGMT_1, 1, read_buffer);
+ 206              		.loc 1 50 2
+ 207              		.loc 1 50 7 is_stmt 0
+ 208 0058 83078100 		lb	a5,8(sp)
+ 209 005c 63DF0700 		bge	a5,zero,.L8
+ 210              	.L9:
+ 211              		.loc 1 50 47 is_stmt 1
+ 212              	.LVL25:
+ 213              	.LBB50:
+ 214              	.LBB51:
+  14:lib/mpu6500/src/mpu6500_driver.c **** }
+ 215              		.loc 1 14 2
+ 216 0060 1C40     		lw	a5,0(s0)
+ 217 0062 4844     		lw	a0,12(s0)
+ 218 0064 3800     		addi	a4,sp,8
+ 219              	.LVL26:
+ 220 0066 8546     		li	a3,1
+ 221 0068 1306B006 		li	a2,107
+ 222 006c 93058006 		li	a1,104
+ 223 0070 8297     		jalr	a5
+ 224              	.LVL27:
+ 225              	.LBE51:
+ 226              	.LBE50:
+ 227              		.loc 1 50 7 is_stmt 0
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 6
+
+
+ 228 0072 83078100 		lb	a5,8(sp)
+ 229 0076 E3C507FE 		blt	a5,zero,.L9
+ 230              	.LVL28:
+ 231              	.L8:
+  51:lib/mpu6500/src/mpu6500_driver.c **** 
+  52:lib/mpu6500/src/mpu6500_driver.c **** 	cb.delay(100);
+ 232              		.loc 1 52 2 is_stmt 1
+ 233 007a 1C44     		lw	a5,8(s0)
+ 234 007c 13054006 		li	a0,100
+  53:lib/mpu6500/src/mpu6500_driver.c **** 
+  54:lib/mpu6500/src/mpu6500_driver.c **** 	write_buffer[0] = MPU6500_TEMP_DIS | 0x01; //select PLL
+  55:lib/mpu6500/src/mpu6500_driver.c **** 	write_mpu(MPU6500_PWR_MGMT_1, 1, write_buffer);
+  56:lib/mpu6500/src/mpu6500_driver.c **** 
+  57:lib/mpu6500/src/mpu6500_driver.c **** 	write_buffer[0] = 0x00;
+  58:lib/mpu6500/src/mpu6500_driver.c **** 	write_mpu(MPU6500_SMPLRT_DIV, 1, write_buffer);
+  59:lib/mpu6500/src/mpu6500_driver.c **** 
+  60:lib/mpu6500/src/mpu6500_driver.c **** 	write_buffer[0] = MPU6500_G_DLPF_92HZ;				// Frekvensen vi vill configurera med, förmodligen vill
+ 235              		.loc 1 60 18 is_stmt 0
+ 236 0080 8944     		li	s1,2
+  52:lib/mpu6500/src/mpu6500_driver.c **** 
+ 237              		.loc 1 52 2
+ 238 0082 8297     		jalr	a5
+ 239              	.LVL29:
+  54:lib/mpu6500/src/mpu6500_driver.c **** 	write_mpu(MPU6500_PWR_MGMT_1, 1, write_buffer);
+ 240              		.loc 1 54 2 is_stmt 1
+ 241              	.LBB52:
+ 242              	.LBB53:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 243              		.loc 1 18 2 is_stmt 0
+ 244 0084 4844     		lw	a0,12(s0)
+ 245 0086 5C40     		lw	a5,4(s0)
+ 246              	.LBE53:
+ 247              	.LBE52:
+  54:lib/mpu6500/src/mpu6500_driver.c **** 	write_mpu(MPU6500_PWR_MGMT_1, 1, write_buffer);
+ 248              		.loc 1 54 18
+ 249 0088 2548     		li	a6,9
+ 250 008a 23060101 		sb	a6,12(sp)
+  55:lib/mpu6500/src/mpu6500_driver.c **** 
+ 251              		.loc 1 55 2 is_stmt 1
+ 252              	.LVL30:
+ 253              	.LBB55:
+ 254              	.LBB54:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 255              		.loc 1 18 2
+ 256 008e 7800     		addi	a4,sp,12
+ 257              	.LVL31:
+ 258 0090 8546     		li	a3,1
+ 259 0092 1306B006 		li	a2,107
+ 260 0096 93058006 		li	a1,104
+ 261 009a 8297     		jalr	a5
+ 262              	.LVL32:
+ 263              	.LBE54:
+ 264              	.LBE55:
+  57:lib/mpu6500/src/mpu6500_driver.c **** 	write_mpu(MPU6500_SMPLRT_DIV, 1, write_buffer);
+ 265              		.loc 1 57 2
+ 266              	.LBB56:
+ 267              	.LBB57:
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 7
+
+
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 268              		.loc 1 18 2 is_stmt 0
+ 269 009c 4844     		lw	a0,12(s0)
+ 270 009e 5C40     		lw	a5,4(s0)
+ 271 00a0 7800     		addi	a4,sp,12
+ 272 00a2 8546     		li	a3,1
+ 273 00a4 6546     		li	a2,25
+ 274 00a6 93058006 		li	a1,104
+ 275              	.LBE57:
+ 276              	.LBE56:
+  57:lib/mpu6500/src/mpu6500_driver.c **** 	write_mpu(MPU6500_SMPLRT_DIV, 1, write_buffer);
+ 277              		.loc 1 57 18
+ 278 00aa 23060100 		sb	zero,12(sp)
+  58:lib/mpu6500/src/mpu6500_driver.c **** 
+ 279              		.loc 1 58 2 is_stmt 1
+ 280              	.LVL33:
+ 281              	.LBB59:
+ 282              	.LBB58:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 283              		.loc 1 18 2
+ 284 00ae 8297     		jalr	a5
+ 285              	.LVL34:
+ 286              	.LBE58:
+ 287              	.LBE59:
+ 288              		.loc 1 60 2
+ 289              	.LBB60:
+ 290              	.LBB61:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 291              		.loc 1 18 2 is_stmt 0
+ 292 00b0 4844     		lw	a0,12(s0)
+ 293 00b2 5C40     		lw	a5,4(s0)
+ 294 00b4 7800     		addi	a4,sp,12
+ 295 00b6 8546     		li	a3,1
+ 296 00b8 6946     		li	a2,26
+ 297 00ba 93058006 		li	a1,104
+ 298              	.LBE61:
+ 299              	.LBE60:
+ 300              		.loc 1 60 18
+ 301 00be 23069100 		sb	s1,12(sp)
+  61:lib/mpu6500/src/mpu6500_driver.c **** 	write_mpu(MPU6500_CONFIG, 1, write_buffer);
+ 302              		.loc 1 61 2 is_stmt 1
+ 303              	.LVL35:
+ 304              	.LBB63:
+ 305              	.LBB62:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 306              		.loc 1 18 2
+ 307 00c2 8297     		jalr	a5
+ 308              	.LVL36:
+ 309              	.LBE62:
+ 310              	.LBE63:
+  62:lib/mpu6500/src/mpu6500_driver.c **** 
+  63:lib/mpu6500/src/mpu6500_driver.c **** 	write_buffer[0] = MPU6500_GYRO_FS_2000DPS;			// Inställd skala för att läsa av från Gyron, kan
+ 311              		.loc 1 63 2
+ 312              	.LBB64:
+ 313              	.LBB65:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 314              		.loc 1 18 2 is_stmt 0
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 8
+
+
+ 315 00c4 4844     		lw	a0,12(s0)
+ 316 00c6 5C40     		lw	a5,4(s0)
+ 317              	.LBE65:
+ 318              	.LBE64:
+ 319              		.loc 1 63 18
+ 320 00c8 6148     		li	a6,24
+ 321 00ca 23060101 		sb	a6,12(sp)
+  64:lib/mpu6500/src/mpu6500_driver.c **** 	write_mpu(MPU6500_GYRO_CONFIG, 1, write_buffer);
+ 322              		.loc 1 64 2 is_stmt 1
+ 323              	.LVL37:
+ 324              	.LBB67:
+ 325              	.LBB66:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 326              		.loc 1 18 2
+ 327 00ce 7800     		addi	a4,sp,12
+ 328              	.LVL38:
+ 329 00d0 8546     		li	a3,1
+ 330 00d2 6D46     		li	a2,27
+ 331 00d4 93058006 		li	a1,104
+ 332 00d8 8297     		jalr	a5
+ 333              	.LVL39:
+ 334              	.LBE66:
+ 335              	.LBE67:
+  65:lib/mpu6500/src/mpu6500_driver.c **** 
+  66:lib/mpu6500/src/mpu6500_driver.c **** 	write_buffer[0] = MPU6500_ACCEL_FS_2G;				// Inställd skala för att läsa av från Gyron, kan ä
+ 336              		.loc 1 66 2
+ 337              	.LBB68:
+ 338              	.LBB69:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 339              		.loc 1 18 2 is_stmt 0
+ 340 00da 4844     		lw	a0,12(s0)
+ 341 00dc 5C40     		lw	a5,4(s0)
+ 342 00de 7800     		addi	a4,sp,12
+ 343 00e0 8546     		li	a3,1
+ 344 00e2 7146     		li	a2,28
+ 345 00e4 93058006 		li	a1,104
+ 346              	.LBE69:
+ 347              	.LBE68:
+ 348              		.loc 1 66 18
+ 349 00e8 23060100 		sb	zero,12(sp)
+  67:lib/mpu6500/src/mpu6500_driver.c **** 	write_mpu(MPU6500_ACCEL_CONFIG, 1, write_buffer);
+ 350              		.loc 1 67 2 is_stmt 1
+ 351              	.LVL40:
+ 352              	.LBB71:
+ 353              	.LBB70:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 354              		.loc 1 18 2
+ 355 00ec 8297     		jalr	a5
+ 356              	.LVL41:
+ 357              	.LBE70:
+ 358              	.LBE71:
+  68:lib/mpu6500/src/mpu6500_driver.c **** 	
+  69:lib/mpu6500/src/mpu6500_driver.c **** 	write_buffer[0] = MPU6500_A_DPLF_92HZ;				// Frekvensen vi vill configurera med, förmodligen vill
+ 359              		.loc 1 69 2
+ 360              	.LBB72:
+ 361              	.LBB73:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 9
+
+
+ 362              		.loc 1 18 2 is_stmt 0
+ 363 00ee 4844     		lw	a0,12(s0)
+ 364 00f0 5C40     		lw	a5,4(s0)
+ 365 00f2 7800     		addi	a4,sp,12
+ 366 00f4 8546     		li	a3,1
+ 367 00f6 7546     		li	a2,29
+ 368 00f8 93058006 		li	a1,104
+ 369              	.LBE73:
+ 370              	.LBE72:
+ 371              		.loc 1 69 18
+ 372 00fc 23069100 		sb	s1,12(sp)
+  70:lib/mpu6500/src/mpu6500_driver.c **** 	write_mpu(MPU6500_ACCEL_CONFIG2, 1, write_buffer);
+ 373              		.loc 1 70 2 is_stmt 1
+ 374              	.LVL42:
+ 375              	.LBB75:
+ 376              	.LBB74:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 377              		.loc 1 18 2
+ 378 0100 8297     		jalr	a5
+ 379              	.LVL43:
+ 380              	.LBE74:
+ 381              	.LBE75:
+  71:lib/mpu6500/src/mpu6500_driver.c **** 
+  72:lib/mpu6500/src/mpu6500_driver.c **** 	write_buffer[0] = MPU6500_LATCH_INT_EN | MPU6500_INT_ANYRD_2CLEAR | MPU6500_INT_BYPASS_EN;
+ 382              		.loc 1 72 2
+ 383              	.LBB76:
+ 384              	.LBB77:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 385              		.loc 1 18 2 is_stmt 0
+ 386 0102 4844     		lw	a0,12(s0)
+ 387 0104 5C40     		lw	a5,4(s0)
+ 388              	.LBE77:
+ 389              	.LBE76:
+ 390              		.loc 1 72 18
+ 391 0106 13082003 		li	a6,50
+ 392              	.LBB80:
+ 393              	.LBB78:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 394              		.loc 1 18 2
+ 395 010a 7800     		addi	a4,sp,12
+ 396 010c 8546     		li	a3,1
+ 397 010e 13067003 		li	a2,55
+ 398 0112 93058006 		li	a1,104
+ 399              	.LBE78:
+ 400              	.LBE80:
+ 401              		.loc 1 72 18
+ 402 0116 23060101 		sb	a6,12(sp)
+  73:lib/mpu6500/src/mpu6500_driver.c **** 	write_mpu(MPU6500_INT_PIN_CFG, 1, write_buffer);
+ 403              		.loc 1 73 2 is_stmt 1
+ 404              	.LVL44:
+ 405              	.LBB81:
+ 406              	.LBB79:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 407              		.loc 1 18 2
+ 408 011a 8297     		jalr	a5
+ 409              	.LVL45:
+ 410              	.LBE79:
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 10
+
+
+ 411              	.LBE81:
+  74:lib/mpu6500/src/mpu6500_driver.c **** 
+  75:lib/mpu6500/src/mpu6500_driver.c **** 	write_buffer[0] = MPU6500_INT_RAW_RDY_EN;
+ 412              		.loc 1 75 2
+ 413              	.LBB82:
+ 414              	.LBB83:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 415              		.loc 1 18 2 is_stmt 0
+ 416 011c 4844     		lw	a0,12(s0)
+ 417 011e 5C40     		lw	a5,4(s0)
+ 418              	.LBE83:
+ 419              	.LBE82:
+ 420              		.loc 1 75 18
+ 421 0120 0547     		li	a4,1
+ 422 0122 2306E100 		sb	a4,12(sp)
+  76:lib/mpu6500/src/mpu6500_driver.c **** 	write_mpu(MPU6500_INT_ENABLE, 1, write_buffer);
+ 423              		.loc 1 76 2 is_stmt 1
+ 424              	.LVL46:
+ 425              	.LBB85:
+ 426              	.LBB84:
+  18:lib/mpu6500/src/mpu6500_driver.c **** }
+ 427              		.loc 1 18 2
+ 428 0126 8546     		li	a3,1
+ 429 0128 7800     		addi	a4,sp,12
+ 430              	.LVL47:
+ 431 012a 13068003 		li	a2,56
+ 432 012e 93058006 		li	a1,104
+ 433 0132 8297     		jalr	a5
+ 434              	.LVL48:
+ 435              	.LBE84:
+ 436              	.LBE85:
+  77:lib/mpu6500/src/mpu6500_driver.c **** 
+  78:lib/mpu6500/src/mpu6500_driver.c **** 	return 1;
+ 437              		.loc 1 78 2
+ 438              		.loc 1 78 9 is_stmt 0
+ 439 0134 0545     		li	a0,1
+ 440              	.L6:
+  79:lib/mpu6500/src/mpu6500_driver.c **** 
+  80:lib/mpu6500/src/mpu6500_driver.c **** }
+ 441              		.loc 1 80 1
+ 442 0136 F240     		lw	ra,28(sp)
+ 443              		.cfi_restore 1
+ 444 0138 6244     		lw	s0,24(sp)
+ 445              		.cfi_restore 8
+ 446 013a D244     		lw	s1,20(sp)
+ 447              		.cfi_restore 9
+ 448 013c 0561     		addi	sp,sp,32
+ 449              	.LCFI3:
+ 450              		.cfi_def_cfa_offset 0
+ 451 013e 8280     		jr	ra
+ 452              		.cfi_endproc
+ 453              	.LFE6:
+ 455              		.globl	__floatsisf
+ 456              		.section	.text.mpu6500_getAccel,"ax",@progbits
+ 457              		.align	1
+ 458              		.globl	mpu6500_getAccel
+ 460              	mpu6500_getAccel:
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 11
+
+
+ 461              	.LFB7:
+  81:lib/mpu6500/src/mpu6500_driver.c **** 
+  82:lib/mpu6500/src/mpu6500_driver.c **** // MPU 6500 DataSheet: http://invensense.wpenginepowered.com/wp-content/uploads/2020/06/PS-MPU-6500
+  83:lib/mpu6500/src/mpu6500_driver.c **** 
+  84:lib/mpu6500/src/mpu6500_driver.c **** int mpu6500_getAccel(mpu_vector_t* pAccel){
+ 462              		.loc 1 84 43 is_stmt 1
+ 463              		.cfi_startproc
+ 464              	.LVL49:
+  85:lib/mpu6500/src/mpu6500_driver.c **** 	mpu_raw_vector_t accel;
+ 465              		.loc 1 85 2
+  86:lib/mpu6500/src/mpu6500_driver.c **** 	read_mpu(MPU6500_ACCEL_XOUT_H, 6, (uint8_t*) &accel); 	// Skickar rådata som måste skalas i main
+ 466              		.loc 1 86 2
+ 467              	.LBB86:
+ 468              	.LBB87:
+  14:lib/mpu6500/src/mpu6500_driver.c **** }
+ 469              		.loc 1 14 2 is_stmt 0
+ 470 0000 B7070000 		lui	a5,%hi(cb)
+ 471              	.LBE87:
+ 472              	.LBE86:
+  84:lib/mpu6500/src/mpu6500_driver.c **** 	mpu_raw_vector_t accel;
+ 473              		.loc 1 84 43
+ 474 0004 0111     		addi	sp,sp,-32
+ 475              	.LCFI4:
+ 476              		.cfi_def_cfa_offset 32
+ 477              	.LVL50:
+ 478              	.LBB92:
+ 479              	.LBB88:
+  14:lib/mpu6500/src/mpu6500_driver.c **** }
+ 480              		.loc 1 14 2 is_stmt 1
+ 481 0006 93870700 		addi	a5,a5,%lo(cb)
+ 482              	.LBE88:
+ 483              	.LBE92:
+  84:lib/mpu6500/src/mpu6500_driver.c **** 	mpu_raw_vector_t accel;
+ 484              		.loc 1 84 43 is_stmt 0
+ 485 000a 22CC     		sw	s0,24(sp)
+ 486              	.LBB93:
+ 487              	.LBB89:
+  14:lib/mpu6500/src/mpu6500_driver.c **** }
+ 488              		.loc 1 14 2
+ 489 000c 03A80700 		lw	a6,0(a5)
+ 490              		.cfi_offset 8, -8
+ 491              	.LBE89:
+ 492              	.LBE93:
+  84:lib/mpu6500/src/mpu6500_driver.c **** 	mpu_raw_vector_t accel;
+ 493              		.loc 1 84 43
+ 494 0010 2A84     		mv	s0,a0
+ 495              	.LBB94:
+ 496              	.LBB90:
+  14:lib/mpu6500/src/mpu6500_driver.c **** }
+ 497              		.loc 1 14 2
+ 498 0012 C847     		lw	a0,12(a5)
+ 499              	.LVL51:
+ 500              	.LBE90:
+ 501              	.LBE94:
+  84:lib/mpu6500/src/mpu6500_driver.c **** 	mpu_raw_vector_t accel;
+ 502              		.loc 1 84 43
+ 503 0014 06CE     		sw	ra,28(sp)
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 12
+
+
+ 504              		.cfi_offset 1, -4
+ 505              	.LBB95:
+ 506              	.LBB91:
+  14:lib/mpu6500/src/mpu6500_driver.c **** }
+ 507              		.loc 1 14 2
+ 508 0016 9946     		li	a3,6
+ 509 0018 1306B003 		li	a2,59
+ 510 001c 93058006 		li	a1,104
+ 511 0020 3800     		addi	a4,sp,8
+ 512              	.LVL52:
+ 513 0022 0298     		jalr	a6
+ 514              	.LVL53:
+ 515              	.LBE91:
+ 516              	.LBE95:
+  87:lib/mpu6500/src/mpu6500_driver.c **** 	pAccel->x = (float) flip_bytes(accel.x);
+ 517              		.loc 1 87 2 is_stmt 1
+ 518              		.loc 1 87 22 is_stmt 0
+ 519 0024 83178100 		lh	a5,8(sp)
+ 520              	.LVL54:
+ 521              	.LBB96:
+ 522              	.LBB97:
+  22:lib/mpu6500/src/mpu6500_driver.c **** 	uint8_t temp = pByte[1];
+ 523              		.loc 1 22 2 is_stmt 1
+  23:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[1] = pByte[0];
+ 524              		.loc 1 23 2
+  24:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[0] = temp;
+ 525              		.loc 1 24 2
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+ 526              		.loc 1 25 11 is_stmt 0
+ 527 0028 13D78700 		srli	a4,a5,8
+  24:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[0] = temp;
+ 528              		.loc 1 24 11
+ 529 002c A303F100 		sb	a5,7(sp)
+ 530              	.LVL55:
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+ 531              		.loc 1 25 2 is_stmt 1
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+ 532              		.loc 1 25 11 is_stmt 0
+ 533 0030 2303E100 		sb	a4,6(sp)
+  26:lib/mpu6500/src/mpu6500_driver.c **** }
+ 534              		.loc 1 26 2 is_stmt 1
+ 535              	.LVL56:
+ 536              	.LBE97:
+ 537              	.LBE96:
+ 538              		.loc 1 87 14 is_stmt 0
+ 539 0034 03156100 		lh	a0,6(sp)
+ 540 0038 97000000 		call	__floatsisf
+ 540      E7800000 
+ 541              	.LVL57:
+  88:lib/mpu6500/src/mpu6500_driver.c **** 	pAccel->y = (float) flip_bytes(accel.y);
+ 542              		.loc 1 88 22
+ 543 0040 8317A100 		lh	a5,10(sp)
+  87:lib/mpu6500/src/mpu6500_driver.c **** 	pAccel->y = (float) flip_bytes(accel.y);
+ 544              		.loc 1 87 14
+ 545 0044 08C0     		sw	a0,0(s0)
+ 546              		.loc 1 88 2 is_stmt 1
+ 547              	.LVL58:
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 13
+
+
+ 548              	.LBB98:
+ 549              	.LBB99:
+  22:lib/mpu6500/src/mpu6500_driver.c **** 	uint8_t temp = pByte[1];
+ 550              		.loc 1 22 2
+  23:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[1] = pByte[0];
+ 551              		.loc 1 23 2
+  24:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[0] = temp;
+ 552              		.loc 1 24 2
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+ 553              		.loc 1 25 11 is_stmt 0
+ 554 0046 13D78700 		srli	a4,a5,8
+  24:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[0] = temp;
+ 555              		.loc 1 24 11
+ 556 004a A303F100 		sb	a5,7(sp)
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+ 557              		.loc 1 25 2 is_stmt 1
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+ 558              		.loc 1 25 11 is_stmt 0
+ 559 004e 2303E100 		sb	a4,6(sp)
+  26:lib/mpu6500/src/mpu6500_driver.c **** }
+ 560              		.loc 1 26 2 is_stmt 1
+ 561              	.LVL59:
+ 562              	.LBE99:
+ 563              	.LBE98:
+ 564              		.loc 1 88 14 is_stmt 0
+ 565 0052 03156100 		lh	a0,6(sp)
+ 566 0056 97000000 		call	__floatsisf
+ 566      E7800000 
+ 567              	.LVL60:
+  89:lib/mpu6500/src/mpu6500_driver.c **** 	pAccel->z = (float) flip_bytes(accel.z);
+ 568              		.loc 1 89 22
+ 569 005e 8317C100 		lh	a5,12(sp)
+  88:lib/mpu6500/src/mpu6500_driver.c **** 	pAccel->z = (float) flip_bytes(accel.z);
+ 570              		.loc 1 88 14
+ 571 0062 48C0     		sw	a0,4(s0)
+ 572              		.loc 1 89 2 is_stmt 1
+ 573              	.LVL61:
+ 574              	.LBB100:
+ 575              	.LBB101:
+  22:lib/mpu6500/src/mpu6500_driver.c **** 	uint8_t temp = pByte[1];
+ 576              		.loc 1 22 2
+  23:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[1] = pByte[0];
+ 577              		.loc 1 23 2
+  24:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[0] = temp;
+ 578              		.loc 1 24 2
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+ 579              		.loc 1 25 11 is_stmt 0
+ 580 0064 13D78700 		srli	a4,a5,8
+  24:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[0] = temp;
+ 581              		.loc 1 24 11
+ 582 0068 A303F100 		sb	a5,7(sp)
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+ 583              		.loc 1 25 2 is_stmt 1
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+ 584              		.loc 1 25 11 is_stmt 0
+ 585 006c 2303E100 		sb	a4,6(sp)
+  26:lib/mpu6500/src/mpu6500_driver.c **** }
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 14
+
+
+ 586              		.loc 1 26 2 is_stmt 1
+ 587              	.LVL62:
+ 588              	.LBE101:
+ 589              	.LBE100:
+ 590              		.loc 1 89 14 is_stmt 0
+ 591 0070 03156100 		lh	a0,6(sp)
+ 592 0074 97000000 		call	__floatsisf
+ 592      E7800000 
+ 593              	.LVL63:
+ 594 007c 08C4     		sw	a0,8(s0)
+  90:lib/mpu6500/src/mpu6500_driver.c **** 	return 1;
+ 595              		.loc 1 90 2 is_stmt 1
+  91:lib/mpu6500/src/mpu6500_driver.c **** }
+ 596              		.loc 1 91 1 is_stmt 0
+ 597 007e F240     		lw	ra,28(sp)
+ 598              		.cfi_restore 1
+ 599 0080 6244     		lw	s0,24(sp)
+ 600              		.cfi_restore 8
+ 601              	.LVL64:
+ 602 0082 0545     		li	a0,1
+ 603 0084 0561     		addi	sp,sp,32
+ 604              	.LCFI5:
+ 605              		.cfi_def_cfa_offset 0
+ 606              	.LVL65:
+ 607 0086 8280     		jr	ra
+ 608              		.cfi_endproc
+ 609              	.LFE7:
+ 611              		.section	.text.mpu6500_getGyro,"ax",@progbits
+ 612              		.align	1
+ 613              		.globl	mpu6500_getGyro
+ 615              	mpu6500_getGyro:
+ 616              	.LFB8:
+  92:lib/mpu6500/src/mpu6500_driver.c **** 
+  93:lib/mpu6500/src/mpu6500_driver.c **** int mpu6500_getGyro(mpu_vector_t* pGyro){
+ 617              		.loc 1 93 41 is_stmt 1
+ 618              		.cfi_startproc
+ 619              	.LVL66:
+  94:lib/mpu6500/src/mpu6500_driver.c **** 	mpu_raw_vector_t gyro;
+ 620              		.loc 1 94 2
+  95:lib/mpu6500/src/mpu6500_driver.c **** 	read_mpu(MPU6500_GYRO_XOUT_H, 6, (uint8_t*) &gyro); 	// Skickar rådata som måste skalas i main. 
+ 621              		.loc 1 95 2
+ 622              	.LBB102:
+ 623              	.LBB103:
+  14:lib/mpu6500/src/mpu6500_driver.c **** }
+ 624              		.loc 1 14 2 is_stmt 0
+ 625 0000 B7070000 		lui	a5,%hi(cb)
+ 626              	.LBE103:
+ 627              	.LBE102:
+  93:lib/mpu6500/src/mpu6500_driver.c **** 	mpu_raw_vector_t gyro;
+ 628              		.loc 1 93 41
+ 629 0004 0111     		addi	sp,sp,-32
+ 630              	.LCFI6:
+ 631              		.cfi_def_cfa_offset 32
+ 632              	.LVL67:
+ 633              	.LBB108:
+ 634              	.LBB104:
+  14:lib/mpu6500/src/mpu6500_driver.c **** }
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 15
+
+
+ 635              		.loc 1 14 2 is_stmt 1
+ 636 0006 93870700 		addi	a5,a5,%lo(cb)
+ 637              	.LBE104:
+ 638              	.LBE108:
+  93:lib/mpu6500/src/mpu6500_driver.c **** 	mpu_raw_vector_t gyro;
+ 639              		.loc 1 93 41 is_stmt 0
+ 640 000a 22CC     		sw	s0,24(sp)
+ 641              	.LBB109:
+ 642              	.LBB105:
+  14:lib/mpu6500/src/mpu6500_driver.c **** }
+ 643              		.loc 1 14 2
+ 644 000c 03A80700 		lw	a6,0(a5)
+ 645              		.cfi_offset 8, -8
+ 646              	.LBE105:
+ 647              	.LBE109:
+  93:lib/mpu6500/src/mpu6500_driver.c **** 	mpu_raw_vector_t gyro;
+ 648              		.loc 1 93 41
+ 649 0010 2A84     		mv	s0,a0
+ 650              	.LBB110:
+ 651              	.LBB106:
+  14:lib/mpu6500/src/mpu6500_driver.c **** }
+ 652              		.loc 1 14 2
+ 653 0012 C847     		lw	a0,12(a5)
+ 654              	.LVL68:
+ 655              	.LBE106:
+ 656              	.LBE110:
+  93:lib/mpu6500/src/mpu6500_driver.c **** 	mpu_raw_vector_t gyro;
+ 657              		.loc 1 93 41
+ 658 0014 06CE     		sw	ra,28(sp)
+ 659              		.cfi_offset 1, -4
+ 660              	.LBB111:
+ 661              	.LBB107:
+  14:lib/mpu6500/src/mpu6500_driver.c **** }
+ 662              		.loc 1 14 2
+ 663 0016 9946     		li	a3,6
+ 664 0018 13063004 		li	a2,67
+ 665 001c 93058006 		li	a1,104
+ 666 0020 3800     		addi	a4,sp,8
+ 667              	.LVL69:
+ 668 0022 0298     		jalr	a6
+ 669              	.LVL70:
+ 670              	.LBE107:
+ 671              	.LBE111:
+  96:lib/mpu6500/src/mpu6500_driver.c **** 	pGyro->x = (float) flip_bytes(gyro.x);
+ 672              		.loc 1 96 2 is_stmt 1
+ 673              		.loc 1 96 21 is_stmt 0
+ 674 0024 83178100 		lh	a5,8(sp)
+ 675              	.LVL71:
+ 676              	.LBB112:
+ 677              	.LBB113:
+  22:lib/mpu6500/src/mpu6500_driver.c **** 	uint8_t temp = pByte[1];
+ 678              		.loc 1 22 2 is_stmt 1
+  23:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[1] = pByte[0];
+ 679              		.loc 1 23 2
+  24:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[0] = temp;
+ 680              		.loc 1 24 2
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 16
+
+
+ 681              		.loc 1 25 11 is_stmt 0
+ 682 0028 13D78700 		srli	a4,a5,8
+  24:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[0] = temp;
+ 683              		.loc 1 24 11
+ 684 002c A303F100 		sb	a5,7(sp)
+ 685              	.LVL72:
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+ 686              		.loc 1 25 2 is_stmt 1
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+ 687              		.loc 1 25 11 is_stmt 0
+ 688 0030 2303E100 		sb	a4,6(sp)
+  26:lib/mpu6500/src/mpu6500_driver.c **** }
+ 689              		.loc 1 26 2 is_stmt 1
+ 690              	.LVL73:
+ 691              	.LBE113:
+ 692              	.LBE112:
+ 693              		.loc 1 96 13 is_stmt 0
+ 694 0034 03156100 		lh	a0,6(sp)
+ 695 0038 97000000 		call	__floatsisf
+ 695      E7800000 
+ 696              	.LVL74:
+  97:lib/mpu6500/src/mpu6500_driver.c **** 	pGyro->y = (float) flip_bytes(gyro.y);
+ 697              		.loc 1 97 21
+ 698 0040 8317A100 		lh	a5,10(sp)
+  96:lib/mpu6500/src/mpu6500_driver.c **** 	pGyro->y = (float) flip_bytes(gyro.y);
+ 699              		.loc 1 96 13
+ 700 0044 08C0     		sw	a0,0(s0)
+ 701              		.loc 1 97 2 is_stmt 1
+ 702              	.LVL75:
+ 703              	.LBB114:
+ 704              	.LBB115:
+  22:lib/mpu6500/src/mpu6500_driver.c **** 	uint8_t temp = pByte[1];
+ 705              		.loc 1 22 2
+  23:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[1] = pByte[0];
+ 706              		.loc 1 23 2
+  24:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[0] = temp;
+ 707              		.loc 1 24 2
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+ 708              		.loc 1 25 11 is_stmt 0
+ 709 0046 13D78700 		srli	a4,a5,8
+  24:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[0] = temp;
+ 710              		.loc 1 24 11
+ 711 004a A303F100 		sb	a5,7(sp)
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+ 712              		.loc 1 25 2 is_stmt 1
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+ 713              		.loc 1 25 11 is_stmt 0
+ 714 004e 2303E100 		sb	a4,6(sp)
+  26:lib/mpu6500/src/mpu6500_driver.c **** }
+ 715              		.loc 1 26 2 is_stmt 1
+ 716              	.LVL76:
+ 717              	.LBE115:
+ 718              	.LBE114:
+ 719              		.loc 1 97 13 is_stmt 0
+ 720 0052 03156100 		lh	a0,6(sp)
+ 721 0056 97000000 		call	__floatsisf
+ 721      E7800000 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 17
+
+
+ 722              	.LVL77:
+  98:lib/mpu6500/src/mpu6500_driver.c **** 	pGyro->z = (float) flip_bytes(gyro.z);
+ 723              		.loc 1 98 21
+ 724 005e 8317C100 		lh	a5,12(sp)
+  97:lib/mpu6500/src/mpu6500_driver.c **** 	pGyro->z = (float) flip_bytes(gyro.z);
+ 725              		.loc 1 97 13
+ 726 0062 48C0     		sw	a0,4(s0)
+ 727              		.loc 1 98 2 is_stmt 1
+ 728              	.LVL78:
+ 729              	.LBB116:
+ 730              	.LBB117:
+  22:lib/mpu6500/src/mpu6500_driver.c **** 	uint8_t temp = pByte[1];
+ 731              		.loc 1 22 2
+  23:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[1] = pByte[0];
+ 732              		.loc 1 23 2
+  24:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[0] = temp;
+ 733              		.loc 1 24 2
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+ 734              		.loc 1 25 11 is_stmt 0
+ 735 0064 13D78700 		srli	a4,a5,8
+  24:lib/mpu6500/src/mpu6500_driver.c **** 	pByte[0] = temp;
+ 736              		.loc 1 24 11
+ 737 0068 A303F100 		sb	a5,7(sp)
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+ 738              		.loc 1 25 2 is_stmt 1
+  25:lib/mpu6500/src/mpu6500_driver.c **** 	return bt; 
+ 739              		.loc 1 25 11 is_stmt 0
+ 740 006c 2303E100 		sb	a4,6(sp)
+  26:lib/mpu6500/src/mpu6500_driver.c **** }
+ 741              		.loc 1 26 2 is_stmt 1
+ 742              	.LVL79:
+ 743              	.LBE117:
+ 744              	.LBE116:
+ 745              		.loc 1 98 13 is_stmt 0
+ 746 0070 03156100 		lh	a0,6(sp)
+ 747 0074 97000000 		call	__floatsisf
+ 747      E7800000 
+ 748              	.LVL80:
+ 749 007c 08C4     		sw	a0,8(s0)
+  99:lib/mpu6500/src/mpu6500_driver.c **** 	return 1;
+ 750              		.loc 1 99 2 is_stmt 1
+ 100:lib/mpu6500/src/mpu6500_driver.c **** }
+ 751              		.loc 1 100 1 is_stmt 0
+ 752 007e F240     		lw	ra,28(sp)
+ 753              		.cfi_restore 1
+ 754 0080 6244     		lw	s0,24(sp)
+ 755              		.cfi_restore 8
+ 756              	.LVL81:
+ 757 0082 0545     		li	a0,1
+ 758 0084 0561     		addi	sp,sp,32
+ 759              	.LCFI7:
+ 760              		.cfi_def_cfa_offset 0
+ 761              	.LVL82:
+ 762 0086 8280     		jr	ra
+ 763              		.cfi_endproc
+ 764              	.LFE8:
+ 766              		.section	.text.mpu6500_getGyroAccel,"ax",@progbits
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 18
+
+
+ 767              		.align	1
+ 768              		.globl	mpu6500_getGyroAccel
+ 770              	mpu6500_getGyroAccel:
+ 771              	.LFB9:
+ 101:lib/mpu6500/src/mpu6500_driver.c **** 
+ 102:lib/mpu6500/src/mpu6500_driver.c **** int mpu6500_getGyroAccel(mpu_vector_t* pGyro, mpu_vector_t* pAccel){
+ 772              		.loc 1 102 68 is_stmt 1
+ 773              		.cfi_startproc
+ 774              	.LVL83:
+ 103:lib/mpu6500/src/mpu6500_driver.c **** 	mpu6500_getAccel(pAccel);
+ 775              		.loc 1 103 2
+ 102:lib/mpu6500/src/mpu6500_driver.c **** 	mpu6500_getAccel(pAccel);
+ 776              		.loc 1 102 68 is_stmt 0
+ 777 0000 4111     		addi	sp,sp,-16
+ 778              	.LCFI8:
+ 779              		.cfi_def_cfa_offset 16
+ 780 0002 22C4     		sw	s0,8(sp)
+ 781              		.cfi_offset 8, -8
+ 782 0004 2A84     		mv	s0,a0
+ 783              		.loc 1 103 2
+ 784 0006 2E85     		mv	a0,a1
+ 785              	.LVL84:
+ 102:lib/mpu6500/src/mpu6500_driver.c **** 	mpu6500_getAccel(pAccel);
+ 786              		.loc 1 102 68
+ 787 0008 06C6     		sw	ra,12(sp)
+ 788              		.cfi_offset 1, -4
+ 789              		.loc 1 103 2
+ 790 000a 97000000 		call	mpu6500_getAccel
+ 790      E7800000 
+ 791              	.LVL85:
+ 104:lib/mpu6500/src/mpu6500_driver.c **** 	mpu6500_getGyro(pGyro);
+ 792              		.loc 1 104 2 is_stmt 1
+ 793 0012 2285     		mv	a0,s0
+ 794 0014 97000000 		call	mpu6500_getGyro
+ 794      E7800000 
+ 795              	.LVL86:
+ 105:lib/mpu6500/src/mpu6500_driver.c **** 	return 1;
+ 796              		.loc 1 105 2
+ 106:lib/mpu6500/src/mpu6500_driver.c **** }
+ 797              		.loc 1 106 1 is_stmt 0
+ 798 001c B240     		lw	ra,12(sp)
+ 799              		.cfi_restore 1
+ 800 001e 2244     		lw	s0,8(sp)
+ 801              		.cfi_restore 8
+ 802              	.LVL87:
+ 803 0020 0545     		li	a0,1
+ 804 0022 4101     		addi	sp,sp,16
+ 805              	.LCFI9:
+ 806              		.cfi_def_cfa_offset 0
+ 807 0024 8280     		jr	ra
+ 808              		.cfi_endproc
+ 809              	.LFE9:
+ 811              		.comm	cb,16,4
+ 812              		.text
+ 813              	.Letext0:
+ 814              		.file 2 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\machine\
+ 815              		.file 3 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\lib\\gcc\\riscv64-unknown-elf\\8.3.0\\
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 19
+
+
+ 816              		.file 4 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\sys\\_ty
+ 817              		.file 5 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\sys\\ree
+ 818              		.file 6 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\sys\\loc
+ 819              		.file 7 "c:\\idrotttek-kurs\\toolchain-gd32v-win\\compiler\\riscv64-unknown-elf\\include\\sys\\_st
+ 820              		.file 8 "lib/mpu6500/include/mpu6500_driver.h"
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 20
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 mpu6500_driver.c
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:13     .text.read_mpu:0000000000000000 read_mpu
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:17     .text.read_mpu:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:19     .text.read_mpu:0000000000000000 .L0 
+                            *COM*:0000000000000010 cb
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:20     .text.read_mpu:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:33     .text.read_mpu:000000000000001a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:40     .text.write_mpu:0000000000000000 write_mpu
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:43     .text.write_mpu:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:45     .text.write_mpu:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:46     .text.write_mpu:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:59     .text.write_mpu:000000000000001a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:66     .text.flip_bytes:0000000000000000 flip_bytes
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:69     .text.flip_bytes:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:71     .text.flip_bytes:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:72     .text.flip_bytes:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:73     .text.flip_bytes:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:80     .text.flip_bytes:000000000000000c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:82     .text.flip_bytes:000000000000000e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:85     .text.flip_bytes:000000000000000e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:86     .text.flip_bytes:000000000000000e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:87     .text.flip_bytes:000000000000000e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:88     .text.flip_bytes:000000000000000e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:89     .text.flip_bytes:000000000000000e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:93     .text.flip_bytes:0000000000000014 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:96     .text.flip_bytes:0000000000000016 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:103    .text.mpu6500_init:0000000000000000 mpu6500_init
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:106    .text.mpu6500_init:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:108    .text.mpu6500_init:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:109    .text.mpu6500_init:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:110    .text.mpu6500_init:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:111    .text.mpu6500_init:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:112    .text.mpu6500_init:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:114    .text.mpu6500_init:0000000000000002 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:116    .text.mpu6500_init:0000000000000004 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:118    .text.mpu6500_init:0000000000000004 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:121    .text.mpu6500_init:000000000000000c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:123    .text.mpu6500_init:000000000000000e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:125    .text.mpu6500_init:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:128    .text.mpu6500_init:0000000000000012 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:130    .text.mpu6500_init:0000000000000014 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:132    .text.mpu6500_init:0000000000000016 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:133    .text.mpu6500_init:0000000000000016 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:134    .text.mpu6500_init:0000000000000016 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:135    .text.mpu6500_init:0000000000000016 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:140    .text.mpu6500_init:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:141    .text.mpu6500_init:0000000000000018 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:146    .text.mpu6500_init:000000000000001a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:148    .text.mpu6500_init:000000000000001e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:149    .text.mpu6500_init:000000000000001e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:153    .text.mpu6500_init:000000000000001e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:164    .text.mpu6500_init:000000000000002a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:165    .text.mpu6500_init:000000000000002a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:168    .text.mpu6500_init:0000000000000030 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:170    .text.mpu6500_init:0000000000000032 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:174    .text.mpu6500_init:0000000000000036 .L0 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 21
+
+
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:175    .text.mpu6500_init:0000000000000036 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:180    .text.mpu6500_init:000000000000003a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:184    .text.mpu6500_init:000000000000003e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:191    .text.mpu6500_init:000000000000004a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:196    .text.mpu6500_init:000000000000004e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:197    .text.mpu6500_init:000000000000004e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:202    .text.mpu6500_init:0000000000000050 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:207    .text.mpu6500_init:0000000000000058 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:208    .text.mpu6500_init:0000000000000058 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:215    .text.mpu6500_init:0000000000000060 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:216    .text.mpu6500_init:0000000000000060 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:228    .text.mpu6500_init:0000000000000072 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:233    .text.mpu6500_init:000000000000007a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:236    .text.mpu6500_init:0000000000000080 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:238    .text.mpu6500_init:0000000000000082 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:243    .text.mpu6500_init:0000000000000084 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:244    .text.mpu6500_init:0000000000000084 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:249    .text.mpu6500_init:0000000000000088 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:255    .text.mpu6500_init:000000000000008e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:256    .text.mpu6500_init:000000000000008e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:268    .text.mpu6500_init:000000000000009c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:269    .text.mpu6500_init:000000000000009c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:278    .text.mpu6500_init:00000000000000aa .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:283    .text.mpu6500_init:00000000000000ae .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:284    .text.mpu6500_init:00000000000000ae .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:291    .text.mpu6500_init:00000000000000b0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:292    .text.mpu6500_init:00000000000000b0 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:301    .text.mpu6500_init:00000000000000be .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:306    .text.mpu6500_init:00000000000000c2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:307    .text.mpu6500_init:00000000000000c2 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:314    .text.mpu6500_init:00000000000000c4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:315    .text.mpu6500_init:00000000000000c4 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:320    .text.mpu6500_init:00000000000000c8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:326    .text.mpu6500_init:00000000000000ce .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:327    .text.mpu6500_init:00000000000000ce .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:339    .text.mpu6500_init:00000000000000da .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:340    .text.mpu6500_init:00000000000000da .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:349    .text.mpu6500_init:00000000000000e8 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:354    .text.mpu6500_init:00000000000000ec .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:355    .text.mpu6500_init:00000000000000ec .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:362    .text.mpu6500_init:00000000000000ee .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:363    .text.mpu6500_init:00000000000000ee .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:372    .text.mpu6500_init:00000000000000fc .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:377    .text.mpu6500_init:0000000000000100 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:378    .text.mpu6500_init:0000000000000100 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:385    .text.mpu6500_init:0000000000000102 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:386    .text.mpu6500_init:0000000000000102 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:391    .text.mpu6500_init:0000000000000106 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:395    .text.mpu6500_init:000000000000010a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:402    .text.mpu6500_init:0000000000000116 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:407    .text.mpu6500_init:000000000000011a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:408    .text.mpu6500_init:000000000000011a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:415    .text.mpu6500_init:000000000000011c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:416    .text.mpu6500_init:000000000000011c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:421    .text.mpu6500_init:0000000000000120 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:427    .text.mpu6500_init:0000000000000126 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:428    .text.mpu6500_init:0000000000000126 .L0 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 22
+
+
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:438    .text.mpu6500_init:0000000000000134 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:439    .text.mpu6500_init:0000000000000134 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:442    .text.mpu6500_init:0000000000000136 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:443    .text.mpu6500_init:0000000000000138 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:445    .text.mpu6500_init:000000000000013a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:447    .text.mpu6500_init:000000000000013c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:450    .text.mpu6500_init:000000000000013e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:452    .text.mpu6500_init:0000000000000140 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:460    .text.mpu6500_getAccel:0000000000000000 mpu6500_getAccel
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:463    .text.mpu6500_getAccel:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:465    .text.mpu6500_getAccel:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:466    .text.mpu6500_getAccel:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:469    .text.mpu6500_getAccel:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:470    .text.mpu6500_getAccel:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:474    .text.mpu6500_getAccel:0000000000000004 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:476    .text.mpu6500_getAccel:0000000000000006 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:481    .text.mpu6500_getAccel:0000000000000006 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:485    .text.mpu6500_getAccel:000000000000000a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:489    .text.mpu6500_getAccel:000000000000000c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:490    .text.mpu6500_getAccel:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:494    .text.mpu6500_getAccel:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:498    .text.mpu6500_getAccel:0000000000000012 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:503    .text.mpu6500_getAccel:0000000000000014 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:504    .text.mpu6500_getAccel:0000000000000016 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:508    .text.mpu6500_getAccel:0000000000000016 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:518    .text.mpu6500_getAccel:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:519    .text.mpu6500_getAccel:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:524    .text.mpu6500_getAccel:0000000000000028 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:525    .text.mpu6500_getAccel:0000000000000028 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:526    .text.mpu6500_getAccel:0000000000000028 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:527    .text.mpu6500_getAccel:0000000000000028 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:529    .text.mpu6500_getAccel:000000000000002c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:532    .text.mpu6500_getAccel:0000000000000030 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:533    .text.mpu6500_getAccel:0000000000000030 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:538    .text.mpu6500_getAccel:0000000000000034 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:539    .text.mpu6500_getAccel:0000000000000034 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:543    .text.mpu6500_getAccel:0000000000000040 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:545    .text.mpu6500_getAccel:0000000000000044 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:550    .text.mpu6500_getAccel:0000000000000046 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:551    .text.mpu6500_getAccel:0000000000000046 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:552    .text.mpu6500_getAccel:0000000000000046 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:553    .text.mpu6500_getAccel:0000000000000046 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:554    .text.mpu6500_getAccel:0000000000000046 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:556    .text.mpu6500_getAccel:000000000000004a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:558    .text.mpu6500_getAccel:000000000000004e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:559    .text.mpu6500_getAccel:000000000000004e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:564    .text.mpu6500_getAccel:0000000000000052 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:565    .text.mpu6500_getAccel:0000000000000052 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:569    .text.mpu6500_getAccel:000000000000005e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:571    .text.mpu6500_getAccel:0000000000000062 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:576    .text.mpu6500_getAccel:0000000000000064 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:577    .text.mpu6500_getAccel:0000000000000064 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:578    .text.mpu6500_getAccel:0000000000000064 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:579    .text.mpu6500_getAccel:0000000000000064 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:580    .text.mpu6500_getAccel:0000000000000064 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:582    .text.mpu6500_getAccel:0000000000000068 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:584    .text.mpu6500_getAccel:000000000000006c .L0 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 23
+
+
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:585    .text.mpu6500_getAccel:000000000000006c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:590    .text.mpu6500_getAccel:0000000000000070 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:591    .text.mpu6500_getAccel:0000000000000070 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:596    .text.mpu6500_getAccel:000000000000007e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:597    .text.mpu6500_getAccel:000000000000007e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:598    .text.mpu6500_getAccel:0000000000000080 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:600    .text.mpu6500_getAccel:0000000000000082 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:605    .text.mpu6500_getAccel:0000000000000086 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:608    .text.mpu6500_getAccel:0000000000000088 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:615    .text.mpu6500_getGyro:0000000000000000 mpu6500_getGyro
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:618    .text.mpu6500_getGyro:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:620    .text.mpu6500_getGyro:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:621    .text.mpu6500_getGyro:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:624    .text.mpu6500_getGyro:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:625    .text.mpu6500_getGyro:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:629    .text.mpu6500_getGyro:0000000000000004 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:631    .text.mpu6500_getGyro:0000000000000006 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:636    .text.mpu6500_getGyro:0000000000000006 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:640    .text.mpu6500_getGyro:000000000000000a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:644    .text.mpu6500_getGyro:000000000000000c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:645    .text.mpu6500_getGyro:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:649    .text.mpu6500_getGyro:0000000000000010 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:653    .text.mpu6500_getGyro:0000000000000012 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:658    .text.mpu6500_getGyro:0000000000000014 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:659    .text.mpu6500_getGyro:0000000000000016 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:663    .text.mpu6500_getGyro:0000000000000016 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:673    .text.mpu6500_getGyro:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:674    .text.mpu6500_getGyro:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:679    .text.mpu6500_getGyro:0000000000000028 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:680    .text.mpu6500_getGyro:0000000000000028 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:681    .text.mpu6500_getGyro:0000000000000028 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:682    .text.mpu6500_getGyro:0000000000000028 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:684    .text.mpu6500_getGyro:000000000000002c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:687    .text.mpu6500_getGyro:0000000000000030 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:688    .text.mpu6500_getGyro:0000000000000030 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:693    .text.mpu6500_getGyro:0000000000000034 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:694    .text.mpu6500_getGyro:0000000000000034 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:698    .text.mpu6500_getGyro:0000000000000040 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:700    .text.mpu6500_getGyro:0000000000000044 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:705    .text.mpu6500_getGyro:0000000000000046 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:706    .text.mpu6500_getGyro:0000000000000046 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:707    .text.mpu6500_getGyro:0000000000000046 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:708    .text.mpu6500_getGyro:0000000000000046 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:709    .text.mpu6500_getGyro:0000000000000046 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:711    .text.mpu6500_getGyro:000000000000004a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:713    .text.mpu6500_getGyro:000000000000004e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:714    .text.mpu6500_getGyro:000000000000004e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:719    .text.mpu6500_getGyro:0000000000000052 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:720    .text.mpu6500_getGyro:0000000000000052 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:724    .text.mpu6500_getGyro:000000000000005e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:726    .text.mpu6500_getGyro:0000000000000062 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:731    .text.mpu6500_getGyro:0000000000000064 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:732    .text.mpu6500_getGyro:0000000000000064 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:733    .text.mpu6500_getGyro:0000000000000064 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:734    .text.mpu6500_getGyro:0000000000000064 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:735    .text.mpu6500_getGyro:0000000000000064 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:737    .text.mpu6500_getGyro:0000000000000068 .L0 
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 24
+
+
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:739    .text.mpu6500_getGyro:000000000000006c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:740    .text.mpu6500_getGyro:000000000000006c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:745    .text.mpu6500_getGyro:0000000000000070 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:746    .text.mpu6500_getGyro:0000000000000070 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:751    .text.mpu6500_getGyro:000000000000007e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:752    .text.mpu6500_getGyro:000000000000007e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:753    .text.mpu6500_getGyro:0000000000000080 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:755    .text.mpu6500_getGyro:0000000000000082 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:760    .text.mpu6500_getGyro:0000000000000086 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:763    .text.mpu6500_getGyro:0000000000000088 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:770    .text.mpu6500_getGyroAccel:0000000000000000 mpu6500_getGyroAccel
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:773    .text.mpu6500_getGyroAccel:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:775    .text.mpu6500_getGyroAccel:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:776    .text.mpu6500_getGyroAccel:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:777    .text.mpu6500_getGyroAccel:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:779    .text.mpu6500_getGyroAccel:0000000000000002 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:781    .text.mpu6500_getGyroAccel:0000000000000004 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:784    .text.mpu6500_getGyroAccel:0000000000000006 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:787    .text.mpu6500_getGyroAccel:0000000000000008 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:788    .text.mpu6500_getGyroAccel:000000000000000a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:790    .text.mpu6500_getGyroAccel:000000000000000a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:793    .text.mpu6500_getGyroAccel:0000000000000012 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:797    .text.mpu6500_getGyroAccel:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:798    .text.mpu6500_getGyroAccel:000000000000001c .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:799    .text.mpu6500_getGyroAccel:000000000000001e .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:801    .text.mpu6500_getGyroAccel:0000000000000020 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:806    .text.mpu6500_getGyroAccel:0000000000000024 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:808    .text.mpu6500_getGyroAccel:0000000000000026 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:36     .text.read_mpu:000000000000001a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:62     .text.write_mpu:000000000000001a .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:99     .text.flip_bytes:0000000000000016 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:456    .text.mpu6500_init:0000000000000140 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:611    .text.mpu6500_getAccel:0000000000000088 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:766    .text.mpu6500_getGyro:0000000000000088 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:812    .text.mpu6500_getGyroAccel:0000000000000026 .L0 
+                     .debug_frame:0000000000000000 .L0 
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:440    .text.mpu6500_init:0000000000000136 .L6
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:231    .text.mpu6500_init:000000000000007a .L8
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:210    .text.mpu6500_init:0000000000000060 .L9
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:3467   .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5441   .debug_str:000000000000034f .LASF151
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5587   .debug_str:000000000000065f .LASF152
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5349   .debug_str:0000000000000161 .LASF153
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5171   .debug_ranges:0000000000000000 .Ldebug_ranges0
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5277   .debug_line:0000000000000000 .Ldebug_line0
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5319   .debug_str:00000000000000e1 .LASF0
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5289   .debug_str:000000000000002b .LASF2
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5463   .debug_str:0000000000000427 .LASF1
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5367   .debug_str:00000000000001ec .LASF3
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5471   .debug_str:0000000000000449 .LASF4
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5405   .debug_str:0000000000000296 .LASF5
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5339   .debug_str:0000000000000131 .LASF6
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5389   .debug_str:000000000000024e .LASF7
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5317   .debug_str:00000000000000d3 .LASF8
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5299   .debug_str:0000000000000068 .LASF9
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5381   .debug_str:000000000000022a .LASF10
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5435   .debug_str:0000000000000336 .LASF11
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 25
+
+
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5417   .debug_str:00000000000002d9 .LASF12
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5449   .debug_str:00000000000003e5 .LASF13
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5519   .debug_str:000000000000052f .LASF14
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5557   .debug_str:00000000000005d6 .LASF15
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5415   .debug_str:00000000000002d3 .LASF16
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5383   .debug_str:0000000000000237 .LASF17
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5511   .debug_str:000000000000050d .LASF18
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5513   .debug_str:0000000000000515 .LASF19
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5483   .debug_str:0000000000000486 .LASF20
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5539   .debug_str:000000000000057b .LASF21
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5461   .debug_str:0000000000000415 .LASF22
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5565   .debug_str:00000000000005fe .LASF23
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5371   .debug_str:00000000000001fe .LASF28
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5531   .debug_str:000000000000055a .LASF24
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5505   .debug_str:00000000000004f8 .LASF25
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5365   .debug_str:00000000000001e6 .LASF26
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5551   .debug_str:00000000000005c1 .LASF27
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5379   .debug_str:0000000000000225 .LASF29
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5311   .debug_str:00000000000000b5 .LASF30
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5525   .debug_str:0000000000000543 .LASF31
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5327   .debug_str:00000000000000ff .LASF32
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5589   .debug_str:0000000000000680 .LASF33
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5443   .debug_str:00000000000003c9 .LASF34
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5431   .debug_str:0000000000000323 .LASF35
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5553   .debug_str:00000000000005c6 .LASF36
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5473   .debug_str:0000000000000453 .LASF37
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5575   .debug_str:0000000000000626 .LASF38
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5331   .debug_str:000000000000010e .LASF39
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5361   .debug_str:00000000000001d9 .LASF40
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5279   .debug_str:0000000000000000 .LASF41
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5535   .debug_str:000000000000056d .LASF42
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5345   .debug_str:0000000000000152 .LASF43
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5445   .debug_str:00000000000003d2 .LASF44
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5495   .debug_str:00000000000004bf .LASF45
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5363   .debug_str:00000000000001e1 .LASF46
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5477   .debug_str:0000000000000472 .LASF47
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5323   .debug_str:00000000000000f3 .LASF48
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5281   .debug_str:000000000000000c .LASF49
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5485   .debug_str:0000000000000491 .LASF50
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5343   .debug_str:000000000000014b .LASF51
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5391   .debug_str:0000000000000260 .LASF52
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5301   .debug_str:000000000000007f .LASF53
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5333   .debug_str:000000000000011c .LASF54
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5375   .debug_str:0000000000000215 .LASF55
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5429   .debug_str:000000000000031c .LASF56
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5515   .debug_str:000000000000051d .LASF57
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5579   .debug_str:0000000000000640 .LASF58
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5321   .debug_str:00000000000000ed .LASF59
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5569   .debug_str:000000000000060f .LASF60
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5351   .debug_str:00000000000001a1 .LASF61
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5355   .debug_str:00000000000001b2 .LASF62
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5291   .debug_str:0000000000000035 .LASF63
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5419   .debug_str:00000000000002e0 .LASF64
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5487   .debug_str:0000000000000499 .LASF65
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5423   .debug_str:00000000000002f6 .LASF66
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5507   .debug_str:0000000000000500 .LASF67
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5521   .debug_str:0000000000000537 .LASF68
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 26
+
+
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5347   .debug_str:000000000000015a .LASF69
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5385   .debug_str:000000000000023e .LASF70
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5369   .debug_str:00000000000001f6 .LASF71
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5493   .debug_str:00000000000004ba .LASF72
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5285   .debug_str:000000000000001a .LASF73
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5503   .debug_str:00000000000004df .LASF74
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5499   .debug_str:00000000000004cd .LASF75
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5447   .debug_str:00000000000003da .LASF76
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5501   .debug_str:00000000000004d5 .LASF77
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5413   .debug_str:00000000000002cb .LASF78
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5377   .debug_str:000000000000021b .LASF79
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5585   .debug_str:000000000000065a .LASF80
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5457   .debug_str:00000000000003ff .LASF81
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5387   .debug_str:0000000000000246 .LASF82
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5353   .debug_str:00000000000001aa .LASF83
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5465   .debug_str:0000000000000435 .LASF84
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5407   .debug_str:00000000000002a9 .LASF85
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5563   .debug_str:00000000000005f4 .LASF86
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5335   .debug_str:0000000000000124 .LASF87
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5329   .debug_str:0000000000000109 .LASF88
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5523   .debug_str:000000000000053e .LASF89
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5481   .debug_str:000000000000047f .LASF90
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5555   .debug_str:00000000000005d0 .LASF91
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5397   .debug_str:000000000000027c .LASF92
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5479   .debug_str:0000000000000479 .LASF93
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5283   .debug_str:0000000000000012 .LASF94
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5509   .debug_str:0000000000000507 .LASF95
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5529   .debug_str:0000000000000554 .LASF96
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5537   .debug_str:0000000000000576 .LASF97
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5545   .debug_str:00000000000005a3 .LASF98
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5533   .debug_str:0000000000000560 .LASF99
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5411   .debug_str:00000000000002be .LASF100
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5577   .debug_str:0000000000000631 .LASF101
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5373   .debug_str:0000000000000206 .LASF102
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5489   .debug_str:00000000000004a2 .LASF103
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5581   .debug_str:0000000000000647 .LASF104
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5491   .debug_str:00000000000004ad .LASF105
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5583   .debug_str:000000000000064c .LASF106
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5309   .debug_str:00000000000000a7 .LASF107
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5559   .debug_str:00000000000005df .LASF108
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5409   .debug_str:00000000000002b2 .LASF109
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5541   .debug_str:0000000000000583 .LASF110
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5359   .debug_str:00000000000001cb .LASF111
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5307   .debug_str:0000000000000098 .LASF112
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5357   .debug_str:00000000000001ba .LASF113
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5295   .debug_str:0000000000000048 .LASF114
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5297   .debug_str:0000000000000057 .LASF115
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5469   .debug_str:0000000000000440 .LASF116
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5437   .debug_str:0000000000000342 .LASF117
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5433   .debug_str:000000000000032d .LASF118
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5571   .debug_str:0000000000000615 .LASF119
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5303   .debug_str:0000000000000088 .LASF154
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5517   .debug_str:0000000000000523 .LASF120
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5543   .debug_str:0000000000000590 .LASF121
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5527   .debug_str:000000000000054c .LASF122
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5313   .debug_str:00000000000000be .LASF123
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5453   .debug_str:00000000000003f1 .LASF124
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 27
+
+
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5293   .debug_str:000000000000003b .LASF125
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5341   .debug_str:000000000000013a .LASF126
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5451   .debug_str:00000000000003ec .LASF127
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5287   .debug_str:0000000000000025 .LASF128
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5467   .debug_str:000000000000043a .LASF129
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5567   .debug_str:0000000000000607 .LASF130
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5421   .debug_str:00000000000002e6 .LASF131
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5475   .debug_str:000000000000045d .LASF134
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:771    .text.mpu6500_getGyroAccel:0000000000000000 .LFB9
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:809    .text.mpu6500_getGyroAccel:0000000000000026 .LFE9
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4247   .debug_loc:0000000000000000 .LLST66
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5395   .debug_str:0000000000000276 .LASF132
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4265   .debug_loc:000000000000002c .LLST67
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5549   .debug_str:00000000000005ba .LASF133
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4283   .debug_loc:0000000000000058 .LLST68
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:791    .text.mpu6500_getGyroAccel:0000000000000012 .LVL85
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:795    .text.mpu6500_getGyroAccel:000000000000001c .LVL86
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5393   .debug_str:0000000000000266 .LASF135
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:616    .text.mpu6500_getGyro:0000000000000000 .LFB8
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:764    .text.mpu6500_getGyro:0000000000000088 .LFE8
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4297   .debug_loc:0000000000000079 .LLST57
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4315   .debug_loc:00000000000000a5 .LLST58
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5305   .debug_str:0000000000000093 .LASF137
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:622    .text.mpu6500_getGyro:0000000000000000 .LBB102
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4333   .debug_loc:00000000000000d1 .LLST59
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4352   .debug_loc:00000000000000fe .LLST60
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4360   .debug_loc:0000000000000112 .LLST61
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:669    .text.mpu6500_getGyro:0000000000000024 .LVL70
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:676    .text.mpu6500_getGyro:0000000000000028 .LBB112
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:692    .text.mpu6500_getGyro:0000000000000034 .LBE112
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4369   .debug_loc:0000000000000127 .LLST62
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:677    .text.mpu6500_getGyro:0000000000000028 .LBB113
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:691    .text.mpu6500_getGyro:0000000000000034 .LBE113
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4377   .debug_loc:000000000000013b .LLST63
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:703    .text.mpu6500_getGyro:0000000000000046 .LBB114
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:718    .text.mpu6500_getGyro:0000000000000052 .LBE114
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:704    .text.mpu6500_getGyro:0000000000000046 .LBB115
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:717    .text.mpu6500_getGyro:0000000000000052 .LBE115
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4392   .debug_loc:000000000000015d .LLST64
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:729    .text.mpu6500_getGyro:0000000000000064 .LBB116
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:744    .text.mpu6500_getGyro:0000000000000070 .LBE116
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:730    .text.mpu6500_getGyro:0000000000000064 .LBB117
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:743    .text.mpu6500_getGyro:0000000000000070 .LBE117
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4407   .debug_loc:000000000000017f .LLST65
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5427   .debug_str:000000000000030b .LASF136
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:461    .text.mpu6500_getAccel:0000000000000000 .LFB7
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:609    .text.mpu6500_getAccel:0000000000000088 .LFE7
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4422   .debug_loc:00000000000001a1 .LLST48
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4440   .debug_loc:00000000000001cd .LLST49
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5439   .debug_str:0000000000000349 .LASF138
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:467    .text.mpu6500_getAccel:0000000000000000 .LBB86
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4458   .debug_loc:00000000000001f9 .LLST50
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4477   .debug_loc:0000000000000226 .LLST51
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4485   .debug_loc:000000000000023a .LLST52
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:514    .text.mpu6500_getAccel:0000000000000024 .LVL53
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:521    .text.mpu6500_getAccel:0000000000000028 .LBB96
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:537    .text.mpu6500_getAccel:0000000000000034 .LBE96
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 28
+
+
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4494   .debug_loc:000000000000024f .LLST53
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:522    .text.mpu6500_getAccel:0000000000000028 .LBB97
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:536    .text.mpu6500_getAccel:0000000000000034 .LBE97
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4502   .debug_loc:0000000000000263 .LLST54
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:548    .text.mpu6500_getAccel:0000000000000046 .LBB98
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:563    .text.mpu6500_getAccel:0000000000000052 .LBE98
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:549    .text.mpu6500_getAccel:0000000000000046 .LBB99
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:562    .text.mpu6500_getAccel:0000000000000052 .LBE99
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4517   .debug_loc:0000000000000285 .LLST55
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:574    .text.mpu6500_getAccel:0000000000000064 .LBB100
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:589    .text.mpu6500_getAccel:0000000000000070 .LBE100
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:575    .text.mpu6500_getAccel:0000000000000064 .LBB101
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:588    .text.mpu6500_getAccel:0000000000000070 .LBE101
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4532   .debug_loc:00000000000002a7 .LLST56
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5425   .debug_str:00000000000002fe .LASF139
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:104    .text.mpu6500_init:0000000000000000 .LFB6
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:453    .text.mpu6500_init:0000000000000140 .LFE6
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4547   .debug_loc:00000000000002c9 .LLST10
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5455   .debug_str:00000000000003f7 .LASF140
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4565   .debug_loc:00000000000002f5 .LLST11
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5497   .debug_str:00000000000004c4 .LASF141
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4583   .debug_loc:0000000000000321 .LLST12
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5399   .debug_str:0000000000000283 .LASF142
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4602   .debug_loc:0000000000000351 .LLST13
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4621   .debug_loc:0000000000000381 .LLST14
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5459   .debug_str:0000000000000409 .LASF143
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5315   .debug_str:00000000000000c6 .LASF144
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:138    .text.mpu6500_init:0000000000000018 .LBB40
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4639   .debug_loc:00000000000003ad .LLST15
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4658   .debug_loc:00000000000003da .LLST16
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4666   .debug_loc:00000000000003ee .LLST17
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:160    .text.mpu6500_init:000000000000002a .LVL21
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:172    .text.mpu6500_init:0000000000000036 .LBB44
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4675   .debug_loc:0000000000000403 .LLST18
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4688   .debug_loc:0000000000000423 .LLST19
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4696   .debug_loc:0000000000000437 .LLST20
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:198    .text.mpu6500_init:0000000000000050 .LVL23
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:213    .text.mpu6500_init:0000000000000060 .LBB50
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:226    .text.mpu6500_init:0000000000000072 .LBE50
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4705   .debug_loc:000000000000044c .LLST21
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4724   .debug_loc:0000000000000479 .LLST22
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4732   .debug_loc:000000000000048d .LLST23
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:224    .text.mpu6500_init:0000000000000072 .LVL27
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:241    .text.mpu6500_init:0000000000000084 .LBB52
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4741   .debug_loc:00000000000004a2 .LLST24
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4760   .debug_loc:00000000000004cf .LLST25
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4768   .debug_loc:00000000000004e3 .LLST26
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:262    .text.mpu6500_init:000000000000009c .LVL32
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:266    .text.mpu6500_init:000000000000009c .LBB56
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4777   .debug_loc:00000000000004f8 .LLST27
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4790   .debug_loc:0000000000000518 .LLST28
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4798   .debug_loc:000000000000052c .LLST29
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:285    .text.mpu6500_init:00000000000000b0 .LVL34
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:289    .text.mpu6500_init:00000000000000b0 .LBB60
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4806   .debug_loc:0000000000000540 .LLST30
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4819   .debug_loc:0000000000000560 .LLST31
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4827   .debug_loc:0000000000000574 .LLST32
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 29
+
+
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:308    .text.mpu6500_init:00000000000000c4 .LVL36
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:312    .text.mpu6500_init:00000000000000c4 .LBB64
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4835   .debug_loc:0000000000000588 .LLST33
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4854   .debug_loc:00000000000005b5 .LLST34
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4862   .debug_loc:00000000000005c9 .LLST35
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:333    .text.mpu6500_init:00000000000000da .LVL39
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:337    .text.mpu6500_init:00000000000000da .LBB68
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4870   .debug_loc:00000000000005dd .LLST36
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4883   .debug_loc:00000000000005fd .LLST37
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4891   .debug_loc:0000000000000611 .LLST38
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:356    .text.mpu6500_init:00000000000000ee .LVL41
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:360    .text.mpu6500_init:00000000000000ee .LBB72
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4899   .debug_loc:0000000000000625 .LLST39
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4912   .debug_loc:0000000000000645 .LLST40
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4920   .debug_loc:0000000000000659 .LLST41
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:379    .text.mpu6500_init:0000000000000102 .LVL43
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:383    .text.mpu6500_init:0000000000000102 .LBB76
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4928   .debug_loc:000000000000066d .LLST42
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4941   .debug_loc:000000000000068d .LLST43
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4949   .debug_loc:00000000000006a1 .LLST44
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:409    .text.mpu6500_init:000000000000011c .LVL45
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:413    .text.mpu6500_init:000000000000011c .LBB82
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4958   .debug_loc:00000000000006b6 .LLST45
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4977   .debug_loc:00000000000006e3 .LLST46
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4985   .debug_loc:00000000000006f7 .LLST47
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:434    .text.mpu6500_init:0000000000000134 .LVL48
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:205    .text.mpu6500_init:0000000000000058 .LVL24
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:239    .text.mpu6500_init:0000000000000084 .LVL29
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5561   .debug_str:00000000000005e9 .LASF155
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5325   .debug_str:00000000000000f9 .LASF145
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5337   .debug_str:000000000000012c .LASF146
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5547   .debug_str:00000000000005b0 .LASF149
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5403   .debug_str:0000000000000291 .LASF147
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5401   .debug_str:000000000000028c .LASF148
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5573   .debug_str:000000000000061d .LASF150
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:14     .text.read_mpu:0000000000000000 .LFB3
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:34     .text.read_mpu:000000000000001a .LFE3
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:4994   .debug_loc:000000000000070c .LLST0
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5008   .debug_loc:000000000000072d .LLST1
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5022   .debug_loc:000000000000074e .LLST2
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:32     .text.read_mpu:000000000000001a .LVL4
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:41     .text.write_mpu:0000000000000000 .LFB4
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:60     .text.write_mpu:000000000000001a .LFE4
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5040   .debug_loc:000000000000077a .LLST3
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5054   .debug_loc:000000000000079b .LLST4
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5068   .debug_loc:00000000000007bc .LLST5
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:58     .text.write_mpu:000000000000001a .LVL9
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:67     .text.flip_bytes:0000000000000000 .LFB5
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:97     .text.flip_bytes:0000000000000016 .LFE5
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5086   .debug_loc:00000000000007e8 .LLST6
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5104   .debug_loc:0000000000000814 .LLST7
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5118   .debug_loc:0000000000000835 .LLST8
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:5133   .debug_loc:0000000000000857 .LLST9
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:778    .text.mpu6500_getGyroAccel:0000000000000002 .LCFI8
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:805    .text.mpu6500_getGyroAccel:0000000000000024 .LCFI9
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:774    .text.mpu6500_getGyroAccel:0000000000000000 .LVL83
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:785    .text.mpu6500_getGyroAccel:0000000000000008 .LVL84
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 30
+
+
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:802    .text.mpu6500_getGyroAccel:0000000000000020 .LVL87
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:630    .text.mpu6500_getGyro:0000000000000006 .LCFI6
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:759    .text.mpu6500_getGyro:0000000000000086 .LCFI7
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:619    .text.mpu6500_getGyro:0000000000000000 .LVL66
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:654    .text.mpu6500_getGyro:0000000000000014 .LVL68
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:756    .text.mpu6500_getGyro:0000000000000082 .LVL81
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:632    .text.mpu6500_getGyro:0000000000000006 .LVL67
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:667    .text.mpu6500_getGyro:0000000000000022 .LVL69
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:675    .text.mpu6500_getGyro:0000000000000028 .LVL71
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:685    .text.mpu6500_getGyro:0000000000000030 .LVL72
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:761    .text.mpu6500_getGyro:0000000000000086 .LVL82
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:702    .text.mpu6500_getGyro:0000000000000046 .LVL75
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:728    .text.mpu6500_getGyro:0000000000000064 .LVL78
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:475    .text.mpu6500_getAccel:0000000000000006 .LCFI4
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:604    .text.mpu6500_getAccel:0000000000000086 .LCFI5
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:464    .text.mpu6500_getAccel:0000000000000000 .LVL49
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:499    .text.mpu6500_getAccel:0000000000000014 .LVL51
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:601    .text.mpu6500_getAccel:0000000000000082 .LVL64
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:477    .text.mpu6500_getAccel:0000000000000006 .LVL50
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:512    .text.mpu6500_getAccel:0000000000000022 .LVL52
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:520    .text.mpu6500_getAccel:0000000000000028 .LVL54
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:530    .text.mpu6500_getAccel:0000000000000030 .LVL55
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:606    .text.mpu6500_getAccel:0000000000000086 .LVL65
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:547    .text.mpu6500_getAccel:0000000000000046 .LVL58
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:573    .text.mpu6500_getAccel:0000000000000064 .LVL61
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:113    .text.mpu6500_init:0000000000000002 .LCFI2
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:449    .text.mpu6500_init:000000000000013e .LCFI3
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:107    .text.mpu6500_init:0000000000000000 .LVL14
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:126    .text.mpu6500_init:0000000000000012 .LVL15
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:158    .text.mpu6500_init:0000000000000028 .LVL20
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:156    .text.mpu6500_init:0000000000000024 .LVL19
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:154    .text.mpu6500_init:0000000000000020 .LVL18
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:137    .text.mpu6500_init:0000000000000018 .LVL16
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:142    .text.mpu6500_init:000000000000001a .LVL17
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:193    .text.mpu6500_init:000000000000004e .LVL22
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:212    .text.mpu6500_init:0000000000000060 .LVL25
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:219    .text.mpu6500_init:0000000000000066 .LVL26
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:230    .text.mpu6500_init:000000000000007a .LVL28
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:252    .text.mpu6500_init:000000000000008e .LVL30
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:257    .text.mpu6500_init:0000000000000090 .LVL31
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:280    .text.mpu6500_init:00000000000000ae .LVL33
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:303    .text.mpu6500_init:00000000000000c2 .LVL35
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:323    .text.mpu6500_init:00000000000000ce .LVL37
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:328    .text.mpu6500_init:00000000000000d0 .LVL38
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:351    .text.mpu6500_init:00000000000000ec .LVL40
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:374    .text.mpu6500_init:0000000000000100 .LVL42
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:404    .text.mpu6500_init:000000000000011a .LVL44
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:424    .text.mpu6500_init:0000000000000126 .LVL46
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:430    .text.mpu6500_init:000000000000012a .LVL47
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:18     .text.read_mpu:0000000000000000 .LVL0
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:27     .text.read_mpu:0000000000000012 .LVL2
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:30     .text.read_mpu:0000000000000018 .LVL3
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:25     .text.read_mpu:0000000000000010 .LVL1
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:44     .text.write_mpu:0000000000000000 .LVL5
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:53     .text.write_mpu:0000000000000012 .LVL7
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:56     .text.write_mpu:0000000000000018 .LVL8
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:51     .text.write_mpu:0000000000000010 .LVL6
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 31
+
+
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:81     .text.flip_bytes:000000000000000e .LCFI0
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:92     .text.flip_bytes:0000000000000014 .LCFI1
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:70     .text.flip_bytes:0000000000000000 .LVL10
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:76     .text.flip_bytes:0000000000000008 .LVL11
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:83     .text.flip_bytes:000000000000000e .LVL12
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:94     .text.flip_bytes:0000000000000014 .LVL13
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:822    .debug_info:0000000000000000 .Ldebug_info0
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:144    .text.mpu6500_init:000000000000001a .LBE40
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:150    .text.mpu6500_init:000000000000001e .LBB43
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:162    .text.mpu6500_init:000000000000002a .LBE43
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:178    .text.mpu6500_init:000000000000003a .LBE44
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:181    .text.mpu6500_init:000000000000003e .LBB48
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:189    .text.mpu6500_init:000000000000004a .LBE48
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:194    .text.mpu6500_init:000000000000004e .LBB49
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:200    .text.mpu6500_init:0000000000000050 .LBE49
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:247    .text.mpu6500_init:0000000000000088 .LBE52
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:253    .text.mpu6500_init:000000000000008e .LBB55
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:264    .text.mpu6500_init:000000000000009c .LBE55
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:276    .text.mpu6500_init:00000000000000aa .LBE56
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:281    .text.mpu6500_init:00000000000000ae .LBB59
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:287    .text.mpu6500_init:00000000000000b0 .LBE59
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:299    .text.mpu6500_init:00000000000000be .LBE60
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:304    .text.mpu6500_init:00000000000000c2 .LBB63
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:310    .text.mpu6500_init:00000000000000c4 .LBE63
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:318    .text.mpu6500_init:00000000000000c8 .LBE64
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:324    .text.mpu6500_init:00000000000000ce .LBB67
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:335    .text.mpu6500_init:00000000000000da .LBE67
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:347    .text.mpu6500_init:00000000000000e8 .LBE68
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:352    .text.mpu6500_init:00000000000000ec .LBB71
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:358    .text.mpu6500_init:00000000000000ee .LBE71
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:370    .text.mpu6500_init:00000000000000fc .LBE72
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:375    .text.mpu6500_init:0000000000000100 .LBB75
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:381    .text.mpu6500_init:0000000000000102 .LBE75
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:389    .text.mpu6500_init:0000000000000106 .LBE76
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:392    .text.mpu6500_init:000000000000010a .LBB80
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:400    .text.mpu6500_init:0000000000000116 .LBE80
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:405    .text.mpu6500_init:000000000000011a .LBB81
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:411    .text.mpu6500_init:000000000000011c .LBE81
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:419    .text.mpu6500_init:0000000000000120 .LBE82
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:425    .text.mpu6500_init:0000000000000126 .LBB85
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:436    .text.mpu6500_init:0000000000000134 .LBE85
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:472    .text.mpu6500_getAccel:0000000000000004 .LBE86
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:478    .text.mpu6500_getAccel:0000000000000006 .LBB92
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:483    .text.mpu6500_getAccel:000000000000000a .LBE92
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:486    .text.mpu6500_getAccel:000000000000000c .LBB93
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:492    .text.mpu6500_getAccel:0000000000000010 .LBE93
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:495    .text.mpu6500_getAccel:0000000000000012 .LBB94
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:501    .text.mpu6500_getAccel:0000000000000014 .LBE94
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:505    .text.mpu6500_getAccel:0000000000000016 .LBB95
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:516    .text.mpu6500_getAccel:0000000000000024 .LBE95
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:627    .text.mpu6500_getGyro:0000000000000004 .LBE102
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:633    .text.mpu6500_getGyro:0000000000000006 .LBB108
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:638    .text.mpu6500_getGyro:000000000000000a .LBE108
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:641    .text.mpu6500_getGyro:000000000000000c .LBB109
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:647    .text.mpu6500_getGyro:0000000000000010 .LBE109
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:650    .text.mpu6500_getGyro:0000000000000012 .LBB110
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:656    .text.mpu6500_getGyro:0000000000000014 .LBE110
+GAS LISTING C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s 			page 32
+
+
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:660    .text.mpu6500_getGyro:0000000000000016 .LBB111
+C:\Users\Kalle\AppData\Local\Temp\cctneNSz.s:671    .text.mpu6500_getGyro:0000000000000024 .LBE111
+
+UNDEFINED SYMBOLS
+__floatsisf
